@@ -1,0 +1,15 @@
+extends base
+
+block content
+  main
+    div(class="w-75 mx-auto my-5")
+      h2(class="my-3") Log into your account
+      form
+        div.mb-3
+          label.form-label(for='email') Email address
+          input#email.form-control(type='email', placeholder='you@example.com', required)
+          
+        div.mb-3
+          label.form-label(for='password') Password
+          input#password.form-control(type='password', placeholder='••••••••', required, minlength='8', maxlength='20')
+        button(type="submit" class="btn btn-primary") Login

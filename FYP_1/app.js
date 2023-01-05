@@ -10,19 +10,29 @@ const cookieParser = require("cookie-parser");
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
-// const tourRouter = require('./routes/tourRoutes');
+const propertyRouter = require("./routes/propertyRoutes");
 const userRouter = require("./routes/userRoutes");
 const viewRouter = require("./routes/viewRoutes");
 
 const app = express();
-
+app.use(cookieParser());
 // pug setup
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
 // 1) GLOBAL MIDDLEWARES
 // Set security HTTP headers
-app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'", "https:", "http:", "data:", "ws:"],
+      baseUri: ["'self'"],
+      fontSrc: ["'self'", "https:", "http:", "data:"],
+      scriptSrc: ["'self'", "https:", "http:", "blob:"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https:", "http:"]
+    }
+  })
+);
 
 // Development logging
 if (process.env.NODE_ENV === "development") {
@@ -73,6 +83,7 @@ app.use((req, res, next) => {
 // 3) ROUTES
 // app.use('/api/v1/tours', tourRouter);
 app.use("/", viewRouter);
+app.use("/api/v1/properties", propertyRouter);
 app.use("/api/v1/users", userRouter);
 
 app.all("*", (req, res, next) => {

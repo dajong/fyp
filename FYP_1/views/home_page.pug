@@ -1,0 +1,18 @@
+extends base
+
+block content
+    main(class="w-75 mx-auto my-5")
+        h1(class="text-center my-5") Search for properties you like!
+        form(method="get", action="")
+            div(class="row")
+                div(class="col-4")
+                    select(class="form-select", arial-label="cities", name="city")
+                        each city in cities
+                            option(value=`${city}`)= `${city}`
+                div(class="col-4") 
+                    input(type="text", class="form-control", placeholder="Number of Bathrooms", name="numBathrooms")
+                div(class="col-4") 
+                    input(type="text", class="form-control", placeholder="Number of Bathrooms", name="numBathrooms")
+
+            div(class="text-center my-5")
+                button(type="submit" class="btn btn-primary") Filter

@@ -1,4 +1,5 @@
 //
+const Property = require("../models/propertyModel");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 // const AppError = require("../utils/appError");
@@ -13,7 +14,27 @@ exports.getOverview = catchAsync(async (req, res, next) => {
   //   title: "All Tours"
   //   //tours
   // });
-  res.status(200).render("base");
+  const properties = await Property.find();
+
+  res.status(200).render("displayProperties", {
+    title: "Properties",
+    properties
+  });
+});
+
+exports.getHomePage = catchAsync(async (req, res, next) => {
+  const cities = ["Limerick", "Dublin"];
+
+  res.status(200).render("home_page", {
+    title: "Home",
+    cities
+  });
+});
+
+exports.getRegistrationPage = catchAsync(async (req, res, next) => {
+  res.status(200).render("registration_page", {
+    title: "Sign Up"
+  });
 });
 
 // exports.getTour = catchAsync(async (req, res, next) => {

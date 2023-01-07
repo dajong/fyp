@@ -1,0 +1,23 @@
+extends base
+
+block content
+
+    main(class="w-75 mx-auto")
+        each property in properties
+            div(class="row row-cols-1 row-cols-md-3 g-4")
+                div(class="col")
+                    div(class="card h-100")
+                        img(src="", alt="", class="")
+
+                        div(class="card-body")
+                            h5("card-title")= `${property.address}, ${property.city}`
+
+                            div(class="row")
+
+                                div(class="col-8")
+                                    p(class="card-text")= `${property.numBedrooms} bedrooms`
+                                    p(class="card-text")= `${property.numBathrooms} bathrooms`
+                                    //- p(class="card-text")
+
+                            form(method="get", action=`property/${property.slug}`)
+                                button(type="submit", class="btn btn-primary" name="propertySelected") View Property

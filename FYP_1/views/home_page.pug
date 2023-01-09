@@ -3,16 +3,18 @@ extends base
 block content
     main(class="w-75 mx-auto my-5")
         h1(class="text-center my-5") Search for properties you like!
-        form(method="get", action="")
+        form(method="get", action="/overview")
             div(class="row")
-                div(class="col-4")
-                    select(class="form-select", arial-label="cities", name="city")
-                        each city in cities
-                            option(value=`${city}`)= `${city}`
-                div(class="col-4") 
-                    input(type="text", class="form-control", placeholder="Number of Bathrooms", name="numBathrooms")
-                div(class="col-4") 
-                    input(type="text", class="form-control", placeholder="Number of Bathrooms", name="numBathrooms")
+                div(class="col-3")
+                    select(class="form-select", arial-label="difficulty", name="difficulty")
+                        each difficulty in difficulties
+                            option(value=`${difficulty}`)= `${difficulty}`
+                div(class="col-3") 
+                    input(type="text", class="form-control", placeholder="Duration", name="duration")
+                div(class="col-3") 
+                    input(type="text", class="form-control", placeholder="Min Price", name="minPrice")
+                div(class="col-3") 
+                    input(type="text", class="form-control", placeholder="Max Price", name="maxPrice")
 
             div(class="text-center my-5")
-                button(type="submit" class="btn btn-primary") Filter
+                button(type="submit" class="btn btn-success") Filter

@@ -5,15 +5,43 @@ import { login, logout } from './login';
 import { register } from './registration';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
+import { connect } from 'mongoose';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
-const loginForm = document.querySelector(".form--login")
-const registrationForm = document.querySelector(".form--registration")
+const walletButton = document.getElementById("btn--wallet");
+const loginForm = document.querySelector(".form--login");
+const registrationForm = document.querySelector(".form--registration");
 const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
+
+
+const connectWallet = async () => {
+  if (!window.ethereum) return alert('Please install MetaMask.');
+
+  const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+  setCurrentAccount(accounts[0]);
+  window.location.reload();
+};
+
+const checkIfWalletIsConnect = async (e) => {
+  if (!window.ethereum) return alert("Please install MetaMask.");
+
+  const accounts = await window.ethereum.request({ method: "eth_accounts" });
+
+  if (accounts.length) {
+    // setCurrentAccount(accounts[0]);
+    console.log("Accounts found: " + accounts);
+  } else {
+    console.log("No accounts found, connecting wallet now..");
+    connectWallet();
+    e.target.textContent = "Connected";
+    e.target.className += "disabled";
+  }
+};
 
 // DELEGATION
 if (mapBox) {
@@ -75,4 +103,10 @@ if (userPasswordForm)
     e.target.textContent = 'Processing...';
     const { tourId } = e.target.dataset;
     bookTour(tourId);
+  });
+
+  if(walletButton)
+  walletButton.addEventListener('click', e => {
+    console.log("Button clicked!");
+    checkIfWalletIsConnect(e);
   });

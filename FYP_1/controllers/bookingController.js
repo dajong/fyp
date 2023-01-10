@@ -47,6 +47,16 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   res.redirect(req.originalUrl.split("?")[0]);
 });
 
+exports.createBookingWithNFT = catchAsync(async (req, res, next) => {
+  // const doc = await Model.create(req.body);
+  // res.status(201).json({
+  //   status: "success",
+  //   data: {
+  //     data: doc
+  //   }
+  // });
+});
+
 exports.createBooking = factory.createOne(Booking);
 exports.getBooking = factory.getOne(Booking);
 exports.getAllBookings = factory.getAll(Booking);

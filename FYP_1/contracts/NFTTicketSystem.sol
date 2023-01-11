@@ -13,8 +13,6 @@ contract NFTTicketSystem is ERC721URIStorage {
 
     Counters.Counter private _tokenIds;
     Counters.Counter private _itemsSold;
-    string tourName;
-    string tourDate;
     uint256 listingPrice = 0.025 ether;
     address payable owner;
 
@@ -24,8 +22,6 @@ contract NFTTicketSystem is ERC721URIStorage {
       uint256 tokenId;
       address payable seller;
       address payable owner;
-      string tourName;
-      string tourDate;
       uint256 price;
       bool sold;
     }
@@ -34,8 +30,6 @@ contract NFTTicketSystem is ERC721URIStorage {
       uint256 indexed tokenId,
       address seller,
       address owner,
-      string tourName,
-      string tourDate,
       uint256 price,
       bool sold
     );
@@ -44,32 +38,38 @@ contract NFTTicketSystem is ERC721URIStorage {
       owner = payable(msg.sender);
     }
 
+        /* Updates the listing price of the contract */
+    function updateListingPrice(uint _listingPrice) public payable {
+      require(owner == msg.sender, "Only marketplace owner can update listing price.");
+      listingPrice = _listingPrice;
+    }
+
+    /* Returns the listing price of the contract */
+    function getListingPrice() public view returns (uint256) {
+      return listingPrice;
+    }
+
     /* Mints a token and lists it in the marketplace */
-    function createToken(string memory tokenURI, uint256 price, string memory tourName, string memory tourDate) public payable returns (uint) {
+    function createTokenNFT(string memory tokenURI, uint256 price) public payable returns (uint) {
       _tokenIds.increment();
       uint256 newTokenId = _tokenIds.current();
 
       _mint(msg.sender, newTokenId);
       _setTokenURI(newTokenId, tokenURI);
-      createMarketItem(newTokenId, price, tourName, tourDate);
+      createMarketItem(newTokenId, price);
       return newTokenId;
     }
 
     function createMarketItem(
       uint256 tokenId,
-      uint256 price,
-      string memory tourName,
-      string memory tourDate
+      uint256 price
     ) private {
       require(price > 0, "Price must be at least 1 wei");
-      require(msg.value == listingPrice, "Price must be equal to listing price");
 
       idToMarketItem[tokenId] =  MarketItem(
         tokenId,
         payable(msg.sender),
         payable(address(this)),
-        tourName,
-        tourDate,
         price,
         false
       );
@@ -79,8 +79,6 @@ contract NFTTicketSystem is ERC721URIStorage {
         tokenId,
         msg.sender,
         address(this),
-        tourName,
-        tourDate,
         price,
         false
       );

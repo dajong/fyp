@@ -1,14 +1,7 @@
-import { ethers } from "ethers";
-import { MarketAddress, MarketAddressABI } from "../context/constants";
-
-const Web3Modal = require("web3modal");
 const Tour = require("./../models/tourModel");
 const catchAsync = require("./../utils/catchAsync");
 const factory = require("./handlerFactory");
 const AppError = require("./../utils/appError");
-
-const fetchContract = signerOrProvider =>
-  new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = "5";
@@ -19,33 +12,7 @@ exports.aliasTopTours = (req, res, next) => {
 
 exports.getAllTours = factory.getAll(Tour);
 exports.getTour = factory.getOne(Tour, { path: "reviews" });
-exports.createTour = () =>
-  catchAsync(async (req, res, next) => {
-    const formInputPrice = req.body.price;
-    const doc = await Tour.create(req.body);
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-
-    const price = ethers.utils.parseUnits(formInputPrice, "ether");
-    const contract = fetchContract(signer);
-
-    const transaction = await contract.createToken(
-      url,
-      price,
-      req.body.name,
-      req.body.startDates[0]
-    );
-    await transaction.wait();
-
-    res.status(201).json({
-      status: "success",
-      data: {
-        data: doc
-      }
-    });
-  });
+exports.createTour = factory.createOne(Tour);
 exports.updateTour = factory.updateOne(Tour);
 exports.deleteTour = factory.deleteOne(Tour);
 

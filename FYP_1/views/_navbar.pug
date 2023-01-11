@@ -13,6 +13,7 @@ nav(class="navbar navbar-expand-lg navbar-light bg-light container-fluid")
         - var currentUser = user;
         - 
         if role === "admin" 
+            li(class="nav-item"): a(class="nav-link btn btn-success" id="btn--wallet" aria-current="page") Wallet
             li(class="nav-item"): a(class="nav-link nav__el--createTour" aria-current="page" href="/createTour") Create Tour
             li(class="nav-item"): a(class="nav-link nav__el--logout" aria-current="page" href="/") Log out
             //- a.nav__el(href='/me')

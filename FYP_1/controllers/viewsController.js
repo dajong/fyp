@@ -1,5 +1,3 @@
-//
-// const Property = require("../models/propertyModel");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const Tour = require("../models/tourModel");
@@ -39,6 +37,12 @@ exports.getHomePage = catchAsync(async (req, res, next) => {
 exports.getRegistrationPage = catchAsync(async (req, res, next) => {
   res.status(200).render("registration_page", {
     title: "Sign Up"
+  });
+});
+
+exports.getCreateTourPage = catchAsync(async (req, res, next) => {
+  res.status(200).render("createTour", {
+    title: "Create Tour"
   });
 });
 

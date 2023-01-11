@@ -5,7 +5,10 @@ import { login, logout } from './login';
 import { register } from './registration';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
+import { createTour} from './tour';
+import { createTokenNFT } from './web3ModalFactory';
 import { connect } from 'mongoose';
+// import { createTour } from '../../controllers/tourController';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -16,6 +19,7 @@ const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
+const createTourForm = document.querySelector(".form--createTour");
 
 
 const connectWallet = async () => {
@@ -55,6 +59,15 @@ if (loginForm)
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     login(email, password);
+  });
+
+  if (createTourForm)
+  createTourForm.addEventListener('submit', e => {
+    e.preventDefault();
+    console.log("Creating tour..")
+    const price = "100";
+    createTokenNFT(price);
+    // createTour();
   });
 
 if (registrationForm)

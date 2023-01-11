@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
@@ -37,13 +38,32 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm
-  });
+  const { name, email, role, password, passwordConfirm } = req.body;
+  // Validation
+  if (!name || !email || !password || !passwordConfirm) {
+    res.status(400);
+    return next(new AppError("Please include all fields", 400));
+  }
 
+  // Check if user already exists
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    res.status(400);
+    return next(new AppError("User already exists!", 400));
+  }
+
+  // Hash password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  const newUser = await User.create({
+    name,
+    email,
+    role,
+    password: hashedPassword,
+    passwordConfirm: hashedPassword
+  });
   createSendToken(newUser, 201, res);
 });
 
@@ -55,14 +75,13 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError("Please provide email and password!", 400));
   }
   // 2) Check if user exists && password is correct
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email });
 
-  if (!user || !(await user.correctPassword(password, user.password))) {
+  if (user || (await bcrypt.compare(password, user.password))) {
+    createSendToken(user, 200, res);
+  } else {
     return next(new AppError("Incorrect email or password", 401));
   }
-
-  // 3) If everything ok, send token to client
-  createSendToken(user, 200, res);
 });
 
 exports.logout = (req, res) => {

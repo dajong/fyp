@@ -29,4 +29,10 @@ router.post(
   viewsController.updateUserData
 );
 
+router.get(
+  "/createTour",
+  authController.isLoggedIn,
+  viewsController.getCreateTourPage
+);
+
 module.exports = router;

@@ -897,7 +897,7 @@
   .nav__el,
   .nav__el:link,
   .nav__el:visited {
-    color: #f7f7f7;
+    color: black;
     text-transform: uppercase;
     font-size: 1.6rem;
     text-decoration: none;

@@ -15,10 +15,13 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, "Please provide a valid email"]
   },
-  // photo: String,
+  photo: {
+    type: String,
+    default: "default.jpg"
+  },
   role: {
     type: String,
-    enum: ["user", "admin"],
+    enum: ["user", "guide", "lead-guide", "admin"],
     default: "user"
   },
   password: {
@@ -31,7 +34,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please confirm your password"],
     validate: {
-      // Callback function to check if two password matches
       // This only works on CREATE and SAVE!!!
       validator: function(el) {
         return el === this.password;

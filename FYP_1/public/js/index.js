@@ -3,7 +3,7 @@ import '@babel/polyfill';
 import { displayMap } from './mapbox';
 import { login, logout } from './login';
 import { register } from './registration';
-import { updateSettings } from './updateSettings';
+import { updateSettings, forgetPassword } from './updateSettings';
 import { bookTour } from './stripe';
 import { createTour} from './tour';
 import { createTokenNFT } from './web3ModalFactory';
@@ -20,6 +20,7 @@ const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
 const createTourForm = document.querySelector(".form--createTour");
+const forgetPasswordForm = document.querySelector(".form--forgetPassword");
 
 
 const connectWallet = async () => {
@@ -53,6 +54,13 @@ if (mapBox) {
   displayMap(locations);
 }
 
+if(forgetPasswordForm)
+forgetPasswordForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  forgetPassword(email);
+});
+
 if (loginForm)
   loginForm.addEventListener('submit', e => {
     e.preventDefault();
@@ -66,8 +74,8 @@ if (loginForm)
     e.preventDefault();
     console.log("Creating tour..")
     const price = "100";
-    createTokenNFT(price);
-    // createTour();
+    // createTokenNFT(price);
+    createTour();
   });
 
 if (registrationForm)
@@ -77,8 +85,6 @@ if (registrationForm)
     const name = document.getElementById('name').value;
     const password = document.getElementById('password').value;
     const passwordConfirmation = document.getElementById('passwordConfirm').value;
-    console.log(password);
-    console.log(passwordConfirmation);
     register(email, name, "user", password, passwordConfirmation);
   });
 

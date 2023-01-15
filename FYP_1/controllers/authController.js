@@ -1,11 +1,10 @@
 const crypto = require("crypto");
 const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const User = require("../models/userModel");
-const catchAsync = require("../utils/catchAsync");
-const AppError = require("../utils/appError");
-const sendEmail = require("../utils/email");
+const User = require("./../models/userModel");
+const catchAsync = require("./../utils/catchAsync");
+const AppError = require("./../utils/appError");
+const Email = require("./../utils/email");
 
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -38,32 +37,28 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const { name, email, role, password, passwordConfirm } = req.body;
-  // Validation
-  if (!name || !email || !password || !passwordConfirm) {
-    res.status(400);
-    return next(new AppError("Please include all fields", 400));
-  }
+  const { email, name, role, password, passwordConfirm } = req.body;
 
-  // Check if user already exists
+  // Find if user already exists
   const userExists = await User.findOne({ email });
 
   if (userExists) {
     res.status(400);
-    return next(new AppError("User already exists!", 400));
+    throw new Error("User already exists");
   }
 
-  // Hash password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
   const newUser = await User.create({
-    name,
-    email,
-    role,
-    password: hashedPassword,
-    passwordConfirm: hashedPassword
+    name: name,
+    email: email,
+    role: role,
+    password: password,
+    passwordConfirm: passwordConfirm
   });
+
+  // const url = `${req.protocol}://${req.get("host")}/me`;
+  // console.log(url);
+  // await new Email(newUser, url).sendWelcome();
+
   createSendToken(newUser, 201, res);
 });
 
@@ -75,13 +70,14 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError("Please provide email and password!", 400));
   }
   // 2) Check if user exists && password is correct
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select("+password");
 
-  if (user || (await bcrypt.compare(password, user.password))) {
-    createSendToken(user, 200, res);
-  } else {
+  if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("Incorrect email or password", 401));
   }
+
+  // 3) If everything ok, send token to client
+  createSendToken(user, 200, res);
 });
 
 exports.logout = (req, res) => {
@@ -134,6 +130,8 @@ exports.protect = catchAsync(async (req, res, next) => {
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
   res.locals.user = currentUser;
+  if (currentUser.role === "admin") res.locals.role = "admin";
+  else res.locals.role = "user";
   next();
 });
 
@@ -195,18 +193,11 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   // 3) Send it to user's email
-  const resetURL = `${req.protocol}://${req.get(
-    "host"
-  )}/api/v1/users/resetPassword/${resetToken}`;
-
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
-
   try {
-    await sendEmail({
-      email: user.email,
-      subject: "Your password reset token (valid for 10 min)",
-      message
-    });
+    const resetURL = `${req.protocol}://${req.get(
+      "host"
+    )}/api/v1/users/resetPassword/${resetToken}`;
+    await new Email(user, resetURL).sendPasswordReset();
 
     res.status(200).json({
       status: "success",

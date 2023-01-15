@@ -12153,7 +12153,7 @@ exports.register = register;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateSettings = void 0;
+exports.updateSettings = exports.forgetPassword = void 0;
 var _axios = _interopRequireDefault(require("axios"));
 var _alerts = require("./alerts");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -12169,7 +12169,7 @@ var updateSettings = /*#__PURE__*/function () {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.prev = 0;
-          url = type === 'password' ? 'http://127.0.0.1:3000/api/v1/users/updateMyPassword' : 'http://127.0.0.1:3000/api/v1/users/updateMe';
+          url = type === 'password' ? 'http://localhost:3000/api/v1/users/updateMyPassword' : 'http://localhost:3000/api/v1/users/updateMe';
           _context.next = 4;
           return (0, _axios.default)({
             method: 'PATCH',
@@ -12198,6 +12198,43 @@ var updateSettings = /*#__PURE__*/function () {
   };
 }();
 exports.updateSettings = updateSettings;
+var forgetPassword = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(email) {
+    var res;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.prev = 0;
+          _context2.next = 3;
+          return (0, _axios.default)({
+            method: 'POST',
+            url: 'http://localhost:3000/api/v1/users/forgotPassword',
+            data: {
+              email: email
+            }
+          });
+        case 3:
+          res = _context2.sent;
+          if (res.data.status === 'success') {
+            (0, _alerts.showAlert)('success', 'Logged in successfully!');
+          }
+          _context2.next = 10;
+          break;
+        case 7:
+          _context2.prev = 7;
+          _context2.t0 = _context2["catch"](0);
+          (0, _alerts.showAlert)('error', _context2.t0.response.data.message);
+        case 10:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2, null, [[0, 7]]);
+  }));
+  return function forgetPassword(_x3) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+exports.forgetPassword = forgetPassword;
 },{"axios":"../../node_modules/axios/index.js","./alerts":"alerts.js"}],"stripe.js":[function(require,module,exports) {
 "use strict";
 
@@ -59471,6 +59508,7 @@ var userDataForm = document.querySelector('.form-user-data');
 var userPasswordForm = document.querySelector('.form-user-password');
 var bookBtn = document.getElementById('book-tour');
 var createTourForm = document.querySelector(".form--createTour");
+var forgetPasswordForm = document.querySelector(".form--forgetPassword");
 var connectWallet = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
     var accounts;
@@ -59544,6 +59582,11 @@ if (mapBox) {
   var locations = JSON.parse(mapBox.dataset.locations);
   (0, _mapbox.displayMap)(locations);
 }
+if (forgetPasswordForm) forgetPasswordForm.addEventListener('submit', function (e) {
+  e.preventDefault();
+  var email = document.getElementById('email').value;
+  (0, _updateSettings.forgetPassword)(email);
+});
 if (loginForm) loginForm.addEventListener('submit', function (e) {
   e.preventDefault();
   var email = document.getElementById('email').value;
@@ -59554,18 +59597,15 @@ if (createTourForm) createTourForm.addEventListener('submit', function (e) {
   e.preventDefault();
   console.log("Creating tour..");
   var price = "100";
-  (0, _web3ModalFactory.createTokenNFT)(price);
-  // createTour();
+  // createTokenNFT(price);
+  (0, _tour.createTour)();
 });
-
 if (registrationForm) registrationForm.addEventListener('submit', function (e) {
   e.preventDefault();
   var email = document.getElementById('email').value;
   var name = document.getElementById('name').value;
   var password = document.getElementById('password').value;
   var passwordConfirmation = document.getElementById('passwordConfirm').value;
-  console.log(password);
-  console.log(passwordConfirmation);
   (0, _registration.register)(email, name, "user", password, passwordConfirmation);
 });
 if (logOutBtn) logOutBtn.addEventListener('click', _login.logout);

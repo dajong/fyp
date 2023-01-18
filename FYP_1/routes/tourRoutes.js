@@ -42,6 +42,8 @@ router
     tourController.createTour
   );
 
+router.route("/addTickets").post(tourController.addTickets);
+
 router
   .route("/:id")
   .get(tourController.getTour)

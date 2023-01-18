@@ -37,24 +37,12 @@ block content
         .overview-box__group
           h2.heading-secondary.ma-bt-lg Quick facts
 
-          - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
+          //- - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
+          - const date = tour.startDates[0]
           +overviewBox('Next date', date, 'calendar')
           +overviewBox('Difficulty', tour.difficulty, 'trending-up')
           +overviewBox('Participants', `${tour.maxGroupSize} people`, 'user')
           +overviewBox('Rating', `${tour.ratingsAverage} / 5`, 'star')
-
-        .overview-box__group
-          h2.heading-secondary.ma-bt-lg Your tour guides
-
-          each guide in tour.guides
-            .overview-box__detail
-              img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
-
-              - if (guide.role === 'lead-guide')
-                span.overview-box__label Lead guide
-              - if (guide.role === 'guide')
-                span.overview-box__label Tour guide
-              span.overview-box__text= guide.name
 
     .description-box
       h2.heading-secondary.ma-bt-lg= `About ${tour.name} tour`
@@ -67,13 +55,13 @@ block content
       .picture-box
         img.picture-box__img(src=`/img/tours/${img}`, alt=`The Park Camper Tour ${i + 1}`, class=`picture-box__img--${i + 1}`)
 
-  section.section-map
-    #map(data-locations=`${JSON.stringify(tour.locations)}`)
+  //- section.section-map
+  //-   #map(data-locations=`${JSON.stringify(tour.locations)}`)
 
-  section.section-reviews
-    .reviews
-      each review in tour.reviews
-        +reviewCard(review)
+  //- section.section-reviews
+  //-   .reviews
+  //-     each review in tour.reviews
+  //-       +reviewCard(review)
 
   section.section-cta
     .cta

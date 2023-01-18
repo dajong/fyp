@@ -22,6 +22,7 @@ contract NFTTicketSystem is ERC721URIStorage {
       uint256 tokenId;
       address payable seller;
       address payable owner;
+      string tourName;
       uint256 price;
       bool sold;
     }
@@ -30,6 +31,7 @@ contract NFTTicketSystem is ERC721URIStorage {
       uint256 indexed tokenId,
       address seller,
       address owner,
+      string tourName,
       uint256 price,
       bool sold
     );
@@ -49,20 +51,25 @@ contract NFTTicketSystem is ERC721URIStorage {
       return listingPrice;
     }
 
+    function compareStrings(string memory a, string memory b) public view returns (bool) {
+      return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
+    }
+
     /* Mints a token and lists it in the marketplace */
-    function createTokenNFT(string memory tokenURI, uint256 price) public payable returns (uint) {
+    function createTokenNFT(string memory tokenURI, uint256 price, string memory tourName) public payable returns (uint) {
       _tokenIds.increment();
       uint256 newTokenId = _tokenIds.current();
 
       _mint(msg.sender, newTokenId);
       _setTokenURI(newTokenId, tokenURI);
-      createMarketItem(newTokenId, price);
+      createMarketItem(newTokenId, price, tourName);
       return newTokenId;
     }
 
     function createMarketItem(
       uint256 tokenId,
-      uint256 price
+      uint256 price,
+      string memory tourName
     ) private {
       require(price > 0, "Price must be at least 1 wei");
 
@@ -70,6 +77,7 @@ contract NFTTicketSystem is ERC721URIStorage {
         tokenId,
         payable(msg.sender),
         payable(address(this)),
+        tourName,
         price,
         false
       );
@@ -79,23 +87,11 @@ contract NFTTicketSystem is ERC721URIStorage {
         tokenId,
         msg.sender,
         address(this),
+        tourName,
         price,
         false
       );
     }
-
-    /* allows someone to resell a token they have purchased */
-    // function resellToken(uint256 tokenId, uint256 price) public payable {
-    //   require(idToMarketItem[tokenId].owner == msg.sender, "Only item owner can perform this operation");
-    //   require(msg.value == listingPrice, "Price must be equal to listing price");
-    //   idToMarketItem[tokenId].sold = false;
-    //   idToMarketItem[tokenId].price = price;
-    //   idToMarketItem[tokenId].seller = payable(msg.sender);
-    //   idToMarketItem[tokenId].owner = payable(address(this));
-    //   _itemsSold.decrement();
-
-    //   _transfer(msg.sender, address(this), tokenId);
-    // }
 
     /* Creates the sale of a marketplace item */
     /* Transfers ownership of the item, as well as funds between parties */
@@ -155,6 +151,29 @@ contract NFTTicketSystem is ERC721URIStorage {
       return items;
     }
 
+    function fetchTourNFTs(string memory tourName) public view returns (MarketItem[] memory) {
+      uint totalItemCount = _tokenIds.current();
+      uint itemCount = 0;
+      uint currentIndex = 0;
+
+      for (uint i = 0; i < totalItemCount; i++) {
+        if (compareStrings(idToMarketItem[i + 1].tourName, tourName)) {
+          itemCount += 1;
+        }
+      }
+
+      MarketItem[] memory items = new MarketItem[](itemCount);
+      for (uint i = 0; i < totalItemCount; i++) {
+        if (compareStrings(idToMarketItem[i + 1].tourName, tourName)) {
+          uint currentId = i + 1;
+          MarketItem storage currentItem = idToMarketItem[currentId];
+          items[currentIndex] = currentItem;
+          currentIndex += 1;
+        }
+      }
+      return items;
+    }
+
     /* Returns only items a user has listed */
     function fetchItemsListed() public view returns (MarketItem[] memory) {
       uint totalItemCount = _tokenIds.current();
@@ -178,4 +197,6 @@ contract NFTTicketSystem is ERC721URIStorage {
       }
       return items;
     }
+
+   
 }

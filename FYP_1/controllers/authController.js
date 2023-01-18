@@ -36,6 +36,26 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
+exports.connectWalletToken = catchAsync(async (req, res, next) => {
+  const { account } = req.body;
+  const token = signToken(account);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true
+  };
+  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+
+  res.cookie("connectedWallet", token, cookieOptions);
+
+  res.status(200).json({
+    status: "success",
+    token,
+    account
+  });
+});
+
 exports.signup = catchAsync(async (req, res, next) => {
   const { email, name, role, password, passwordConfirm } = req.body;
 
@@ -82,9 +102,13 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.logout = (req, res) => {
   res.cookie("jwt", "loggedout", {
-    expires: new Date(Date.now() + 10 * 1000),
+    expires: new Date(Date.now() + 1 * 1000),
     httpOnly: true
   });
+  // res.cookie("connectedWallet", "disconnected", {
+  //   expires: new Date(Date.now() + 1 * 1000),
+  //   httpOnly: true
+  // });
   res.status(200).json({ status: "success" });
 };
 
@@ -119,6 +143,17 @@ exports.protect = catchAsync(async (req, res, next) => {
       )
     );
   }
+
+  // Check if wallet is connected
+  let tokenWalletConnected;
+  if (req.cookies.connectedWallet) {
+    tokenWalletConnected = req.cookies.connectedWallet;
+  }
+
+  if (tokenWalletConnected) {
+    res.locals.wallet = "connected";
+  } else res.locals.wallet = "disconnected";
+  console.log(res.locals.wallet);
 
   // 4) Check if user changed password after the token was issued
   if (currentUser.changedPasswordAfter(decoded.iat)) {
@@ -155,6 +190,17 @@ exports.isLoggedIn = async (req, res, next) => {
       if (currentUser.changedPasswordAfter(decoded.iat)) {
         return next();
       }
+
+      // Check if wallet is connected
+      let tokenWalletConnected;
+      if (req.cookies.connectedWallet) {
+        tokenWalletConnected = req.cookies.connectedWallet;
+      }
+
+      if (tokenWalletConnected) {
+        res.locals.wallet = "connected";
+      } else res.locals.wallet = "disconnected";
+      console.log(res.locals.wallet);
 
       // THERE IS A LOGGED IN USER
       res.locals.user = currentUser;
@@ -194,9 +240,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // 3) Send it to user's email
   try {
-    const resetURL = `${req.protocol}://${req.get(
-      "host"
-    )}/api/v1/users/resetPassword/${resetToken}`;
+    const resetURL = `http://localhost:3000/api/v1/users/resetPassword/${resetToken}`;
     await new Email(user, resetURL).sendPasswordReset();
 
     res.status(200).json({
@@ -207,7 +251,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save({ validateBeforeSave: false });
-
+    console.log(err);
     return next(
       new AppError("There was an error sending the email. Try again later!"),
       500

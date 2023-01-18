@@ -20,7 +20,10 @@ nav(class="navbar navbar-expand-lg navbar-light bg-light container-fluid")
                 img.nav__user-img(src=`/img/users/${user.photo}` alt=`Photo of ${user.name}`)
                 span= user.name.split(' ')[0]
         else if role === "user"
-          li(class="nav__el ms-3"): a(class="nav-link btn btn-success" id="btn--wallet" aria-current="page") Wallet
+          if wallet === "disconnected"
+            li(class="nav__el ms-3"): a(class="nav-link btn btn-success" id="btn--wallet" aria-current="page") Disconnected
+          else if wallet === "connected"
+            li(class="nav__el ms-3"): a(class="nav-link btn btn-success" id="btn--wallet" aria-current="page") Connected
           a.nav__el(href='/me').ms-3
                 img.nav__user-img(src=`/img/users/${user.photo}` alt=`Photo of ${user.name}`)
                 span= user.name.split(' ')[0]

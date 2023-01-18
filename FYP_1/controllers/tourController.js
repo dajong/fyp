@@ -10,6 +10,27 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
+exports.addTickets = catchAsync(async (req, res, next) => {
+  const { name, ticket } = req.body;
+
+  // Filter
+  const filter = { name: name };
+
+  // Tickets
+  const update = { ticket: ticket };
+
+  const tour = await Tour.findOneAndUpdate(filter, update, {
+    new: true
+  });
+  console.log(tour);
+  res.status(200).json({
+    status: "success",
+    data: {
+      tour
+    }
+  });
+});
+
 exports.getAllTours = factory.getAll(Tour);
 exports.getTour = factory.getOne(Tour, { path: "reviews" });
 exports.createTour = factory.createOne(Tour);

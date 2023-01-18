@@ -1,10 +1,10 @@
 const crypto = require("crypto");
 const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
-const User = require("../models/userModel");
-const catchAsync = require("../utils/catchAsync");
-const AppError = require("../utils/appError");
-const sendEmail = require("../utils/email");
+const User = require("./../models/userModel");
+const catchAsync = require("./../utils/catchAsync");
+const AppError = require("./../utils/appError");
+const Email = require("./../utils/email");
 
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -36,13 +36,48 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
-exports.signup = catchAsync(async (req, res, next) => {
-  const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm
+exports.connectWalletToken = catchAsync(async (req, res, next) => {
+  const { account } = req.body;
+  const token = signToken(account);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true
+  };
+  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+
+  res.cookie("connectedWallet", token, cookieOptions);
+
+  res.status(200).json({
+    status: "success",
+    token,
+    account
   });
+});
+
+exports.signup = catchAsync(async (req, res, next) => {
+  const { email, name, role, password, passwordConfirm } = req.body;
+
+  // Find if user already exists
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    res.status(400);
+    throw new Error("User already exists");
+  }
+
+  const newUser = await User.create({
+    name: name,
+    email: email,
+    role: role,
+    password: password,
+    passwordConfirm: passwordConfirm
+  });
+
+  // const url = `${req.protocol}://${req.get("host")}/me`;
+  // console.log(url);
+  // await new Email(newUser, url).sendWelcome();
 
   createSendToken(newUser, 201, res);
 });
@@ -67,9 +102,13 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.logout = (req, res) => {
   res.cookie("jwt", "loggedout", {
-    expires: new Date(Date.now() + 10 * 1000),
+    expires: new Date(Date.now() + 1 * 1000),
     httpOnly: true
   });
+  // res.cookie("connectedWallet", "disconnected", {
+  //   expires: new Date(Date.now() + 1 * 1000),
+  //   httpOnly: true
+  // });
   res.status(200).json({ status: "success" });
 };
 
@@ -105,6 +144,17 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
+  // Check if wallet is connected
+  let tokenWalletConnected;
+  if (req.cookies.connectedWallet) {
+    tokenWalletConnected = req.cookies.connectedWallet;
+  }
+
+  if (tokenWalletConnected) {
+    res.locals.wallet = "connected";
+  } else res.locals.wallet = "disconnected";
+  console.log(res.locals.wallet);
+
   // 4) Check if user changed password after the token was issued
   if (currentUser.changedPasswordAfter(decoded.iat)) {
     return next(
@@ -115,6 +165,8 @@ exports.protect = catchAsync(async (req, res, next) => {
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
   res.locals.user = currentUser;
+  if (currentUser.role === "admin") res.locals.role = "admin";
+  else res.locals.role = "user";
   next();
 });
 
@@ -139,8 +191,21 @@ exports.isLoggedIn = async (req, res, next) => {
         return next();
       }
 
+      // Check if wallet is connected
+      let tokenWalletConnected;
+      if (req.cookies.connectedWallet) {
+        tokenWalletConnected = req.cookies.connectedWallet;
+      }
+
+      if (tokenWalletConnected) {
+        res.locals.wallet = "connected";
+      } else res.locals.wallet = "disconnected";
+      console.log(res.locals.wallet);
+
       // THERE IS A LOGGED IN USER
       res.locals.user = currentUser;
+      if (currentUser.role === "admin") res.locals.role = "admin";
+      else res.locals.role = "user";
       return next();
     } catch (err) {
       return next();
@@ -174,18 +239,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   // 3) Send it to user's email
-  const resetURL = `${req.protocol}://${req.get(
-    "host"
-  )}/api/v1/users/resetPassword/${resetToken}`;
-
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
-
   try {
-    await sendEmail({
-      email: user.email,
-      subject: "Your password reset token (valid for 10 min)",
-      message
-    });
+    const resetURL = `http://localhost:3000/api/v1/users/resetPassword/${resetToken}`;
+    await new Email(user, resetURL).sendPasswordReset();
 
     res.status(200).json({
       status: "success",
@@ -195,7 +251,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save({ validateBeforeSave: false });
-
+    console.log(err);
     return next(
       new AppError("There was an error sending the email. Try again later!"),
       500

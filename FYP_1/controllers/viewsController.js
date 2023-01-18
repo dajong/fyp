@@ -1,5 +1,3 @@
-//
-// const Property = require("../models/propertyModel");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const Tour = require("../models/tourModel");
@@ -42,6 +40,12 @@ exports.getRegistrationPage = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getCreateTourPage = catchAsync(async (req, res, next) => {
+  res.status(200).render("createTour", {
+    title: "Create Tour"
+  });
+});
+
 exports.getTour = catchAsync(async (req, res, next) => {
   // 1) Get the data, for the requested tour (including reviews and guides)
   const tour = await Tour.findOne({ slug: req.params.slug }).populate({
@@ -64,6 +68,12 @@ exports.getTour = catchAsync(async (req, res, next) => {
 exports.getLoginForm = (req, res) => {
   res.status(200).render("login", {
     title: "Log into your account"
+  });
+};
+
+exports.forgetPassword = (req, res) => {
+  res.status(200).render("forgotPassword", {
+    title: "Forget Password"
   });
 };
 

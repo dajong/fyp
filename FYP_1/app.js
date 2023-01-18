@@ -10,7 +10,6 @@ const cookieParser = require("cookie-parser");
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
-const propertyRouter = require("./routes/propertyRoutes");
 const userRouter = require("./routes/userRoutes");
 const viewRouter = require("./routes/viewRoutes");
 const tourRouter = require("./routes/tourRoutes");
@@ -87,7 +86,6 @@ app.use((req, res, next) => {
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/", viewRouter);
-app.use("/api/v1/properties", propertyRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/bookings", bookingRouter);
 

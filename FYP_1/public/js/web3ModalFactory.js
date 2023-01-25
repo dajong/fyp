@@ -10,36 +10,35 @@ import { showAlert } from "./alerts";
 const fetchContract = signerOrProvider =>
   new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
 
-const fetchNFTs = async (tourName) => {
+const fetchNFTs = async (propertyAddress) => {
     const provider = new ethers.providers.JsonRpcProvider();
     const contract = fetchContract(provider);
 
-    const data = await contract.fetchTourNFTs(tourName);
-    const IDs = [];
-    const items = await Promise.all(data.map(async ({ tokenId, seller, owner, tourName, price: unformattedPrice }) => {
+    const data = await contract.fetchPropertyAddressNFTs(propertyAddress);
+    let contractID;
+    const items = await Promise.all(data.map(async ({ tokenId, seller, owner, propertyAddress, price: unformattedPrice }) => {
       const tokenURI = await contract.tokenURI(tokenId);
-      IDs.push(tokenId.toString());
+      contractID = tokenId.toString();
       console.log(tokenId);
-      console.log(tourName);
     }));
 
-    return IDs;
+    return contractID;
   };
 
-export const addTickets = catchAsync(async (tourName) =>{
-  const tickets = await fetchNFTs(tourName);
+export const addContract = catchAsync(async (propertyAddress) =>{
+  const contract = await fetchNFTs(propertyAddress);
   try {
     const res = await axios({
       method: "POST",
-      url: "http://localhost:3000/api/v1/tours/addTickets",
+      url: "http://localhost:3000/api/v1/properties/addContract",
       data: {
-        name: tourName,
-        ticket: tickets
+        address: propertyAddress,
+        nftContract: contract
       }
     });
 
     if (res.data.status === "success") {
-      showAlert("success", "Ticket added successfully!");
+      showAlert("success", "Contract added successfully!");
     }
   } catch (err) {
     showAlert("error", err);
@@ -47,7 +46,7 @@ export const addTickets = catchAsync(async (tourName) =>{
 });
 
 // eslint-disable-next-line import/prefer-default-export
-export const createTokenNFT = catchAsync(async (formInputPrice, tourName) => {
+export const createTokenNFT = catchAsync(async (formInputPrice, propertyAddress) => {
   // using hardcoded value for now..
   console.log("Run_ 0..");
   const web3modal = new Web3Modal();
@@ -62,9 +61,9 @@ export const createTokenNFT = catchAsync(async (formInputPrice, tourName) => {
   const url =
     "https://gateway.pinata.cloud/ipfs/QmXA7GCd4pWNKXkQ5FGrMMnzMHsRAAzex2WXtWFVdu32ji";
 
-  const transaction = await contract.createTokenNFT(url, price, tourName);
+  const transaction = await contract.createTokenNFT(url, price, propertyAddress);
   await transaction.wait();
-  await addTickets(tourName);
+  await addContract(propertyAddress);
 });
 
 export const connectWalletToken = async (account) => {

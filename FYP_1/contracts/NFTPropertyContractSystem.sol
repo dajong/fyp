@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 import "hardhat/console.sol";
 
-contract NFTTicketSystem is ERC721URIStorage {
+contract NFTPropertyContractSystem is ERC721URIStorage {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIds;
@@ -22,7 +22,7 @@ contract NFTTicketSystem is ERC721URIStorage {
       uint256 tokenId;
       address payable seller;
       address payable owner;
-      string tourName;
+      string propertyAddress;
       uint256 price;
       bool sold;
     }
@@ -31,7 +31,7 @@ contract NFTTicketSystem is ERC721URIStorage {
       uint256 indexed tokenId,
       address seller,
       address owner,
-      string tourName,
+      string propertyAddress,
       uint256 price,
       bool sold
     );
@@ -56,20 +56,20 @@ contract NFTTicketSystem is ERC721URIStorage {
     }
 
     /* Mints a token and lists it in the marketplace */
-    function createTokenNFT(string memory tokenURI, uint256 price, string memory tourName) public payable returns (uint) {
+    function createTokenNFT(string memory tokenURI, uint256 price, string memory propertyAddress) public payable returns (uint) {
       _tokenIds.increment();
       uint256 newTokenId = _tokenIds.current();
 
       _mint(msg.sender, newTokenId);
       _setTokenURI(newTokenId, tokenURI);
-      createMarketItem(newTokenId, price, tourName);
+      createMarketItem(newTokenId, price, propertyAddress);
       return newTokenId;
     }
 
     function createMarketItem(
       uint256 tokenId,
       uint256 price,
-      string memory tourName
+      string memory propertyAddress
     ) private {
       require(price > 0, "Price must be at least 1 wei");
 
@@ -77,7 +77,7 @@ contract NFTTicketSystem is ERC721URIStorage {
         tokenId,
         payable(msg.sender),
         payable(address(this)),
-        tourName,
+        propertyAddress,
         price,
         false
       );
@@ -87,7 +87,7 @@ contract NFTTicketSystem is ERC721URIStorage {
         tokenId,
         msg.sender,
         address(this),
-        tourName,
+        propertyAddress,
         price,
         false
       );
@@ -151,20 +151,20 @@ contract NFTTicketSystem is ERC721URIStorage {
       return items;
     }
 
-    function fetchTourNFTs(string memory tourName) public view returns (MarketItem[] memory) {
+    function fetchPropertyAddressNFTs(string memory propertyAddress) public view returns (MarketItem[] memory) {
       uint totalItemCount = _tokenIds.current();
       uint itemCount = 0;
       uint currentIndex = 0;
 
       for (uint i = 0; i < totalItemCount; i++) {
-        if (compareStrings(idToMarketItem[i + 1].tourName, tourName)) {
+        if (compareStrings(idToMarketItem[i + 1].propertyAddress, propertyAddress)) {
           itemCount += 1;
         }
       }
 
       MarketItem[] memory items = new MarketItem[](itemCount);
       for (uint i = 0; i < totalItemCount; i++) {
-        if (compareStrings(idToMarketItem[i + 1].tourName, tourName)) {
+        if (compareStrings(idToMarketItem[i + 1].propertyAddress, propertyAddress)) {
           uint currentId = i + 1;
           MarketItem storage currentItem = idToMarketItem[currentId];
           items[currentIndex] = currentItem;

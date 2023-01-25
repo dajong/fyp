@@ -11,13 +11,13 @@ exports.aliasTopTours = (req, res, next) => {
 };
 
 exports.addTickets = catchAsync(async (req, res, next) => {
-  const { name, ticket } = req.body;
+  const { address, nftContract } = req.body;
 
   // Filter
-  const filter = { name: name };
+  const filter = { address: address };
 
   // Tickets
-  const update = { ticket: ticket };
+  const update = { nftContract: nftContract };
 
   const tour = await Tour.findOneAndUpdate(filter, update, {
     new: true

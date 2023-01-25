@@ -6,6 +6,7 @@ import { register } from './registration';
 import { updateSettings, forgetPassword } from './updateSettings';
 // import { bookTour } from './stripe';
 import { createTour, getTour } from './tour';
+import { createProperty, getProperty, soldProperty } from './property';
 import { createTokenNFT, connectWalletToken, buyNft } from './web3ModalFactory';
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -16,7 +17,9 @@ const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
+const buyBtn = document.getElementById('buy-property');
 const createTourForm = document.querySelector(".form--createTour");
+const createPropertyForm = document.querySelector(".form--createProperty");
 const forgetPasswordForm = document.querySelector(".form--forgetPassword");
 
 
@@ -65,13 +68,50 @@ if (loginForm)
   });
 
   if (createTourForm)
-  createTourForm.addEventListener('submit', e => {
+    createTourForm.addEventListener('submit', e => {
+      e.preventDefault();
+      console.log("Creating tour..")
+      const name = "Test_name-test";
+      const price = "100";
+      createTour();
+      createTokenNFT(price, name);
+   });
+
+  if(createPropertyForm)
+    createPropertyForm.addEventListener('submit', e => {
     e.preventDefault();
-    console.log("Creating tour..")
-    const name = "Test_name-test";
-    const price = "100";
-    createTour();
-    createTokenNFT(price, name);
+    console.log("Creating property..")
+
+    const address = document.getElementById('address').value;
+    const city = document.getElementById('city').value;
+    const listingNum = document.getElementById('listingNum').value;
+    const propertyStyle = document.getElementById('propertyStyle').value;
+    const garageType = document.getElementById('garageType').value;
+    const garageSize = document.getElementById('garageSize').value;
+    const numBedroom = document.getElementById('numBedroom').value;
+    const numBathroom = document.getElementById('numBathroom').value;
+    const price = document.getElementById('price').value;
+    const imageCover = document.getElementById('imageCover').files[0];
+    
+    const description = document.getElementById('description').value;
+    const berRating = document.getElementById('berRating').value;
+    const squareFeet = document.getElementById('squareFeet').value;
+    const lotSize = document.getElementById('lotSize').value;
+
+    createProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, price, imageCover, description);
+    // createTokenNFT(price, address);
+
+    document.getElementById('address').value = "";
+    document.getElementById('listingNum').value = "";
+    document.getElementById('garageSize').value = "";
+    document.getElementById('numBedroom').value = "";
+    document.getElementById('numBathroom').value = "";
+    document.getElementById('price').value = "";
+    document.getElementById('imageCover').value = "";
+    document.getElementById('squareFeet').value = "";
+    document.getElementById('description').value = "";
+    document.getElementById('lotSize').value = "";
+
   });
 
 if (registrationForm)
@@ -125,6 +165,17 @@ if (userPasswordForm)
     const curTour = await getTour(tourId);
     console.log(curTour);
     await buyNft(BigInt(curTour.data.ticket[0]), curTour.data.price);
+  });
+
+  if(buyBtn)
+  buyBtn.addEventListener('click',async e => {
+    console.log("button_click")
+    e.target.textContent = 'Processing...';
+    const { propertyId } = e.target.dataset;
+    const curProperty = await getProperty(propertyId);
+    console.log(curProperty);
+    await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.price);
+    await soldProperty(curProperty.data.address);
   });
 
   if(walletButton)

@@ -1,14 +1,17 @@
 const express = require("express");
 const viewsController = require("../controllers/viewsController");
 const authController = require("../controllers/authController");
-const bookingController = require("../controllers/bookingController");
 
 const router = express.Router();
 
 router.get("/", authController.isLoggedIn, viewsController.getHomePage);
 router.get("/forgetPassword", viewsController.forgetPassword);
 router.get("/overview", authController.isLoggedIn, viewsController.getOverview);
-router.get("/tour/:slug", authController.isLoggedIn, viewsController.getTour);
+router.get(
+  "/property/:slug",
+  authController.isLoggedIn,
+  viewsController.getProperty
+);
 router.get("/login", authController.isLoggedIn, viewsController.getLoginForm);
 router.get(
   "/signup",
@@ -16,24 +19,15 @@ router.get(
   viewsController.getRegistrationPage
 );
 router.get("/me", authController.protect, viewsController.getAccount);
-
-router.get(
-  "/my-tours",
-  bookingController.createBookingCheckout,
-  authController.protect,
-  viewsController.getMyTours
-);
-
 router.post(
   "/submit-user-data",
   authController.protect,
   viewsController.updateUserData
 );
-
 router.get(
-  "/createTour",
-  authController.isLoggedIn,
-  viewsController.getCreateTourPage
+  "/createProperty",
+  authController.protect,
+  viewsController.getCreatePropertyPage
 );
 
 module.exports = router;

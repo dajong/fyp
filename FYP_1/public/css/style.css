@@ -337,18 +337,6 @@
   .section-header {
     position: relative;
     height: 38vw;
-    clip-path: polygon(
-      0 0,
-      100% 0,
-      100% calc(100% - var(--section-rotate)),
-      0 100%
-    );
-    -webkit-clip-path: polygon(
-      0 0,
-      100% 0,
-      100% calc(100% - var(--section-rotate)),
-      0 100%
-    );
   }
   
   .header__hero {
@@ -457,6 +445,7 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    height: fit-content;
     -webkit-box-pack: center;
     -ms-flex-pack: center;
     justify-content: center;
@@ -676,10 +665,7 @@
   }
   
   .section-cta {
-    margin-top: calc(0px - var(--section-rotate));
-    padding: 3rem;
-    padding-bottom: 11rem;
-    padding-top: calc(15rem + var(--section-rotate));
+    padding: 3rem;  
     background-color: #f7f7f7;
   }
   
@@ -1101,8 +1087,6 @@
   }
   .card__picture {
     position: relative;
-    -webkit-clip-path: polygon(0 0, 100% 0%, 100% 83%, 0% 98%);
-    clip-path: polygon(0 0, 100% 0%, 100% 83%, 0% 98%);
     height: 22rem;
   }
   .card__picture-overlay {

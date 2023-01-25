@@ -18,14 +18,17 @@ async function main() {
   //   `Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
   // );
 
-  const NFTTicketSystem = await hre.ethers.getContractFactory(
-    "NFTTicketSystem"
+  const NFTPropertyContractSystem = await hre.ethers.getContractFactory(
+    "NFTPropertyContractSystem"
   );
-  const nftTicketSystem = await NFTTicketSystem.deploy();
+  const nftPropertyContractSystem = await NFTPropertyContractSystem.deploy();
 
-  await nftTicketSystem.deployed();
+  await nftPropertyContractSystem.deployed();
 
-  console.log("NFTTicketSystem deployed to: ", nftTicketSystem.address);
+  console.log(
+    "NFTPropertyContractSystem deployed to: ",
+    nftPropertyContractSystem.address
+  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere

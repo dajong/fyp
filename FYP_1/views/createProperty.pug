@@ -1,0 +1,74 @@
+extends base
+
+block content
+  main
+    div(class="w-75 mx-auto my-5")
+      h2(class="my-3") Create Property
+      form(class="form--createProperty")
+        div.mb-3
+          label.form-label(for='address') Address
+          input#address.form-control(type='text', required)
+
+        div.mb-3
+          label.form-label(for='city') City
+          select(class="form-select", arial-label="city", name="city" id="city")
+            each city in cities
+                option(value=`${city}`)= `${city}`
+
+        div.mb-3
+          label.form-label(for='listingNum') Listing Number
+          input#listingNum.form-control(type='number', required)
+
+        div.mb-3e
+          label.form-label(for='proprtyStyle') Property Style
+          select(class="form-select", arial-label="propertyType", name="propertyType" id="propertyType")
+            each pType in propertyTypes
+                option(value=`${pType}`)= `${pType}`
+
+        div.mb-3
+          label.form-label(for='garageType') Garage Type
+          select(class="form-select", arial-label="garageType", name="garageType" id="garageType")
+            each gType in garageTypes
+                option(value=`${gType}`)= `${gType}`
+
+        div.mb-3
+          label.form-label(for='garageSize') Garage Size
+          input#garageSize.form-control(type='number', required)
+
+        div.mb-3
+          label.form-label(for='berRating') Ber Rating
+          select(class="form-select", arial-label="berRating", name="berRating" id="berRating")
+            each rating in berRating
+                option(value=`${rating}`)= `${rating}`
+
+        div.mb-3
+          label.form-label(for='squareFeet') Square Feet
+          input#squareFeet.form-control(type='number', required)
+        
+        div.mb-3
+          label.form-label(for='lotSize') Lot Size
+          input#lotSize.form-control(type='text', required)
+          
+        div.mb-3
+          label.form-label(for='numBedroom') Number of Bedrooms
+          input#numBedroom.form-control(type='number', required)
+
+        div.mb-3
+          label.form-label(for='numBathroom') Number of Bathrooms
+          input#numBathroom.form-control(type='number', required)
+
+        div.mb-3
+          label.form-label(for='price') Price
+          input#price.form-control(type='number', required)
+
+        div.mb-3
+          label.form-label(for='price') Description
+          textarea#description.form-control(rows="3", required)  
+
+        div.mb-3
+          label.form-label(for='price') Image Cover
+          .form__group.form__photo-upload
+              input.form__upload(type='file', accept='image/*', id='imageCover', name='imageCover' required)
+              label(for='imageCover') Upload Property Image Cover
+
+        button(type="submit" class="btn btn-success") Create 

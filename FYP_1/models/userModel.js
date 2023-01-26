@@ -48,7 +48,8 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
     select: false
-  }
+  },
+  currentBiddingProperty: [String]
 });
 
 userSchema.pre("save", async function(next) {

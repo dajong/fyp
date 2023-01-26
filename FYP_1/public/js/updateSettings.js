@@ -41,3 +41,43 @@ export const forgetPassword = async (email) => {
     showAlert('error', err.response.data.message);
   }
 };
+
+export const userPlaceBid = async (address, user) => {
+  try {
+    const res = await axios({
+      method: 'POST',
+      url: 'http://localhost:3000/api/v1/users/placeBid',
+      data: {
+        address: address,
+        userId: user
+      }
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'User place bid successfully!');
+    }
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+  }
+};
+
+export const removeBidding = async (address) => {
+  try {
+    const res = await axios({
+      method: 'POST',
+      url: 'http://localhost:3000/api/v1/users/removeBidding',
+      data: {
+        address: address
+      }
+    });
+
+    if (res.data.status === 'success') {
+      console.log("Bidding Removed!");
+      location.reload();
+    }
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+  }
+};
+
+

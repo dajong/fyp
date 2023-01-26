@@ -96,6 +96,32 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.placeBid = catchAsync(async (req, res, next) => {
+  const { address } = req.body;
+
+  await User.findByIdAndUpdate(req.user.id, {
+    $push: { currentBiddingProperty: address }
+  });
+
+  res.status(204).json({
+    status: "success",
+    data: null
+  });
+});
+
+exports.removeBidding = catchAsync(async (req, res, next) => {
+  const { address } = req.body;
+  console.log(`removing bidding for user ${req.user.id}`);
+  console.log(address);
+  await User.findByIdAndUpdate(req.user.id, {
+    $pull: { currentBiddingProperty: address }
+  });
+  res.status(200).json({
+    status: "success",
+    data: null
+  });
+});
+
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: "error",

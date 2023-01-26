@@ -6,11 +6,10 @@ block content
         form(method="get", action="/overview")
             div(class="row")
                 div(class="col-3")
-                    select(class="form-select", arial-label="difficulty", name="difficulty")
-                        each difficulty in difficulties
-                            option(value=`${difficulty}`)= `${difficulty}`
-                div(class="col-3") 
-                    input(type="text", class="form-control", placeholder="Duration", name="duration")
+                    select(class="form-select", arial-label="city", name="city")
+                        option(value="" selected) City
+                        each city in cities
+                            option(value=`${city}`)= `${city}`
                 div(class="col-3") 
                     input(type="text", class="form-control", placeholder="Min Price", name="minPrice")
                 div(class="col-3") 

@@ -13,23 +13,23 @@ block content
       nav.user-view__menu
         ul.side-nav
           +navItem('#', 'Settings', 'settings', true)
+          if (role === 'user')
+            +navItem('/bidding', 'My bidding', 'star')
         //-   +navItem('/my-tours', 'My bookings', 'briefcase')
-        //-   +navItem('#', 'My reviews', 'star')
+          
         //-   +navItem('#', 'Billing', 'credit-card')
 
         //- - if (user.role === 'admin')
         //-   .admin-nav
         //-     h5.admin-nav__heading Admin
         //-     ul.side-nav
-        //-       +navItem('#', 'Manage tours', 'map')
-        //-       +navItem('#', 'Manage users', 'users')
-        //-       +navItem('#', 'Manage reviews', 'star')
-        //-       +navItem('#', 'Manage bookings', 'briefcase')
+        //-       +navItem('#', 'Manage properties', 'star')
+        //-       +navItem('#', 'Manage users', 'star')
 
       .user-view__content
         .user-view__form-container
           h2.heading-secondary.ma-bt-md Your account settings
-          
+
           //- WITHOUT API
           //- form.form.form-user-data(action='/submit-user-data' method='POST' enctype='multipart/form-data')
           
@@ -47,7 +47,7 @@ block content
               label(for='photo') Choose new photo
               
             .form__group.right
-              button.btn.btn--small.btn--green Save settings
+              button.btn-small.btn-xgreen Save settings
               
         .line &nbsp;
         
@@ -64,4 +64,4 @@ block content
               label.form__label(for='password-confirm') Confirm password
               input#password-confirm.form__input(type='password', placeholder='••••••••', required, minlength='8')
             .form__group.right
-              button.btn.btn--small.btn--green.btn--save-password Save password
+              button.btn-small.btn-xgreen.btn--save-password Save password

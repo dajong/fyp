@@ -5,6 +5,11 @@ const authController = require("../controllers/authController");
 const router = express.Router();
 
 router.get("/", authController.isLoggedIn, viewsController.getHomePage);
+router.get(
+  "/contactAdmin",
+  // authController.isLoggedIn,
+  viewsController.contactAdmin
+);
 router.get("/forgetPassword", viewsController.forgetPassword);
 router.get("/overview", authController.isLoggedIn, viewsController.getOverview);
 router.get(
@@ -20,6 +25,7 @@ router.get(
 );
 router.get("/me", authController.protect, viewsController.getAccount);
 router.get("/bidding", authController.protect, viewsController.getBiddings);
+router.get("/queries", authController.protect, viewsController.getQueries);
 
 router.post(
   "/submit-user-data",

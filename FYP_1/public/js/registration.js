@@ -19,10 +19,11 @@ export const register = async (email, name, role, password, passwordConfirm) => 
     if (res.data.status === 'success') {
       showAlert('success', 'Registration successfully!');
       window.setTimeout(() => {
-        location.assign('/login');
+        location.assign('/');
       }, 1500);
     }
   } catch (err) {
     showAlert('error', err.response.data.message);
+    console.log(err);
   }
 };

@@ -7,17 +7,17 @@ block content
       form(class="form--registration")
         div.mb-3
           label.form-label(for='email') Email address
-          input#email.form-control(type='email', placeholder='you@example.com', required)
+          input#email.form-control(type='email', placeholder='you@example.com', value="danieljong5201@gmail.com", required)
 
         div.mb-3
           label.form-label(for='name') Full Name
-          input#name.form-control(type='text', placeholder='John Smith', required)
+          input#name.form-control(type='text', placeholder='John Smith', value="Daniel", required)
           
         div.mb-3
           label.form-label(for='password') Password
-          input#password.form-control(type='password', placeholder='••••••••', required, minlength='8', maxlength='20')
+          input#password.form-control(type='password', placeholder='••••••••', required, value="pass1234", minlength='8', maxlength='20')
 
         div.mb-3
           label.form-label(for='passwordConfirm') Password Confirmation
-          input#passwordConfirm.form-control(type='password', placeholder='••••••••', required, minlength='8', maxlength='20')
+          input#passwordConfirm.form-control(type='password', placeholder='••••••••', required, value="pass1234", minlength='8', maxlength='20')
         button(type="submit" class="btn btn-primary") Register

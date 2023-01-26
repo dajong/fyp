@@ -62,15 +62,14 @@ block content
           input#price.form-control(type='number', required)
 
         div.mb-3
-          label.form-label(for='price') Start Bidding Price
+          label.form-label(for='biddingPrice') Start Bidding Price
           input#biddingPrice.form-control(type='number', required)
 
         div.mb-3
-          label.form-label(for='price') Description
+          label.form-label(for='description') Description
           textarea#description.form-control(rows="3", required)  
 
         div.mb-3
-          label.form-label(for='price') Image Cover
           .form__group.form__photo-upload
               input.form__upload(type='file', accept='image/*', id='imageCover', name='imageCover' required)
               label(for='imageCover') Upload Property Image Cover

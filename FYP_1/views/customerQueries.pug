@@ -1,0 +1,36 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+  li(class=`${active ? 'side-nav--active' : ''}`)
+    a(href=`${link}`)
+      svg
+        use(xlink:href=`img/icons.svg#icon-${icon}`)
+      | #{text}
+
+block content
+  main.main
+    .user-view
+      nav.user-view__menu
+        ul.side-nav
+          +navItem('#', 'Settings', 'settings', true)
+          if (role === 'user')
+            +navItem('/bidding', 'My bidding', 'star')
+          else if (role === 'admin')
+            +navItem('/queries', 'Customer Queries', 'mail')
+
+      .user-view__content
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Active Customer Queries
+
+          table.table.table-responsive
+            thead
+                tr
+                    th(scope='col') Subject
+                    th(scope='col') View
+            tbody
+                each query in queries
+                    tr
+                        th(scope='row')
+                            =`${query.querySubject}`
+                        td
+                            a.btn-xsmall.btn-xgreen(href=`#`) View

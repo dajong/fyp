@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const Property = require("../models/propertyModel");
+const Query = require("../models/queryModel");
 const AppError = require("../utils/appError");
 
 exports.getOverview = catchAsync(async (req, res, next) => {
@@ -137,6 +138,12 @@ exports.getLoginForm = (req, res) => {
   });
 };
 
+exports.contactAdmin = (req, res) => {
+  res.status(200).render("contact", {
+    title: "Contact Us"
+  });
+};
+
 exports.forgetPassword = (req, res) => {
   res.status(200).render("forgotPassword", {
     title: "Forget Password"
@@ -160,6 +167,16 @@ exports.getBiddings = catchAsync(async (req, res, next) => {
   res.status(200).render("userBiddings", {
     title: "Current Biddings",
     properties
+  });
+});
+
+exports.getQueries = catchAsync(async (req, res, next) => {
+  const queries = await Query.find()
+    .where("replied")
+    .equals(false);
+  res.status(200).render("customerQueries", {
+    title: "All Active Customer Queries",
+    queries
   });
 });
 

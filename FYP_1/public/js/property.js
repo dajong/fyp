@@ -25,7 +25,7 @@ export const createProperty = async (address, city, listingNum, propertyStyle, g
           imageCover,
           propertySold: false,
           propertyViews: 0,
-          biddingPrice: price
+          biddingPrice
         }
       });
   

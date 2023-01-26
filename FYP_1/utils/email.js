@@ -1,62 +1,24 @@
-// const nodemailer = require("nodemailer");
-
-// const sendEmail = async options => {
-//   // 1) Create a transporter
-//   const transporter = nodemailer.createTransport({
-//     service: "Gmail",
-//     host: process.env.EMAIL_HOST,
-//     port: process.env.EMAIL_PORT,
-//     auth: {
-//       user: process.env.EMAIL_USERNAME,
-//       pass: process.env.EMAIL_PASSWORD
-//     }
-//   });
-
-//   // 2) Define the email options
-//   const mailOptions = {
-//     from: "ihlTest1234@gmail.com",
-//     to: options.email,
-//     subject: options.subject,
-//     text: options.message
-//     // html:
-//   };
-
-//   // 3) Actually send the email
-//   await transporter.sendMail(mailOptions);
-// };
-
-// module.exports = sendEmail;
-
 const nodemailer = require("nodemailer");
 const pug = require("pug");
 const htmlToText = require("html-to-text");
-const nodemailerSendgrid = require("nodemailer-sendgrid");
 
 module.exports = class Email {
-  constructor(user, url) {
-    this.to = user.email;
-    this.firstName = user.name.split(" ")[0];
-    this.url = url;
+  constructor(name, email) {
+    this.to = email;
+    this.firstName = name.split(" ")[0];
     this.from = `Daniel Jong <${process.env.EMAIL_FROM}>`;
   }
 
   newTransport() {
-    if (process.env.NODE_ENV === "production") {
-      // Sendgrid
-      return nodemailer.createTransport({
-        service: "SendGrid",
-        auth: {
-          user: process.env.SENDGRID_USERNAME,
-          pass: process.env.SENDGRID_PASSWORD
-        }
-      });
-    }
-
-    return nodemailer.createTransport(
-      nodemailerSendgrid({
-        apiKey: process.env.SENDGRID_PASSWORD
-      })
-    );
+    return nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD
+      },
+      secure: true
+    });
   }
 
   // Send the actual email
@@ -82,7 +44,7 @@ module.exports = class Email {
   }
 
   async sendWelcome() {
-    await this.send("welcome", "Welcome to the Natours Family!");
+    await this.send("welcome", "Thanks for registration!");
   }
 
   async sendPasswordReset() {
@@ -90,5 +52,9 @@ module.exports = class Email {
       "passwordReset",
       "Your password reset token (valid for only 10 minutes)"
     );
+  }
+
+  async sendAutomatedQuery(subject) {
+    await this.send("automatedQuery", `RE: ${subject}`);
   }
 };

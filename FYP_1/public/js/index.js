@@ -1,13 +1,11 @@
 /* eslint-disable */
 import '@babel/polyfill';
-import { displayMap } from './mapbox';
 import { login, logout } from './login';
 import { register } from './registration';
 import { updateSettings, forgetPassword, userPlaceBid, removeBidding } from './updateSettings';
 import { createProperty, getProperty, soldProperty, placeBid } from './property';
 import { createTokenNFT, connectWalletToken, buyNft } from './web3ModalFactory';
 // DOM ELEMENTS
-const mapBox = document.getElementById('map');
 const walletButton = document.getElementById("btn--wallet");
 const loginForm = document.querySelector(".form--login");
 const registrationForm = document.querySelector(".form--registration");
@@ -17,7 +15,6 @@ const userPasswordForm = document.querySelector('.form-user-password');
 const checkoutBiddingBtn = document.getElementById('checkout-bidding-btn');
 const buyBtn = document.getElementById('buy-property');
 const removeBiddingBtn = document.getElementById('remove-bidding-btn');
-const createTourForm = document.querySelector(".form--createTour");
 const createPropertyForm = document.querySelector(".form--createProperty");
 const forgetPasswordForm = document.querySelector(".form--forgetPassword");
 const biddingForm = document.querySelector(".form--bidding");
@@ -46,11 +43,6 @@ const checkIfWalletIsConnect = async (e) => {
 };
 
 // DELEGATION
-if (mapBox) {
-  const locations = JSON.parse(mapBox.dataset.locations);
-  displayMap(locations);
-}
-
 if(forgetPasswordForm)
 forgetPasswordForm.addEventListener('submit', e => {
   e.preventDefault();
@@ -65,16 +57,6 @@ if (loginForm)
     const password = document.getElementById('password').value;
     login(email, password);
   });
-
-  if (createTourForm)
-    createTourForm.addEventListener('submit', e => {
-      e.preventDefault();
-      console.log("Creating tour..")
-      const name = "Test_name-test";
-      const price = "100";
-      createTour();
-      createTokenNFT(price, name);
-   });
 
   if(createPropertyForm)
     createPropertyForm.addEventListener('submit', e => {

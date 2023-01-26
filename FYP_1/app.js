@@ -13,9 +13,6 @@ const globalErrorHandler = require("./controllers/errorController");
 const userRouter = require("./routes/userRoutes");
 const propertyRouter = require("./routes/propertyRoutes");
 const viewRouter = require("./routes/viewRoutes");
-const tourRouter = require("./routes/tourRoutes");
-const reviewRouter = require("./routes/reviewRoutes");
-const bookingRouter = require("./routes/bookingRoutes");
 
 const app = express();
 app.use(cookieParser());
@@ -77,12 +74,9 @@ app.use((req, res, next) => {
 });
 
 // 3) ROUTES
-app.use("/api/v1/tours", tourRouter);
-app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/properties", propertyRouter);
 app.use("/", viewRouter);
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/bookings", bookingRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

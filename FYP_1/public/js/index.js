@@ -3,10 +3,8 @@ import '@babel/polyfill';
 import { displayMap } from './mapbox';
 import { login, logout } from './login';
 import { register } from './registration';
-import { updateSettings, forgetPassword } from './updateSettings';
-// import { bookTour } from './stripe';
-import { createTour, getTour } from './tour';
-import { createProperty, getProperty, soldProperty } from './property';
+import { updateSettings, forgetPassword, userPlaceBid, removeBidding } from './updateSettings';
+import { createProperty, getProperty, soldProperty, placeBid } from './property';
 import { createTokenNFT, connectWalletToken, buyNft } from './web3ModalFactory';
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -16,12 +14,13 @@ const registrationForm = document.querySelector(".form--registration");
 const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
-const bookBtn = document.getElementById('book-tour');
+const checkoutBiddingBtn = document.getElementById('checkout-bidding-btn');
 const buyBtn = document.getElementById('buy-property');
+const removeBiddingBtn = document.getElementById('remove-bidding-btn');
 const createTourForm = document.querySelector(".form--createTour");
 const createPropertyForm = document.querySelector(".form--createProperty");
 const forgetPasswordForm = document.querySelector(".form--forgetPassword");
-
+const biddingForm = document.querySelector(".form--bidding");
 
 const connectWallet = async (e) => {
   if (!window.ethereum) return alert('Please install MetaMask.');
@@ -92,13 +91,13 @@ if (loginForm)
     const numBathroom = document.getElementById('numBathroom').value;
     const price = document.getElementById('price').value;
     const imageCover = document.getElementById('imageCover').files[0];
-    
+    const biddingPrice = document.getElementById('biddingPrice').value;
     const description = document.getElementById('description').value;
     const berRating = document.getElementById('berRating').value;
     const squareFeet = document.getElementById('squareFeet').value;
     const lotSize = document.getElementById('lotSize').value;
 
-    createProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, price, imageCover, description);
+    createProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, price, imageCover, description, biddingPrice);
     // createTokenNFT(price, address);
 
     document.getElementById('address').value = "";
@@ -111,7 +110,7 @@ if (loginForm)
     document.getElementById('squareFeet').value = "";
     document.getElementById('description').value = "";
     document.getElementById('lotSize').value = "";
-
+    document.getElementById('biddingPrice').value = "";
   });
 
 if (registrationForm)
@@ -157,16 +156,6 @@ if (userPasswordForm)
     document.getElementById('password-confirm').value = '';
   });
 
-  if (bookBtn)
-  bookBtn.addEventListener('click',async e => {
-    console.log("button_click")
-    e.target.textContent = 'Processing...';
-    const { tourId } = e.target.dataset;
-    const curTour = await getTour(tourId);
-    console.log(curTour);
-    await buyNft(BigInt(curTour.data.ticket[0]), curTour.data.price);
-  });
-
   if(buyBtn)
   buyBtn.addEventListener('click',async e => {
     console.log("button_click")
@@ -177,6 +166,38 @@ if (userPasswordForm)
     await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.price);
     await soldProperty(curProperty.data.address);
   });
+
+  if(checkoutBiddingBtn)
+  checkoutBiddingBtn.addEventListener('click',async e => {
+    console.log("button_click")
+    e.target.textContent = 'Processing...';
+    const propertyId = e.target.value;
+    console.log(propertyId);
+    const curProperty = await getProperty(propertyId);
+    console.log(curProperty);
+    // await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice);
+    // await soldProperty(curProperty.data.address);
+  });
+
+  if(biddingForm)
+    biddingForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    console.log("Bidding form is running..")
+    const biddingPrice = document.getElementById('biddingAmount').value;
+    const curPropertyAddress = document.getElementById('curPropertyAddress').value;
+    const curUser = document.getElementById('curUser').value;
+    await placeBid(curPropertyAddress, biddingPrice, curUser);
+    await userPlaceBid(curPropertyAddress, curUser);
+    document.getElementById('biddingAmount').textContent = '';
+  });
+
+  if(removeBiddingBtn)
+    removeBiddingBtn.addEventListener('click', async e => {
+      console.log("Button clicked!");
+      const address = e.target.value;
+      console.log(address);
+      await removeBidding(address);
+  });  
 
   if(walletButton)
   walletButton.addEventListener('click', e => {

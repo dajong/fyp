@@ -1,0 +1,52 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+  li(class=`${active ? 'side-nav--active' : ''}`)
+    a(href=`${link}`)
+      svg
+        use(xlink:href=`img/icons.svg#icon-${icon}`)
+      | #{text}
+
+block content
+  main.main
+    .user-view
+      nav.user-view__menu
+        ul.side-nav
+          +navItem('/me', 'Settings', 'settings')
+          +navItem('#', 'My bidding', 'star', true)
+
+      .user-view__content
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Your current biddings
+
+          table.table.table-responsive
+            thead
+                tr
+                    th(scope='col') Address
+                    th(scope='col') Status
+                    th(scope='col') View
+                    th(scope='col') Remove / Pay
+            tbody
+                each property in properties
+                    tr
+                        th(scope='row')
+                            //- img(src=`img/properties/thumbs/${property.listingNum}.jpg`, alt=`${property.photo}`)
+                            =`${property.address}, ${property.city}`
+
+                        if(property.currentHighestBidder === user.id && property.createdAt < Date.now())
+                            td You won the bid!
+                        
+                        else if (property.currentHighestBidder === user.id)
+                            td Higest bidder
+
+                        else 
+                            td Not Highest Bidder
+                        td
+                            a.btn-xsmall.btn-xgreen(href=`property/${property.slug}`) View Property
+                        if(property.currentHighestBidder !== user.id)
+                            td
+                                button.btn-xsmall.btn-red#remove-bidding-btn(value=`${property.address}`) Stop Watching
+
+                        if(property.currentHighestBidder === user.id && property.createdAt < Date.now())
+                            td
+                                button.btn-xsmall.btn-xgreen#checkout-bidding-btn(value=`${property._id}`) Checkout

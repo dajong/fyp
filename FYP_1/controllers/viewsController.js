@@ -2,7 +2,6 @@ const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const Property = require("../models/propertyModel");
 const AppError = require("../utils/appError");
-const Booking = require("../models/bookingModel");
 
 exports.getOverview = catchAsync(async (req, res, next) => {
   // const { city, numBedrooms, numBathrooms, minPrice, maxPrice } = req.query;
@@ -149,6 +148,20 @@ exports.getAccount = (req, res) => {
     title: "Your account"
   });
 };
+
+exports.getBiddings = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  console.log(user);
+  const properties = await Property.aggregate([
+    {
+      $match: { address: { $in: user.currentBiddingProperty } }
+    }
+  ]);
+  res.status(200).render("userBiddings", {
+    title: "Current Biddings",
+    properties
+  });
+});
 
 exports.updateUserData = catchAsync(async (req, res, next) => {
   const updatedUser = await User.findByIdAndUpdate(

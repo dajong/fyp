@@ -9,12 +9,10 @@ mixin overviewBox(label, text, icon)
 
 block content
   section
-    #carouselExampleControls.carousel.slide.w-75.text-center.center.mx-auto.h-50(data-bs-ride='carousel')
-      .carousel-inner
+    #carouselExampleControls.carousel.slide.w-75.text-center.center.mx-auto.vh-50(data-bs-ride='carousel')
+      .carousel-inner.vh-50
         .carousel-item.active
-          img.d-block.w-100.h-50(src=`/img/properties/large/${property.listingNum}/${property.imageCover}`, alt=`${property.imageCover}`)
-        //- .carousel-item
-        //-   img.d-block.w-100(src='...', alt='...')
+          img.d-block.w-100.carousel-fill(src=`/img/properties/large/${property.listingNum}/${property.imageCover}`, alt=`${property.imageCover}`)
         //- .carousel-item
         //-   img.d-block.w-100(src='...', alt='...')
       button.carousel-control-prev(type='button', data-bs-target='#carouselExampleControls', data-bs-slide='prev')
@@ -41,9 +39,9 @@ block content
     
           - const date = property.createdAt
           // +overviewBox('Date added', String(date), 'calendar')
-          +overviewBox('Price', `${property.price} ETH`, 'trending-up')
+          +overviewBox('Price', `${property.price} ETH`, 'star')
           +overviewBox('Property Style', `${property.propertyStyle}`, 'star')
-          +overviewBox('Number of Bedrooms', `${property.numBedroom} bedrooms`, 'user')
+          +overviewBox('Number of Bedrooms', `${property.numBedroom} bedrooms`, 'star')
           +overviewBox('Number of Bathrooms', `${property.numBathroom} bathrooms`, 'star')
           +overviewBox('Listing Number', `${property.listingNum}`, 'star')
           +overviewBox('Garage Type', `${property.garageType}`, 'star')
@@ -59,20 +57,36 @@ block content
       each p in parapraphs
         p.description__text= p
 
-  h3 Map
+  h2.heading-secondary.ma-bt-lg.text-center Map
   br
   .w-75.mx-auto.text-center
     iframe.mb-5(src=`https://www.google.com/maps?q='${property.address},${property.city}'&output=embed`, width='800', height='600', style='border:0;', allowfullscreen='', loading='lazy', referrerpolicy='no-referrer-when-downgrade')
 
-  section.section-cta
-    .cta
-      .cta__img.cta__img--logo
-        img(src='/img/logo-white.png', alt='Napropertys logo')
-      .cta__content
-        h2.heading-secondary What are you waiting for?
-        p.cta__text= `Make this dream house yours!`
-        
-        if user
-          a.btn.btn-success.span-all-rows#buy-property(data-property-id=`${property.id}`) Buy
+  if (user && role==="user")
+    div(class="w-75 mx-auto my-5")  
+        h2(class="my-3 heading-secondary ma-bt-lg")=`Current Bidding: ${property.biddingPrice} ETH`
+        if user.id !== property.currentHighestBidder
+          form(class="form--bidding")
+            div.mb-3  
+              label.form-label(for='biddingAmount') Place your bid now!
+              input#biddingAmount.form-control(type='Number', placeholder=`${property.biddingPrice + 1}`, min=property.biddingPrice + 1, required)
+            input#curPropertyAddress.form-control(type='hidden', value=`${property.address}`)
+            input#curUser.form-control(type='hidden', value=`${user.id}`)
+            div
+              button(type="submit" class="btn btn-success") Place Bid
         else
-          a.btn.btn-success.span-all-rows(href='/login') Log in to buy
+          p You are the highest bidder now!
+    
+  if(role==="user")
+    section.section-cta
+      .cta
+        .cta__img.cta__img--logo
+          img(src='/img/logo-white.png', alt='Napropertys logo')
+        .cta__content
+          h2.heading-secondary What are you waiting for?
+          p.cta__text= `Make this dream house yours!`
+          
+          if user
+            a.btn-small.span-all-rows#buy-property(data-property-id=`${property.id}`) Buy
+          else
+            a.btn.btn-success.span-all-rows(href='/login') Log in to buy

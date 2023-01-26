@@ -117,9 +117,15 @@ const propertySchema = new mongoose.Schema(
       default: Date.now(),
       select: false
     },
+    biddingEndDate: {
+      type: Date,
+      default: Date.now() + 12096e5
+    },
     nftContract: String,
     propertySold: Boolean,
-    propertyViews: Number
+    propertyViews: Number,
+    biddingPrice: Number,
+    currentHighestBidder: String
   },
   {
     toJSON: { virtuals: true },

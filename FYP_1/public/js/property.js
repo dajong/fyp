@@ -3,7 +3,7 @@ import axios from 'axios';
 import catchAsync from "../../utils/catchAsync";
 import { showAlert } from './alerts';
 
-export const createProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, price, imageCover, description) => {
+export const createProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, price, imageCover, description, biddingPrice) => {
     try {
       const res = await axios({
         method: 'POST',
@@ -24,7 +24,8 @@ export const createProperty = async (address, city, listingNum, propertyStyle, g
           description,
           imageCover,
           propertySold: false,
-          propertyViews: 0
+          propertyViews: 0,
+          biddingPrice: price
         }
       });
   
@@ -67,6 +68,27 @@ export const soldProperty = catchAsync(async (propertyAddress) =>{
       window.setTimeout(() => {
         location.assign('/');
       }, 1500);
+    }
+  } catch (err) {
+    showAlert("error", err);
+  }
+});
+
+export const placeBid = catchAsync(async (propertyAddress, newBidPrice, curBidder) =>{
+  try {
+    const res = await axios({
+      method: "POST",
+      url: "http://localhost:3000/api/v1/properties/placeBid",
+      data: {
+        address: propertyAddress,
+        biddingPrice: newBidPrice,
+        bidder: curBidder
+      }
+    });
+
+    if (res.data.status === "success") {
+      location.reload();
+      showAlert("success", "New bid is placed");
     }
   } catch (err) {
     showAlert("error", err);

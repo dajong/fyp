@@ -14,7 +14,12 @@ router
   );
 
 router.route("/addContract").post(propertyController.addContract);
-router.route("/soldProperty").post(propertyController.soldProperty);
+router
+  .route("/soldProperty")
+  .post(authController.protect, propertyController.soldProperty);
+router
+  .route("/placeBid")
+  .post(authController.protect, propertyController.placeBid);
 
 router
   .route("/:id")

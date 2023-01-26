@@ -55,6 +55,30 @@ exports.soldProperty = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.placeBid = catchAsync(async (req, res, next) => {
+  const { address, biddingPrice, bidder } = req.body;
+
+  // Filter
+  const filter = { address: address };
+
+  // Tickets
+  const update = {
+    biddingPrice: biddingPrice,
+    currentHighestBidder: bidder
+  };
+
+  const property = await Property.findOneAndUpdate(filter, update, {
+    new: true
+  });
+  console.log(property);
+  res.status(200).json({
+    status: "success",
+    data: {
+      property
+    }
+  });
+});
+
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {

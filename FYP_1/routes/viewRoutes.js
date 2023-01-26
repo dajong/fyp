@@ -19,6 +19,8 @@ router.get(
   viewsController.getRegistrationPage
 );
 router.get("/me", authController.protect, viewsController.getAccount);
+router.get("/bidding", authController.protect, viewsController.getBiddings);
+
 router.post(
   "/submit-user-data",
   authController.protect,

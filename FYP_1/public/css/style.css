@@ -264,6 +264,44 @@
   .btn-small:hover {
     background-color: #7dd56f;
   }
+
+  .btn--small {
+    padding: 1.25rem 3rem !important;
+    font-size: 1.4rem !important;
+  }
+  
+  .btn-xsmall,
+  .btn-xsmall:link,
+  .btn-xsmall:visited {
+    color: #fff;
+    font-size: 1rem;
+    padding: .5rem;
+    border-radius: 1rem;
+    text-transform: uppercase;
+    position: relative;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 400;
+    border: none;
+  }
+  
+  .btn-xgreen {
+    background-color: #55c57a;
+  }
+
+  .btn-xgreen:hover{
+    background-color: #7dd56f;
+  }
+
+  .btn-red{
+    background-color: red;
+  }
+
+  .btn-red:hover {
+    background-color: rgba(228, 92, 92, 0.8);
+  }
   
   .btn-text:link,
   .btn-text:visited {
@@ -314,6 +352,22 @@
     -ms-flex-align: center;
     align-items: center;
   }
+
+  .carousel-fill {
+    height: -o-calc(100vh - 165px) !important;
+    height: -webkit-calc(100vh - 165px) !important;
+    height: -moz-calc(100vh - 165px) !important;
+    height: calc(100vh - 165px) !important;
+    width: auto !important;
+    overflow: hidden;
+    display: inline-block;
+    text-align: center;
+}
+
+.carousel-item {
+    text-align: center !important;
+}
+
   @media only screen and (max-width: 62.5em) {
     .header {
       -webkit-box-orient: vertical;

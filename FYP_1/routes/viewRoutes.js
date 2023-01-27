@@ -26,6 +26,11 @@ router.get(
 router.get("/me", authController.protect, viewsController.getAccount);
 router.get("/bidding", authController.protect, viewsController.getBiddings);
 router.get("/queries", authController.protect, viewsController.getQueries);
+router.get(
+  "/replyCustomerQuery/:queryId",
+  authController.protect,
+  viewsController.getQuery
+);
 
 router.post(
   "/submit-user-data",

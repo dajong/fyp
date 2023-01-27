@@ -5,7 +5,7 @@ import { register } from './registration';
 import { updateSettings, forgetPassword, userPlaceBid, removeBidding } from './updateSettings';
 import { createProperty, getProperty, soldProperty, placeBid } from './property';
 import { createTokenNFT, connectWalletToken, buyNft } from './web3ModalFactory';
-import { sendQuery } from './query';
+import { sendQuery,replyQuery } from './query';
 // DOM ELEMENTS
 const walletButton = document.getElementById("btn--wallet");
 const loginForm = document.querySelector(".form--login");
@@ -20,6 +20,7 @@ const createPropertyForm = document.querySelector(".form--createProperty");
 const forgetPasswordForm = document.querySelector(".form--forgetPassword");
 const biddingForm = document.querySelector(".form--bidding");
 const contactAdminForm = document.querySelector(".form--contactAdmin");
+const replyQueryForm = document.querySelector(".form--replyQuery");
 
 const connectWallet = async (e) => {
   if (!window.ethereum) return alert('Please install MetaMask.');
@@ -198,11 +199,17 @@ if (userPasswordForm)
     const name = document.getElementById('name').value;
     const subject = document.getElementById('subject').value;
     const message = document.getElementById('message').value;
-    console.log(message)
-    await sendQuery(email, name, subject, message);
 
-    document.getElementById('email').value = "";
-    document.getElementById('name').value = "";
-    document.getElementById('subject').value = "";
-    document.getElementById('message').value = "";
+    await sendQuery(email, name, subject, message);
+});
+
+
+if(replyQueryForm)
+    replyQueryForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    console.log("Sending replies  ..")
+    const replyMessage = document.getElementById('replyMessage').value;
+    const queryId = document.getElementById('queryId').value;
+  
+    await replyQuery(replyMessage, queryId);
 });

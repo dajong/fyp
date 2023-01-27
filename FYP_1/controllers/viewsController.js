@@ -180,6 +180,14 @@ exports.getQueries = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getQuery = catchAsync(async (req, res, next) => {
+  const query = await Query.findById(req.params.queryId);
+  res.status(200).render("replyCustomerQuery", {
+    title: "Reply Customer Query",
+    query
+  });
+});
+
 exports.updateUserData = catchAsync(async (req, res, next) => {
   const updatedUser = await User.findByIdAndUpdate(
     req.user.id,

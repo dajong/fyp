@@ -12,11 +12,11 @@ block content
     .user-view
       nav.user-view__menu
         ul.side-nav
-          +navItem('#', 'Settings', 'settings', true)
+          +navItem('#', 'Settings', 'settings')
           if (role === 'user')
             +navItem('/bidding', 'My bidding', 'star')
           else if (role === 'admin')
-            +navItem('/queries', 'Customer Queries', 'mail')
+            +navItem('/queries', 'Customer Queries', 'mail', true)
 
       .user-view__content
         .user-view__form-container
@@ -33,4 +33,4 @@ block content
                         th(scope='row')
                             =`${query.querySubject}`
                         td
-                            a.btn-xsmall.btn-xgreen(href=`#`) View
+                            a.btn-xsmall.btn-xgreen(href=`/replyCustomerQuery/` + query._id) View

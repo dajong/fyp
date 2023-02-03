@@ -32,6 +32,8 @@ router.get(
   viewsController.getQuery
 );
 
+router.get("/resetPassword/:resetToken", viewsController.resetPassword);
+
 router.post(
   "/submit-user-data",
   authController.protect,

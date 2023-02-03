@@ -12,11 +12,11 @@ block content
     .user-view
       nav.user-view__menu
         ul.side-nav
-          +navItem('#', 'Settings', 'settings')
+          +navItem('/me', 'Settings', 'settings')
           if (role === 'user')
             +navItem('/bidding', 'My bidding', 'star')
           else if (role === 'admin')
-            +navItem('/queries', 'Customer Queries', 'mail', true)
+            +navItem('#', 'Customer Queries', 'mail', true)
 
       .user-view__content
         .user-view__form-container

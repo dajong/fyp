@@ -35,7 +35,7 @@ export const forgetPassword = async (email) => {
     });
 
     if (res.data.status === 'success') {
-      showAlert('success', 'Logged in successfully!');
+      showAlert('success', 'Email sent successfully!');
     }
   } catch (err) {
     showAlert('error', err.response.data.message);
@@ -74,6 +74,27 @@ export const removeBidding = async (address) => {
     if (res.data.status === 'success') {
       console.log("Bidding Removed!");
       location.reload();
+    }
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+  }
+};
+
+export const resetPassword = async (password, passwordConfirmation, resetToken) => {
+  try {
+    const res = await axios({
+      method: 'PATCH',
+      url: 'http://localhost:3000/api/v1/users/resetPassword/' + resetToken,
+      data: {
+        password,
+        passwordConfirmation
+      }
+    });
+    if (res.data.status === 'success') {
+      window.setTimeout(() => {
+        location.assign('/');
+      }, 1500);
+      showAlert("Password has been reset!");
     }
   } catch (err) {
     showAlert('error', err.response.data.message);

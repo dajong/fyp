@@ -5,6 +5,7 @@ const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const Email = require("./../utils/email");
+const EmailWithContent = require("./../utils/emailWithContent");
 
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -36,25 +37,25 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
-exports.connectWalletToken = catchAsync(async (req, res, next) => {
-  const { account } = req.body;
-  const token = signToken(account);
-  const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true
-  };
-  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+// exports.connectWalletToken = catchAsync(async (req, res, next) => {
+//   const { account } = req.body;
+//   const token = signToken(account);
+//   const cookieOptions = {
+//     expires: new Date(
+//       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+//     ),
+//     httpOnly: true
+//   };
+//   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
-  res.cookie("connectedWallet", token, cookieOptions);
+//   res.cookie("connectedWallet", token, cookieOptions);
 
-  res.status(200).json({
-    status: "success",
-    token,
-    account
-  });
-});
+//   res.status(200).json({
+//     status: "success",
+//     token,
+//     account
+//   });
+// });
 
 exports.signup = catchAsync(async (req, res, next) => {
   const { email, name, role, password, passwordConfirm } = req.body;
@@ -90,7 +91,35 @@ exports.login = catchAsync(async (req, res, next) => {
   // 2) Check if user exists && password is correct
   const user = await User.findOne({ email }).select("+password");
 
+  if (user && Date.now() > user.lockTime) {
+    await User.findByIdAndUpdate(user._id, {
+      userLock: false
+    });
+  }
+
+  if (user && user.userLock === true) {
+    return next(
+      new AppError("Your account is lock! Please try again later", 401)
+    );
+  }
+
   if (!user || !(await user.correctPassword(password, user.password))) {
+    if (user.userAttempt < 4) {
+      await User.findByIdAndUpdate(user._id, {
+        $inc: { userAttempt: 1 }
+      });
+    } else {
+      await User.findByIdAndUpdate(user._id, {
+        userLock: true,
+        lockTime: Date.now() + 100000000,
+        userAttempt: 0
+      });
+
+      return next(
+        new AppError("Your account is now lock! Please try again later", 401)
+      );
+    }
+
     return next(new AppError("Incorrect email or password", 401));
   }
 
@@ -238,8 +267,12 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // 3) Send it to user's email
   try {
-    const resetURL = `http://localhost:3000/api/v1/users/resetPassword/${resetToken}`;
-    await new Email(user, resetURL).sendPasswordReset();
+    const resetURL = `http://localhost:3000/resetPassword/${resetToken}`;
+    await new EmailWithContent(
+      user.name,
+      user.email,
+      resetURL
+    ).sendPasswordReset();
 
     res.status(200).json({
       status: "success",
@@ -274,7 +307,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     return next(new AppError("Token is invalid or has expired", 400));
   }
   user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordConfirm = req.body.passwordConfirmation;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
   await user.save();

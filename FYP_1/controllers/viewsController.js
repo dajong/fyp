@@ -188,6 +188,15 @@ exports.getQuery = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  const tokenId = req.params.resetToken;
+  console.log(tokenId);
+  res.status(200).render("resetPassword", {
+    title: "Reset Password",
+    tokenId
+  });
+});
+
 exports.updateUserData = catchAsync(async (req, res, next) => {
   const updatedUser = await User.findByIdAndUpdate(
     req.user.id,

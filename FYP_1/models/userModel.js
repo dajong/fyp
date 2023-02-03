@@ -49,7 +49,16 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false
   },
-  currentBiddingProperty: [String]
+  currentBiddingProperty: [String],
+  userAttempt: {
+    type: Number,
+    default: 0
+  },
+  userLock: {
+    type: Boolean,
+    default: false
+  },
+  lockTime: Date
 });
 
 userSchema.pre("save", async function(next) {

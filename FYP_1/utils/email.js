@@ -47,13 +47,6 @@ module.exports = class Email {
     await this.send("welcome", "Thanks for registration!");
   }
 
-  async sendPasswordReset() {
-    await this.send(
-      "passwordReset",
-      "Your password reset token (valid for only 10 minutes)"
-    );
-  }
-
   async sendAutomatedQuery(subject) {
     await this.send("automatedQuery", `RE: ${subject}`);
   }

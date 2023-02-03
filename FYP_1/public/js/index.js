@@ -2,7 +2,7 @@
 import '@babel/polyfill';
 import { login, logout } from './login';
 import { register } from './registration';
-import { updateSettings, forgetPassword, userPlaceBid, removeBidding } from './updateSettings';
+import { updateSettings, forgetPassword, userPlaceBid, removeBidding, resetPassword } from './updateSettings';
 import { createProperty, getProperty, soldProperty, placeBid } from './property';
 import { createTokenNFT, connectWalletToken, buyNft } from './web3ModalFactory';
 import { sendQuery,replyQuery } from './query';
@@ -21,13 +21,13 @@ const forgetPasswordForm = document.querySelector(".form--forgetPassword");
 const biddingForm = document.querySelector(".form--bidding");
 const contactAdminForm = document.querySelector(".form--contactAdmin");
 const replyQueryForm = document.querySelector(".form--replyQuery");
+const resetPasswordForm = document.querySelector(".form--resetPassword");
 
 const connectWallet = async (e) => {
   if (!window.ethereum) return alert('Please install MetaMask.');
 
   const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-  await connectWalletToken(accounts[0]);
-
+  // await connectWalletToken(accounts[0]);
   // window.location.reload();
 };
 
@@ -212,4 +212,15 @@ if(replyQueryForm)
     const queryId = document.getElementById('queryId').value;
   
     await replyQuery(replyMessage, queryId);
+});
+
+if(resetPasswordForm)
+  resetPasswordForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    console.log("resetting password  ..")
+    const password = document.getElementById('password').value;
+    const passwordConfirmation = document.getElementById('passwordConfirmation').value;
+    const resetToken = document.getElementById('resetToken').value;
+  
+    await resetPassword(password, passwordConfirmation, resetToken);
 });

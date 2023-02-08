@@ -23,7 +23,9 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       address payable seller;
       address payable owner;
       string propertyAddress;
+      uint256 bidPrice;
       uint256 price;
+      uint256 paidAmount;
       bool sold;
     }
 
@@ -32,7 +34,9 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       address seller,
       address owner,
       string propertyAddress,
+      uint256 bidPrice,
       uint256 price,
+      uint256 paidAmount,
       bool sold
     );
 
@@ -40,7 +44,7 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       owner = payable(msg.sender);
     }
 
-        /* Updates the listing price of the contract */
+    /* Updates the listing price of the contract */
     function updateListingPrice(uint _listingPrice) public payable {
       require(owner == msg.sender, "Only marketplace owner can update listing price.");
       listingPrice = _listingPrice;
@@ -56,20 +60,22 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
     }
 
     /* Mints a token and lists it in the marketplace */
-    function createTokenNFT(string memory tokenURI, uint256 price, string memory propertyAddress) public payable returns (uint) {
+    function createTokenNFT(string memory tokenURI, uint256 price, string memory propertyAddress, uint256 bidPrice, uint256 paidAmount) public payable returns (uint) {
       _tokenIds.increment();
       uint256 newTokenId = _tokenIds.current();
 
       _mint(msg.sender, newTokenId);
       _setTokenURI(newTokenId, tokenURI);
-      createMarketItem(newTokenId, price, propertyAddress);
+      createMarketItem(newTokenId, price, propertyAddress, bidPrice, paidAmount);
       return newTokenId;
     }
 
     function createMarketItem(
       uint256 tokenId,
       uint256 price,
-      string memory propertyAddress
+      string memory propertyAddress,
+      uint256 bidPrice,
+      uint256 paidAmount
     ) private {
       require(price > 0, "Price must be at least 1 wei");
 
@@ -79,6 +85,8 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
         payable(address(this)),
         propertyAddress,
         price,
+        bidPrice,
+        paidAmount,
         false
       );
 
@@ -89,6 +97,8 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
         address(this),
         propertyAddress,
         price,
+        bidPrice,
+        paidAmount,
         false
       );
     }
@@ -107,6 +117,26 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       _transfer(address(this), msg.sender, tokenId);
 
       payable(owner).transfer(msg.value);
+    }
+
+    /* Pay part of the payment */
+    function payPartSale(
+      uint256 tokenId
+      ) public payable {
+      uint amountPaid = msg.value;
+      idToMarketItem[tokenId].paidAmount += amountPaid;
+      if(idToMarketItem[tokenId].paidAmount >= idToMarketItem[tokenId].bidPrice){
+        idToMarketItem[tokenId].owner = payable(msg.sender);
+        idToMarketItem[tokenId].sold = true;
+        idToMarketItem[tokenId].seller = payable(address(0));
+        _itemsSold.increment();
+        _transfer(address(this), msg.sender, tokenId);
+      }
+      payable(owner).transfer(msg.value);
+    }
+
+    function updateBidPrice(uint256 tokenId, uint256 updatedPrice) public {
+      idToMarketItem[tokenId].bidPrice = updatedPrice;
     }
 
     /* Returns all unsold market items */
@@ -151,26 +181,17 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       return items;
     }
 
-    function fetchPropertyAddressNFTs(string memory propertyAddress) public view returns (MarketItem[] memory) {
+    function fetchPropertyAddressNFTs(string memory propertyAddress) public view returns (MarketItem memory) {
       uint totalItemCount = _tokenIds.current();
-      uint itemCount = 0;
-      uint currentIndex = 0;
 
-      for (uint i = 0; i < totalItemCount; i++) {
-        if (compareStrings(idToMarketItem[i + 1].propertyAddress, propertyAddress)) {
-          itemCount += 1;
-        }
-      }
-
-      MarketItem[] memory items = new MarketItem[](itemCount);
+      MarketItem memory item;
       for (uint i = 0; i < totalItemCount; i++) {
         if (compareStrings(idToMarketItem[i + 1].propertyAddress, propertyAddress)) {
           uint currentId = i + 1;
           MarketItem storage currentItem = idToMarketItem[currentId];
-          items[currentIndex] = currentItem;
-          currentIndex += 1;
+          item = currentItem;
         }
       }
-      return items;
+      return item;
     }
 }

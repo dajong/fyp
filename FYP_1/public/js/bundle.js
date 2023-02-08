@@ -40092,7 +40092,7 @@ module.exports = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createTokenNFT = exports.connectWalletToken = exports.buyNft = exports.addContract = void 0;
+exports.createTokenNFT = exports.createPropertyNFT = exports.connectWalletToken = exports.buyNft = exports.addContract = void 0;
 var _web3modal = _interopRequireDefault(require("web3modal"));
 var _ethers = require("ethers");
 var _catchAsync = _interopRequireDefault(require("../../utils/catchAsync"));
@@ -40207,30 +40207,26 @@ var createTokenNFT = (0, _catchAsync.default)( /*#__PURE__*/function () {
       while (1) switch (_context4.prev = _context4.next) {
         case 0:
           // using hardcoded value for now..
-          console.log("Run_ 0..");
           web3modal = new _web3modal.default();
-          console.log("Run_ 1..");
-          _context4.next = 5;
+          _context4.next = 3;
           return web3modal.connect();
-        case 5:
+        case 3:
           connection = _context4.sent;
           provider = new _ethers.ethers.providers.Web3Provider(connection);
-          console.log("Run 3..");
           signer = provider.getSigner();
-          console.log("Run 4..");
           price = _ethers.ethers.utils.parseUnits(formInputPrice, "ether");
           contract = fetchContract(signer);
           url = "https://gateway.pinata.cloud/ipfs/QmXA7GCd4pWNKXkQ5FGrMMnzMHsRAAzex2WXtWFVdu32ji";
-          _context4.next = 15;
+          _context4.next = 11;
           return contract.createTokenNFT(url, price, propertyAddress);
-        case 15:
+        case 11:
           transaction = _context4.sent;
-          _context4.next = 18;
+          _context4.next = 14;
           return transaction.wait();
-        case 18:
-          _context4.next = 20;
+        case 14:
+          _context4.next = 16;
           return addContract(propertyAddress);
-        case 20:
+        case 16:
         case "end":
           return _context4.stop();
       }
@@ -40241,74 +40237,109 @@ var createTokenNFT = (0, _catchAsync.default)( /*#__PURE__*/function () {
   };
 }());
 exports.createTokenNFT = createTokenNFT;
-var connectWalletToken = /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(account) {
-    var res;
+var createPropertyNFT = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(formInputPrice, propertyAddress, url) {
+    var web3modal, connection, provider, signer, price, contract, transaction;
     return _regeneratorRuntime().wrap(function _callee5$(_context5) {
       while (1) switch (_context5.prev = _context5.next) {
         case 0:
+          web3modal = new _web3modal.default();
+          _context5.next = 3;
+          return web3modal.connect();
+        case 3:
+          connection = _context5.sent;
+          provider = new _ethers.ethers.providers.Web3Provider(connection);
+          signer = provider.getSigner();
+          price = _ethers.ethers.utils.parseUnits(formInputPrice, "ether");
+          contract = fetchContract(signer);
+          _context5.next = 10;
+          return contract.createTokenNFT(url, price, propertyAddress);
+        case 10:
+          transaction = _context5.sent;
+          _context5.next = 13;
+          return transaction.wait();
+        case 13:
+          _context5.next = 15;
+          return addContract(propertyAddress);
+        case 15:
+        case "end":
+          return _context5.stop();
+      }
+    }, _callee5);
+  }));
+  return function (_x6, _x7, _x8) {
+    return _ref6.apply(this, arguments);
+  };
+}());
+exports.createPropertyNFT = createPropertyNFT;
+var connectWalletToken = /*#__PURE__*/function () {
+  var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(account) {
+    var res;
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
+        case 0:
           console.log("This is run..");
-          _context5.prev = 1;
-          _context5.next = 4;
+          _context6.prev = 1;
+          _context6.next = 4;
           return (0, _axios.default)({
             method: "POST",
             url: "http://localhost:3000/api/v1/users/connectWalletToken",
             account: account
           });
         case 4:
-          res = _context5.sent;
+          res = _context6.sent;
           if (res.data.status === "success") {
             (0, _alerts.showAlert)("success", "Wallet connected successfully!");
           }
-          _context5.next = 11;
+          _context6.next = 11;
           break;
         case 8:
-          _context5.prev = 8;
-          _context5.t0 = _context5["catch"](1);
-          (0, _alerts.showAlert)("error", _context5.t0);
+          _context6.prev = 8;
+          _context6.t0 = _context6["catch"](1);
+          (0, _alerts.showAlert)("error", _context6.t0);
         case 11:
         case "end":
-          return _context5.stop();
+          return _context6.stop();
       }
-    }, _callee5, null, [[1, 8]]);
+    }, _callee6, null, [[1, 8]]);
   }));
-  return function connectWalletToken(_x6) {
-    return _ref6.apply(this, arguments);
+  return function connectWalletToken(_x9) {
+    return _ref7.apply(this, arguments);
   };
 }();
 exports.connectWalletToken = connectWalletToken;
 var buyNft = /*#__PURE__*/function () {
-  var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(tokenId, tokenPrice) {
+  var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(tokenId, tokenPrice) {
     var web3Modal, connection, provider, signer, contract, price, transaction;
-    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-      while (1) switch (_context6.prev = _context6.next) {
+    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+      while (1) switch (_context7.prev = _context7.next) {
         case 0:
           console.log("running buy nft..");
           web3Modal = new _web3modal.default();
-          _context6.next = 4;
+          _context7.next = 4;
           return web3Modal.connect();
         case 4:
-          connection = _context6.sent;
+          connection = _context7.sent;
           provider = new _ethers.ethers.providers.Web3Provider(connection);
           signer = provider.getSigner();
           contract = new _ethers.ethers.Contract(_constants.MarketAddress, _constants.MarketAddressABI, signer);
           price = _ethers.ethers.utils.parseUnits(tokenPrice.toString(), 'ether');
-          _context6.next = 11;
+          _context7.next = 11;
           return contract.createMarketSale(tokenId, {
             value: price
           });
         case 11:
-          transaction = _context6.sent;
-          _context6.next = 14;
+          transaction = _context7.sent;
+          _context7.next = 14;
           return transaction.wait();
         case 14:
         case "end":
-          return _context6.stop();
+          return _context7.stop();
       }
-    }, _callee6);
+    }, _callee7);
   }));
-  return function buyNft(_x7, _x8) {
-    return _ref7.apply(this, arguments);
+  return function buyNft(_x10, _x11) {
+    return _ref8.apply(this, arguments);
   };
 }();
 exports.buyNft = buyNft;
@@ -40589,9 +40620,7 @@ var connectWallet = /*#__PURE__*/function () {
           });
         case 4:
           accounts = _context.sent;
-          _context.next = 7;
-          return (0, _web3ModalFactory.connectWalletToken)(accounts[0]);
-        case 7:
+        case 5:
         case "end":
           return _context.stop();
       }

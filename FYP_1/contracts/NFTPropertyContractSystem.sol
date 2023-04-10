@@ -3,6 +3,7 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
@@ -10,6 +11,7 @@ import "hardhat/console.sol";
 
 contract NFTPropertyContractSystem is ERC721URIStorage {
     using Counters for Counters.Counter;
+    using Strings for uint256;
 
     Counters.Counter private _tokenIds;
     Counters.Counter private _itemsSold;
@@ -26,6 +28,7 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       uint256 bidPrice;
       uint256 price;
       uint256 paidAmount;
+      address payable currentBidder;
       bool sold;
     }
 
@@ -37,12 +40,17 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       uint256 bidPrice,
       uint256 price,
       uint256 paidAmount,
+      address payable currentBidder,
       bool sold
     );
 
     constructor() ERC721("Metaverse Tokens", "METT") {
       owner = payable(msg.sender);
     }
+
+    function concatenate(string memory a,string memory b) public pure returns (string memory){
+        return string(abi.encodePacked(a,' ',b));
+    } 
 
     /* Updates the listing price of the contract */
     function updateListingPrice(uint _listingPrice) public payable {
@@ -60,13 +68,13 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
     }
 
     /* Mints a token and lists it in the marketplace */
-    function createTokenNFT(string memory tokenURI, uint256 price, string memory propertyAddress, uint256 bidPrice, uint256 paidAmount) public payable returns (uint) {
+    function createTokenNFT(string memory tokenURI, uint256 price, string memory propertyAddress, uint256 bidPrice) public payable returns (uint) {
       _tokenIds.increment();
       uint256 newTokenId = _tokenIds.current();
 
       _mint(msg.sender, newTokenId);
       _setTokenURI(newTokenId, tokenURI);
-      createMarketItem(newTokenId, price, propertyAddress, bidPrice, paidAmount);
+      createMarketItem(newTokenId, price, propertyAddress, bidPrice);
       return newTokenId;
     }
 
@@ -74,8 +82,7 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       uint256 tokenId,
       uint256 price,
       string memory propertyAddress,
-      uint256 bidPrice,
-      uint256 paidAmount
+      uint256 bidPrice
     ) private {
       require(price > 0, "Price must be at least 1 wei");
 
@@ -84,9 +91,10 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
         payable(msg.sender),
         payable(address(this)),
         propertyAddress,
-        price,
         bidPrice,
-        paidAmount,
+        price,
+        0,
+        payable(address(this)),
         false
       );
 
@@ -96,9 +104,10 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
         msg.sender,
         address(this),
         propertyAddress,
-        price,
         bidPrice,
-        paidAmount,
+        price,
+        0,
+        payable(address(this)),
         false
       );
     }
@@ -110,6 +119,21 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       ) public payable {
       uint price = idToMarketItem[tokenId].price;
       require(msg.value == price, "Please pay the full amount in order to complete the transaction!");
+      idToMarketItem[tokenId].owner = payable(msg.sender);
+      idToMarketItem[tokenId].sold = true;
+      idToMarketItem[tokenId].seller = payable(address(0));
+      _itemsSold.increment();
+      _transfer(address(this), msg.sender, tokenId);
+
+      payable(owner).transfer(msg.value);
+    }
+
+    function buyBidProperty(
+      uint256 tokenId
+      ) public payable {
+      uint price = idToMarketItem[tokenId].bidPrice;
+      string memory errMsg= "Please pay the full amount in order to complete the transaction!";
+      require(msg.value >= price, concatenate(errMsg, price.toString()));
       idToMarketItem[tokenId].owner = payable(msg.sender);
       idToMarketItem[tokenId].sold = true;
       idToMarketItem[tokenId].seller = payable(address(0));
@@ -134,6 +158,39 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       }
       payable(owner).transfer(msg.value);
     }
+
+        /* Pay part of the payment */
+    function placeDeposit(
+      uint256 tokenId
+      ) public payable {
+        uint price = idToMarketItem[tokenId].bidPrice * 10 / 100;
+        require(msg.value >= price, "Please pay the full amount in order to complete the transaction!");
+        uint amountPaid = msg.value;
+        idToMarketItem[tokenId].paidAmount += amountPaid;
+        if(idToMarketItem[tokenId].paidAmount >= idToMarketItem[tokenId].bidPrice){
+          idToMarketItem[tokenId].owner = payable(msg.sender);
+          idToMarketItem[tokenId].sold = true;
+          idToMarketItem[tokenId].seller = payable(address(0));
+          _itemsSold.increment();
+          _transfer(address(this), msg.sender, tokenId);
+        }
+        payable(owner).transfer(msg.value);
+    }
+
+        /* Pay part of the payment */
+    // function placeBid(
+    //   uint256 tokenId,
+    //   uint256 biddingPrice
+    //   ) public payable {
+    //   uint amountPaid = msg.value;
+    //   if(idToMarketItem[tokenId].currentBidder != address(this)){
+    //     payable(idToMarketItem[tokenId].currentBidder).transfer(idToMarketItem[tokenId].depositAmount);
+    //   }
+    //   idToMarketItem[tokenId].bidPrice = biddingPrice;
+    //   idToMarketItem[tokenId].currentBidder = payable(msg.sender);
+    //   idToMarketItem[tokenId].depositAmount = amountPaid;
+    //   payable(owner).transfer(msg.value);
+    // }
 
     function updateBidPrice(uint256 tokenId, uint256 updatedPrice) public {
       idToMarketItem[tokenId].bidPrice = updatedPrice;
@@ -181,7 +238,7 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       return items;
     }
 
-    function fetchPropertyAddressNFTs(string memory propertyAddress) public view returns (MarketItem memory) {
+    function fetchNFTByPropertyAddress(string memory propertyAddress) public view returns (MarketItem memory) {
       uint totalItemCount = _tokenIds.current();
 
       MarketItem memory item;

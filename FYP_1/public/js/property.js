@@ -21,10 +21,8 @@ export const createProperty = async (address, city, listingNum, propertyStyle, g
           numBedroom,
           numBathroom,
           price,
-          description,
           imageCover,
-          propertySold: false,
-          propertyViews: 0,
+          description,
           biddingPrice
         }
       });
@@ -87,10 +85,13 @@ export const placeBid = catchAsync(async (propertyAddress, newBidPrice, curBidde
     });
 
     if (res.data.status === "success") {
-      location.reload();
       showAlert("success", "New bid is placed");
+      setTimeout(() => {
+        document.location.reload();
+      }, 3000);
     }
   } catch (err) {
+    console.log(err)
     showAlert("error", err);
   }
 });

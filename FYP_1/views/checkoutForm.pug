@@ -1,0 +1,35 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+  li(class=`${active ? 'side-nav--active' : ''}`)
+    a(href=`${link}`)
+      svg
+        use(xlink:href=`img/icons.svg#icon-${icon}`)
+      | #{text}
+
+block content
+  main.main
+    .user-view
+      nav.user-view__menu
+        ul.side-nav
+          +navItem('/me', 'Settings', 'settings')
+          +navItem('/bidding', 'My bidding', 'star', true)
+          +navItem('/myProperty', 'My property', 'home')
+
+      .user-view__content
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Checkout
+
+          p You can choose to pay in full or pay deposit first to confirm your purchase.
+          br
+          p Pay in full 
+          br
+          a.btn-small.span-all-rows#buy-bid-property(data-property-id=`${property.id}`) Buy
+          br
+          br
+          br
+          p Pay Deposit (10%)
+          br
+          a.btn-small.span-all-rows#deposit-bid-property(data-property-id=`${property.id}`) Place deposit
+
+          

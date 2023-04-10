@@ -2,22 +2,35 @@ extends base
 
 block content
   main
-    div(class="w-75 mx-auto my-5")
-      h2(class="my-3") Sign up for new account
-      form(class="form--registration")
-        div.mb-3
-          label.form-label(for='email') Email address
-          input#email.form-control(type='email', placeholder='you@example.com', required)
+    section.vh-75
+      .container-fluid.h-custom
+        .row.d-flex.justify-content-center.align-items-center.h-100
+          .col-md-9.col-lg-6.col-xl-5
+            img.img-fluid(src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw1.webp", alt="Sample image")
+          .col-md-8.col-lg-6.col-xl-4.offset-xl-1
+            form(class="form--registration")
+              h1.my-5 Register for an account
+              // Name input
+              .form-outline.mb-4
+                input.form-control.form-control-lg(type="text", id="name" placeholder="Enter your name" required)
+                label.form-label(for="name") Your Name
+              // Email input
+              .form-outline.mb-4
+                input.form-control.form-control-lg(type="email", id="email" placeholder="Enter a valid email address" required)
+                label.form-label(for="email") Your Email
+              // Password input
+              .form-outline.mb-3
+                input.form-control.form-control-lg(type='password', id="password", placeholder='••••••••', pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})', required, minlength='8', maxlength='20')
+                label.form-label(for="password") Password
+              // Confirm Password input
+              .form-outline.mb-3
+                input.form-control.form-control-lg(type='password', id="passwordConfirm", placeholder='••••••••', pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})', required, minlength='8', maxlength='20')
+                label.form-label(for="passwordConfirm") Confirm Password
+              .text-center.text-lg-start.mt-4.pt-2
+                button.btnn.btn--green.btn-xsmall(style="padding-left: 2.5rem; padding-right: 2.5rem;", type="submit") Register
+              p.small.fw-bold.mt-2.pt-1.mb-0
+                | Already have an account? 
+                a.link-danger(href="/login") Login
 
-        div.mb-3
-          label.form-label(for='name') Full Name
-          input#name.form-control(type='text', placeholder='John Smith', required)
-          
-        div.mb-3
-          label.form-label(for='password') Password
-          input#password.form-control(type='password', placeholder='••••••••', required, minlength='8', maxlength='20')
 
-        div.mb-3
-          label.form-label(for='passwordConfirm') Password Confirmation
-          input#passwordConfirm.form-control(type='password', placeholder='••••••••', required, minlength='8', maxlength='20')
-        button(type="submit" class="btn btn-primary") Register
+  

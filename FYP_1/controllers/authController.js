@@ -14,7 +14,10 @@ const signToken = id => {
 };
 
 const createSendToken = (user, statusCode, res) => {
+  // sign the token
   const token = signToken(user._id);
+
+  // cookie config
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -60,7 +63,7 @@ const createSendToken = (user, statusCode, res) => {
 exports.signup = catchAsync(async (req, res, next) => {
   const { email, name, role, password, passwordConfirm } = req.body;
 
-  // Find if user already exists
+  // Check if user already exists
   const userExists = await User.findOne({ email });
 
   if (userExists) {
@@ -68,6 +71,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     throw new Error("User already exists");
   }
 
+  // Create a new user
   const newUser = await User.create({
     name: name,
     email: email,
@@ -76,39 +80,48 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: passwordConfirm
   });
 
+  // Send a email to confirm registration
   await new Email(name, email).sendWelcome();
 
+  // Create the account and log the user in
   createSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
-  // 1) Check if email and password exist
+  // Check if email and password exist
   if (!email || !password) {
     return next(new AppError("Please provide email and password!", 400));
   }
-  // 2) Check if user exists && password is correct
+  // Try to fetch the user
   const user = await User.findOne({ email }).select("+password");
 
+  // unlock user if wait time is over
   if (user && Date.now() > user.lockTime) {
     await User.findByIdAndUpdate(user._id, {
-      userLock: false
+      userLock: false,
+      userAttempt: 0
     });
   }
 
+  // Reject the request due to locked account
   if (user && user.userLock === true) {
     return next(
       new AppError("Your account is lock! Please try again later", 401)
     );
   }
 
+  // Check if user exist or if user put in the correct password.
   if (!user || !(await user.correctPassword(password, user.password))) {
-    if (user.userAttempt < 4) {
+    // Increase the counter if the user failed to login
+    if (user.userAttempt <= 4) {
       await User.findByIdAndUpdate(user._id, {
         $inc: { userAttempt: 1 }
       });
-    } else {
+    }
+    // Lock the user if they failed to login over 3 times
+    else {
       await User.findByIdAndUpdate(user._id, {
         userLock: true,
         lockTime: Date.now() + 100000000,
@@ -119,11 +132,12 @@ exports.login = catchAsync(async (req, res, next) => {
         new AppError("Your account is now lock! Please try again later", 401)
       );
     }
-
     return next(new AppError("Incorrect email or password", 401));
   }
-
-  // 3) If everything ok, send token to client
+  // If everything ok, reset the counter and send token to client
+  await User.findByIdAndUpdate(user._id, {
+    userAttempt: 0
+  });
   createSendToken(user, 200, res);
 });
 

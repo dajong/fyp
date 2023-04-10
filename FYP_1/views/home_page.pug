@@ -1,19 +1,41 @@
 extends base
 
 block content
-    main(class="w-75 mx-auto my-5")
-        h1(class="text-center my-5") Search for properties you like!
-        form(method="get", action="/overview")
-            div(class="row")
-                div(class="col-3")
-                    select(class="form-select", arial-label="city", name="city")
-                        option(value="" selected) City
-                        each city in cities
-                            option(value=`${city}`)= `${city}`
-                div(class="col-3") 
-                    input(type="text", class="form-control", placeholder="Min Price", name="minPrice")
-                div(class="col-3") 
-                    input(type="text", class="form-control", placeholder="Max Price", name="maxPrice")
+    // Hero section
+    section(class="hero-image d-flex align-items-center py-5")
+        div(class="container text-center text-white")
+            h1(class="display-3 fw-bold mb-4") Find your way home
 
-            div(class="text-center my-5")
-                button(type="submit" class="btn btn-success") Filter
+            // Main content
+            div(class="search-form bg-white p-4 rounded")
+                form(method="get", action="/overview")
+                    div(class="row g-3 mb-3")
+                        div(class="col-3")
+                            select(class="form__input", arial-label="city", name="city")
+                                option(value="" selected) City
+                                each city in cities
+                                    option(value=`${city}`)= `${city}`
+                        div(class="col-3")
+                            input(type="number", class="form__input", placeholder="Min Price", name="minPrice")
+                        div(class="col-3")
+                            input(type="number", class="form__input", placeholder="Max Price", name="maxPrice")
+
+                        div(class="text-center col-3")
+                            button(type="submit" class="btnn btn--green") Filter
+    // Details section
+    section(class="details-section mt-5 py-3")
+        div(class="container")
+            .row.g-4.py-5.row-cols-1.row-cols-lg-3
+                .feature.col
+                    h2 Enhanced security and transparency
+                    p  By leveraging blockchain technology, our app can provide a secure and transparent environment for property transactions. Each transaction is recorded on a decentralized ledger, making it tamper-proof and easily verifiable. This level of transparency can help build trust between buyers, sellers, and other stakeholders involved in the real estate process, reducing the risks of fraud and misrepresentation.
+
+                .feature.col
+
+                    h2 Efficient ownership verification and transfer
+                    p Our app can streamline the process of property ownership verification and transfer by utilizing smart contracts on the blockchain. These self-executing contracts can automatically enforce the terms and conditions of a property transaction, reducing the need for intermediaries.
+
+                .feature.col
+
+                    h2 Tokenisation of real estate assets
+                    p The app can revolutionise the real estate industry by enabling the tokenisation of properties, creating digital representations of real estate assets on the blockchain. 

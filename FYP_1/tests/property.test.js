@@ -40,45 +40,8 @@ describe("GET /api/v1/properties/:id", () => {
       "/api/v1/properties/63c9b6507657e1013cc7e1fc"
     );
     expect(res.statusCode).toBe(200);
-    console.log(res.body);
     expect(res.body.data.data.address).toBe("1 Kimberley Villas, Millitary Hill");
   });
 });
-
-// describe("POST /api/v1/properties", () => {
-//   it("should create a property", async () => {
-//     const loginRes = await request(app).post(
-//       "/api/v1/users/login"
-//     ).send({
-//       email: "dajong@gmail.com",
-//       password: "pass1234"
-//     });
-//     console.log(loginRes);
-//     expect(loginRes.body.data.user.role).toBe("admin");
-
-//     const res = await request(app).post("/api/v1/properties").send({
-//           address: "test addressasdasdasasasd",
-//           city: "Dublin",
-//           listingNum: 12345,
-//           propertyStyle: "Bungalow",
-//           garageType: "Attached",
-//           garageSize: 123,
-//           berRating: "A1",
-//           squareFeet: 1800,
-//           lotSize: "125 x 324",
-//           numBedroom: 3,
-//           numBathroom: 3,
-//           price: 200,
-//           description: "some tseting description",
-//           imageCover: "12345.jpg",
-//           propertySold: false,
-//           propertyViews: 0,
-//           biddingPrice: 100
-//     });
-//     expect(res.statusCode).toBe(201);
-//     console.log(res.body);
-//     expect(res.body.data.data.address).toBe("test addressasdasdasasasd");
-//   });
-// });
 
 

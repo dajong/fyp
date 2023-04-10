@@ -7,7 +7,7 @@ block content
       form(class="form--createProperty")
         div.mb-3
           label.form-label(for='address') Address
-          input#address.form-control(type='text', required)
+          input#address.form-control(type='text', value="13 Lisheen Homes Caherdavin", required)
 
         div.mb-3
           label.form-label(for='city') City
@@ -17,11 +17,11 @@ block content
 
         div.mb-3
           label.form-label(for='listingNum') Listing Number
-          input#listingNum.form-control(type='number', required)
+          input#listingNum.form-control(type='number', value="123456", required)
 
         div.mb-3e
-          label.form-label(for='proprtyStyle') Property Style
-          select(class="form-select", arial-label="propertyType", name="propertyType" id="propertyType")
+          label.form-label(for='propertyStyle') Property Style
+          select(class="form-select", arial-label="propertyType", name="propertyStyle" id="propertyStyle")
             each pType in propertyTypes
                 option(value=`${pType}`)= `${pType}`
 
@@ -33,7 +33,7 @@ block content
 
         div.mb-3
           label.form-label(for='garageSize') Garage Size
-          input#garageSize.form-control(type='number', required)
+          input#garageSize.form-control(type='number', value="123", required)
 
         div.mb-3
           label.form-label(for='berRating') Ber Rating
@@ -43,31 +43,31 @@ block content
 
         div.mb-3
           label.form-label(for='squareFeet') Square Feet
-          input#squareFeet.form-control(type='number', required)
+          input#squareFeet.form-control(type='number', value="1800", required)
         
         div.mb-3
           label.form-label(for='lotSize') Lot Size
-          input#lotSize.form-control(type='text', required)
+          input#lotSize.form-control(type='text', value="60x180", required)
           
         div.mb-3
           label.form-label(for='numBedroom') Number of Bedrooms
-          input#numBedroom.form-control(type='number', required)
+          input#numBedroom.form-control(type='number', value="5",required)
 
         div.mb-3
           label.form-label(for='numBathroom') Number of Bathrooms
-          input#numBathroom.form-control(type='number', required)
+          input#numBathroom.form-control(type='number', value="3", required)
 
         div.mb-3
           label.form-label(for='price') Buy Price
-          input#price.form-control(type='number', required)
+          input#price.form-control(type='number', value="200", required)
 
         div.mb-3
           label.form-label(for='biddingPrice') Start Bidding Price
-          input#biddingPrice.form-control(type='number', required)
+          input#biddingPrice.form-control(type='number', value="100", required)
 
         div.mb-3
           label.form-label(for='description') Description
-          textarea#description.form-control(rows="3", required)  
+          textarea#description.form-control(rows="3", value="tset description", required)  test description
 
         div.mb-3
           .form__group.form__photo-upload

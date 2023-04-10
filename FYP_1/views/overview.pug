@@ -2,20 +2,26 @@ extends base
 
 block content
   main.main
-    .card-container
+    if properties.length
+      h1 #{properties.length} results found
+      .card-container
+        each property in properties
+          .card
+            .card__header
+              .card__picture
+                img.card__picture-img(src=`/img/properties/large/${property.listingNum}/${property.imageCover}`, alt=`${property.address}`)
+              h3.heading-tertirary
+                span= property.address + ", " + property.city
+
+            .card__details
+              h4.card__sub-heading= `Price: ${property.price} ETH`
+              p.card__text= `${property.numBedroom} bedrooms, ${property.numBathroom} bathrooms`
+              p.card__text= `${property.squareFeet} m², ${property.propertyStyle} `
+
+            .card__footer
+              a.btnn.btn--green.btn--small(href=`/property/${property.slug}`) Details
+    else 
+      h1 No results found
+      a.btnn.btn--green.btn--small(href=`/`) Back to home
+      
     
-      each property in properties
-        .card
-          .card__header
-            .card__picture
-              img.card__picture-img(src=`/img/properties/large/${property.listingNum}/${property.imageCover}`, alt=`${property.address}`)
-            h3.heading-tertirary
-              span= property.address + ", " + property.city
-
-          .card__details
-            h4.card__sub-heading= `Price: ${property.price} ETH`
-            p.card__text= `${property.numBedroom} bedrooms, ${property.numBathroom} bathrooms`
-            p.card__text= `${property.squareFeet} m², ${property.propertyStyle} `
-
-          .card__footer
-            a.btn.btn-success.btn--small(href=`/property/${property.slug}`) Details

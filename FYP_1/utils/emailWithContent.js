@@ -54,4 +54,8 @@ module.exports = class EmailWithContent {
       "Your password reset token (valid for only 10 minutes)"
     );
   }
+
+  async sendOutbidNotification(subject) {
+    await this.send("outbid", `Someone else bid on ${subject}!`);
+  }
 };

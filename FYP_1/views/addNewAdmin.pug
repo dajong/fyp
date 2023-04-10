@@ -1,0 +1,38 @@
+
+extends base
+
+mixin navItem(link, text, icon, active)
+  li(class=`${active ? 'side-nav--active' : ''}`)
+    a(href=`${link}`)
+      svg
+        use(xlink:href=`img/icons.svg#icon-${icon}`)
+      | #{text}
+
+block content
+  main.main
+    .user-view
+      nav.user-view__menu
+        ul.side-nav
+          +navItem('/me', 'Settings', 'settings')
+          +navItem('/queries', 'Customer Queries', 'mail')
+          +navItem('#', 'Add new admin', 'user', true)
+
+
+      .user-view__content
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Register new admin
+
+          form.form.form--registrationAdmin
+          .form__group
+            label.form__label(for='name') Name
+            input#name.form__input(type='text', required, name='name')
+          .form__group.ma-bt-md
+            label.form__label(for='email') Email address
+            input#email.form__input(type='email', required, name='email')
+          .form__group.ma-bt-md
+            label.form__label(for='password') Password
+            input#password.form__input(type='password', required, name='password')
+        
+            
+          .form__group.right
+            button.btn-small.btn-xgreen Save

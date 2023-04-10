@@ -2,19 +2,27 @@ extends base
 
 block content
   main
-    div(class="w-75 mx-auto my-5")
-      h2(class="my-3") Log into your account
-      form(class="form--login")
-        div.mb-3
-          label.form-label(for='email') Email address
-          input#email.form-control(type='email', placeholder='you@example.com', required)
-          
-        div.mb-3
-          label.form-label(for='password') Password
-          input#password.form-control(type='password', placeholder='••••••••', required, minlength='8', maxlength='20')
-
-        div
-          button(type="submit" class="btn btn-success") Login
-
-        div
-          a(href="/forgetPassword") Forget Password
+    section.vh-75
+      .container-fluid.h-custom
+        .row.d-flex.justify-content-center.align-items-center.h-100
+          .col-md-9.col-lg-6.col-xl-5
+            img.img-fluid(src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp", alt="Sample image")
+          .col-md-8.col-lg-6.col-xl-4.offset-xl-1
+            form(class="form--login")
+              .d-flex.flex-row.align-items-center.justify-content-center.justify-content-lg-start
+              h1.my-5 Login to your account now
+              // Email input
+              .form-outline.mb-4
+                input.form-control.form-control-lg(type="email", id="email" placeholder="Enter a valid email address")
+                label.form-label(for="email") Email address
+              // Password input
+              .form-outline.mb-3
+                input.form-control.form-control-lg(type="password", id="password", placeholder="Enter password")
+                label.form-label(for="password") Password
+              .d-flex.justify-content-between.align-items-center
+                a.text-body(href="/forgetPassword") Forgot password?
+              .text-center.text-lg-start.mt-4.pt-2
+                button.btnn.btn--green.btn-xsmall(style="padding-left: 2.5rem; padding-right: 2.5rem;", type="submit") Login
+                p.small.fw-bold.mt-2.pt-1.mb-0
+                  | Don't have an account? 
+                  a.link-danger(href="/signup") Register

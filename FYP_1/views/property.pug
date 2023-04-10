@@ -68,13 +68,13 @@ block content
         if user.id !== property.currentHighestBidder
           form(class="form--bidding")
             div.mb-3  
-              label.form-label(for='biddingAmount') Place your bid now!
-              input#biddingAmount.form-control(type='Number', placeholder=`${property.biddingPrice + 1}`, min=property.biddingPrice + 1, required)
+              label.form__label(for='biddingAmount') Place your bid now!
+              input#biddingAmount.form__input(type='Number', placeholder=`${property.biddingPrice + 1}`, min=property.biddingPrice + 1, required)
             input#curPropertyAddress.form-control(type='hidden', value=`${property.address}`)
             input#curTokenId.form-control(type='hidden', value=`${property.nftContract}`)
             input#curUser.form-control(type='hidden', value=`${user.id}`)
             div
-              button(type="submit" class="btn btn-success") Place Bid
+              button(type="submit" class="btnn btn--green") Place Bid
         else
           p You are the highest bidder now!
     

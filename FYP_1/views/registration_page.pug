@@ -28,7 +28,7 @@ block content
               // Confirm Password input
               .form__group.mb-4
                 label.form__label(for="passwordConfirm") Confirm Password
-                input.form__input(type='password', id="passwordConfirm", placeholder='••••••••', pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})', required, minlength='8', maxlength='20')
+                input.form__input(type='password', id="passwordConfirm", placeholder='••••••••', pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,20}$', required, minlength='8', maxlength='20')
                 
               .text-center.text-lg-start.mt-4.pt-2
                 button.btnn.btn--green.btn-small(style="padding-left: 2.5rem; padding-right: 2.5rem;", type="submit") Register

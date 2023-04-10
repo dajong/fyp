@@ -16,8 +16,11 @@ router.use(authController.protect);
 router.post(
   "/addAdmin",
   authController.restrictTo("admin"),
-  authController.signup
+  authController.addNewAdmin
 );
+router.patch("/addFavouriteProperty", userController.addFavoriteProperty);
+router.patch("/removeFavouriteProperty", userController.removeFavoriteProperty);
+
 router.patch("/updateMyPassword", authController.updatePassword);
 router.get("/me", userController.getMe, userController.getUser);
 // router.post("/connectWalletToken", authController.connectWalletToken);

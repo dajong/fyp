@@ -11,24 +11,28 @@ block content
             form(class="form--registration")
               h1.my-5 Register for an account
               // Name input
-              .form-outline.mb-4
-                input.form-control.form-control-lg(type="text", id="name" placeholder="Enter your name" required)
-                label.form-label(for="name") Your Name
+              .form__group.mb-4
+                label.form__label(for="name") Name
+                input.form__input(type="text", id="name" placeholder="Enter your name" required)
+                
               // Email input
-              .form-outline.mb-4
-                input.form-control.form-control-lg(type="email", id="email" placeholder="Enter a valid email address" required)
-                label.form-label(for="email") Your Email
+              .form__group.mb-4
+                label.form__label(for="email") Email
+                input.form__input(type="email", id="email" placeholder="Enter a valid email address" required)
+                
               // Password input
-              .form-outline.mb-3
-                input.form-control.form-control-lg(type='password', id="password", placeholder='••••••••', pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})', required, minlength='8', maxlength='20')
-                label.form-label(for="password") Password
+              .form__group.mb-4
+                label.form__label(for="password") Password
+                input.form__input(type='password', id="password", placeholder='••••••••', pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})', required, minlength='8', maxlength='20')
+                
               // Confirm Password input
-              .form-outline.mb-3
-                input.form-control.form-control-lg(type='password', id="passwordConfirm", placeholder='••••••••', pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})', required, minlength='8', maxlength='20')
-                label.form-label(for="passwordConfirm") Confirm Password
+              .form__group.mb-4
+                label.form__label(for="passwordConfirm") Confirm Password
+                input.form__input(type='password', id="passwordConfirm", placeholder='••••••••', pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,20}$', required, minlength='8', maxlength='20')
+                
               .text-center.text-lg-start.mt-4.pt-2
-                button.btnn.btn--green.btn-xsmall(style="padding-left: 2.5rem; padding-right: 2.5rem;", type="submit") Register
-              p.small.fw-bold.mt-2.pt-1.mb-0
+                button.btnn.btn--green.btn-small(style="padding-left: 2.5rem; padding-right: 2.5rem;", type="submit") Register
+              p.form__label.fw-bold.mt-2.pt-1.mb-0
                 | Already have an account? 
                 a.link-danger(href="/login") Login
 

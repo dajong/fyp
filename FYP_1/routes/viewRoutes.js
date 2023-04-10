@@ -7,14 +7,15 @@ const router = express.Router();
 router.get("/", authController.isLoggedIn, viewsController.getHomePage);
 router.get(
   "/contactAdmin",
-  // authController.isLoggedIn,
+  authController.isLoggedIn,
   viewsController.contactAdmin
 );
 router.get("/forgetPassword", viewsController.forgetPassword);
 router.get("/overview", authController.isLoggedIn, viewsController.getOverview);
 router.get(
   "/property/:slug",
-  authController.isLoggedIn,
+  authController.protect,
+  viewsController.checkFavoriteStatus,
   viewsController.getProperty
 );
 router.get("/login", authController.isLoggedIn, viewsController.getLoginForm);
@@ -30,6 +31,11 @@ router.get(
   viewsController.getCheckoutForm
 );
 router.get("/bidding", authController.protect, viewsController.getBiddings);
+router.get(
+  "/getFavouriteProperties",
+  authController.protect,
+  viewsController.getFavouriteProperties
+);
 router.get(
   "/addAdmin",
   authController.protect,

@@ -12,17 +12,19 @@ block content
               .d-flex.flex-row.align-items-center.justify-content-center.justify-content-lg-start
               h1.my-5 Login to your account now
               // Email input
-              .form-outline.mb-4
-                input.form-control.form-control-lg(type="email", id="email" placeholder="Enter a valid email address")
-                label.form-label(for="email") Email address
+              .form__group.mb-4
+                label.form__label(for="email") Email address
+                input.form__input(type="email", id="email" placeholder="Enter a valid email address")
+                
               // Password input
-              .form-outline.mb-3
-                input.form-control.form-control-lg(type="password", id="password", placeholder="Enter password")
-                label.form-label(for="password") Password
+              .form__group.mb-4
+                label.form__label(for="password") Password
+                input.form__input(type="password", id="password", placeholder="Enter password")
+                
               .d-flex.justify-content-between.align-items-center
-                a.text-body(href="/forgetPassword") Forgot password?
+                a.form__label(href="/forgetPassword") Forgot password?
               .text-center.text-lg-start.mt-4.pt-2
-                button.btnn.btn--green.btn-xsmall(style="padding-left: 2.5rem; padding-right: 2.5rem;", type="submit") Login
-                p.small.fw-bold.mt-2.pt-1.mb-0
+                button.btnn.btn--green.btn-small(style="padding-left: 2.5rem; padding-right: 2.5rem;", type="submit") Login
+                p.form__label.fw-bold.mt-2.pt-1.mb-0
                   | Don't have an account? 
                   a.link-danger(href="/signup") Register

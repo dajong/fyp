@@ -8,23 +8,27 @@ block content
           .col-md-9.col-lg-3.col-xl-5
             img.img-fluid(src="/img/message.jpeg", alt="Sample image")
           .col-md-8.col-lg-9.col-xl-4.offset-xl-1
-            form(class="form--contactAdmin")
+            form(class="form--contactAdmin form")
               h1.my-5 Contact Us
               // Name input
-              .form-outline.mb-4
-                input.form-control.form-control-lg(type="text", id="name" placeholder="Enter your name" required)
-                label.form-label(for="name") Your Name
+              .form__group.mb-4
+                label.form__label(for='name') Name
+                input.form__input(type="text", id="name" placeholder="Enter your name" required)
+                
               // Email input
-              .form-outline.mb-4
-                input.form-control.form-control-lg(type="email", id="email" placeholder="Enter a valid email address" required)
-                label.form-label(for="email") Your Email
+              .form__group.mb-4
+                label.form__label(for="email") Email
+                input.form__input(type="email", id="email" placeholder="Enter a valid email address" required)
+                
               // Subject input
-              .form-outline.mb-4
-                input.form-control.form-control-lg(type="text", id="subject" placeholder="Enter subject" required)
-                label.form-label(for="subject") Subject
+              .form__group.mb-4
+                label.form__label(for="subject") Subject
+                input.form__input(type="text", id="subject" placeholder="Enter subject" required)
+                
               // Message input
-              .form-outline.mb-3
-                textarea.form-control.form-control-lg(id="message", rows="5", placeholder="Enter your message" required)
-                label.form-label(for="message") Your Message
+              .form__group.mb-4
+                label.form__label(for="message") Message
+                textarea.form__input(id="message", rows="5", placeholder="Enter your message" required)
+                
               .text-center.text-lg-start.mt-4.pt-2
-                button.btnn.btn--green.btn-xsmall(style="padding-left: 2.5rem; padding-right: 2.5rem;", type="submit") Send Query
+                button.btnn.btn--green.btn-small(style="padding-left: 2.5rem; padding-right: 2.5rem;", type="submit") Send Query

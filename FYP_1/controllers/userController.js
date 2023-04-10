@@ -78,6 +78,46 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.addFavoriteProperty = catchAsync(async (req, res, next) => {
+  // Get the user ID from the request
+  const userId = req.user.id;
+  // Get the property ID from the request body
+  const { slug } = req.body;
+  console.log(slug);
+  // Find the user by ID
+  const user = await User.findById(userId);
+
+  // Check if the propertyId is not already in the favoriteProperties list
+  if (!user.favoriteProperties.includes(slug)) {
+    await User.findByIdAndUpdate(req.user.id, {
+      $push: { favoriteProperties: slug }
+    });
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      user: user
+    }
+  });
+});
+
+exports.removeFavoriteProperty = catchAsync(async (req, res, next) => {
+  // Get the property ID from the request body
+  const { slug } = req.body;
+
+  // Find the user by ID and update the favoriteProperties list
+  const user = await User.findByIdAndUpdate(req.user.id, {
+    $pull: { favoriteProperties: slug }
+  });
+  res.status(200).json({
+    status: "success",
+    data: {
+      user: user
+    }
+  });
+});
+
 exports.placeBid = catchAsync(async (req, res, next) => {
   const { address } = req.body;
 

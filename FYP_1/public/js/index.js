@@ -1,8 +1,8 @@
 /* eslint-disable */
 import '@babel/polyfill';
 import { login, logout } from './login';
-import { register } from './registration';
-import { updateSettings, forgetPassword, userPlaceBid, removeBidding, resetPassword } from './updateSettings';
+import { register, addNewAdmin } from './registration';
+import { updateSettings, forgetPassword, userPlaceBid, removeBidding, resetPassword, addToFavourite, removeFromFavourite } from './updateSettings';
 import { createProperty, getProperty, soldProperty, placeBid } from './property';
 import { createTokenNFT, connectWalletToken, buyNft, contractPlaceBid, depositPayment } from './web3ModalFactory';
 import { sendQuery,replyQuery } from './query';
@@ -24,6 +24,8 @@ const biddingForm = document.querySelector(".form--bidding");
 const contactAdminForm = document.querySelector(".form--contactAdmin");
 const replyQueryForm = document.querySelector(".form--replyQuery");
 const resetPasswordForm = document.querySelector(".form--resetPassword");
+const addToFavouriteBtn = document.getElementById("add-to-favourite");
+const removeFromFavouriteBtn = document.getElementById("remove-from-favourite");
 
 const connectWallet = async (e) => {
   if (!window.ethereum) return alert('Please install MetaMask.');
@@ -113,7 +115,7 @@ if (registrationForm)
     const email = document.getElementById('email').value;
     const name = document.getElementById('name').value;
     const password = document.getElementById('password').value;
-    register(email, name, "admin", password, password);
+    addNewAdmin(email, name, password);
   });
 
 if (logOutBtn) logOutBtn.addEventListener('click', logout);
@@ -201,7 +203,6 @@ if (userPasswordForm)
     await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
     await soldProperty(curProperty.data.address);
     await removeBidding(curProperty.data.address);
-
   });
 
   if(depositBiddingBtn)
@@ -250,3 +251,18 @@ if(resetPasswordForm)
   
     await resetPassword(password, passwordConfirmation, resetToken);
 });
+
+if(addToFavouriteBtn)
+  addToFavouriteBtn.addEventListener('click', async e => {
+    console.log("Adding property to favorite");
+    const slug = addToFavouriteBtn.dataset.slug;
+    console.log(slug);
+    await addToFavourite(slug);
+  });
+
+  if(removeFromFavouriteBtn)
+  removeFromFavouriteBtn.addEventListener('click', async e => {
+    console.log("Removing property from favorite");
+    const slug = removeFromFavouriteBtn.dataset.slug;
+    await removeFromFavourite(slug);
+  });

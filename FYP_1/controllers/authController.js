@@ -40,25 +40,31 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
-// exports.connectWalletToken = catchAsync(async (req, res, next) => {
-//   const { account } = req.body;
-//   const token = signToken(account);
-//   const cookieOptions = {
-//     expires: new Date(
-//       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-//     ),
-//     httpOnly: true
-//   };
-//   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+exports.addNewAdmin = catchAsync(async (req, res, next) => {
+  const { email, name, password } = req.body;
 
-//   res.cookie("connectedWallet", token, cookieOptions);
+  // Check if user already exists
+  const userExists = await User.findOne({ email });
 
-//   res.status(200).json({
-//     status: "success",
-//     token,
-//     account
-//   });
-// });
+  if (userExists) {
+    res.status(400);
+    throw new Error("User already exists");
+  }
+
+  // Create a new user
+  const newUser = await User.create({
+    name: name,
+    email: email,
+    role: "admin",
+    password: password,
+    passwordConfirm: password
+  });
+
+  // Send a email to confirm registration
+  await new Email(name, email).sendWelcome();
+
+  res.status(201).json({ status: "success", data: newUser });
+});
 
 exports.signup = catchAsync(async (req, res, next) => {
   const { email, name, role, password, passwordConfirm } = req.body;

@@ -80,6 +80,51 @@ export const removeBidding = async (address) => {
   }
 };
 
+export const addToFavourite = async (slug) => {
+  try {
+    const res = await axios({
+      method: 'PATCH',
+      url: 'http://localhost:3000/api/v1/users/addFavouriteProperty',
+      data: {
+        slug
+      }
+    });
+    if (res.data.status === 'success') {
+      window.setTimeout(() => {
+        location.assign('/property/' + slug);
+      }, 1500);
+      showAlert('success',"Added to favourite!");
+    }
+  } catch (err) {
+    console.log(err);
+    showAlert('error', err.response.data.message);
+  }
+};
+
+export const removeFromFavourite = async (slug) => {
+  try {
+    const res = await axios({
+      method: 'PATCH',
+      url: 'http://localhost:3000/api/v1/users/removeFavouriteProperty',
+      data: {
+        slug
+      }
+    });
+    if (res.data.status === 'success') {
+      showAlert('success',"Property has been removed from favourite list");
+      window.setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+      // window.setTimeout(() => {
+      //   location.assign('/property/' + slug);
+      // }, 1500);
+    }
+  } catch (err) {
+    console.log(err);
+    showAlert('error', err.response.data.message);
+  }
+};
+
 export const resetPassword = async (password, passwordConfirmation, resetToken) => {
   try {
     const res = await axios({

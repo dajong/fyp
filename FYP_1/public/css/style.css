@@ -1393,4 +1393,27 @@
   }
 }
 
+.btn-small-red,
+.btn-small-red:link,
+.btn-small-red:visited {
+  background-color: red;
+  color: #fff;
+  font-size: 1.4rem;
+  padding: 1.25rem 3rem;
+  border-radius: 10rem;
+  text-transform: uppercase;
+  position: relative;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 400;
+  border: none;
+}
+
+.btn-small-red:hover {
+  background-color: rgba(232, 135, 150, 0.8);
+  color: rgba(255, 255, 255, 0.85);
+}
+
   

@@ -14,8 +14,9 @@ block content
         ul.side-nav
           +navItem('#', 'Settings', 'settings', true)
           if (role === 'user')
-            +navItem('/bidding', 'My bidding', 'star')
-            +navItem('/myProperty', 'My property', 'home')
+            +navItem('/bidding', 'My Bidding', 'star')
+            +navItem('/getFavouriteProperties', 'Favourite Properties', 'heart')
+            +navItem('/myProperty', 'My Property', 'home')
           else if (role === 'admin')
             +navItem('/queries', 'Customer Queries', 'mail')
             +navItem('/addAdmin', 'Add new admin', 'user')

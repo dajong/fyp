@@ -1,0 +1,40 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+  li(class=`${active ? 'side-nav--active' : ''}`)
+    a(href=`${link}`)
+      svg
+        use(xlink:href=`img/icons.svg#icon-${icon}`)
+      | #{text}
+
+block content
+  main.main
+    .user-view
+      nav.user-view__menu
+        ul.side-nav
+          +navItem('/me', 'Settings', 'settings')
+          +navItem('/bidding', 'My bidding', 'star')
+          +navItem('#', 'Favourite Properties', 'heart', true)
+          +navItem('/myProperty', 'My property', 'home')
+
+      .user-view__content
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Favourite Properties
+
+          table.table.table-responsive
+            thead
+                tr
+                    th(scope='col') Address
+                    th(scope='col') View
+                    th(scope='col') Remove
+            tbody
+                each property in properties
+                    tr
+                        th(scope='row')
+                            =`${property.address}, ${property.city}`
+                        td
+                            a.btn-xsmall.btn-xgreen(href=`property/${property.slug}`) View Property
+                        td
+                            button.btn-xsmall.btn-red#remove-from-favourite(data-slug=`${property.slug}`) Remove from favourites
+
+   

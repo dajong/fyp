@@ -92,6 +92,17 @@ exports.getCreatePropertyPage = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.checkFavoriteStatus = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+  const user = await User.findById(userId);
+  console.log(req.params.slug);
+  const isFavorite = user.favoriteProperties.includes(req.params.slug);
+
+  res.locals.isFavorite = isFavorite;
+  console.log(isFavorite);
+  next();
+});
+
 exports.getProperty = catchAsync(async (req, res, next) => {
   const property = await Property.findOne({ slug: req.params.slug });
 
@@ -178,6 +189,19 @@ exports.getBiddings = catchAsync(async (req, res, next) => {
   ]);
   res.status(200).render("userBiddings", {
     title: "Current Biddings",
+    properties
+  });
+});
+
+exports.getFavouriteProperties = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  const properties = await Property.aggregate([
+    {
+      $match: { slug: { $in: user.favoriteProperties } }
+    }
+  ]);
+  res.status(200).render("favouriteProperties", {
+    title: "Favourite Properties",
     properties
   });
 });

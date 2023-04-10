@@ -88,6 +88,16 @@ block content
           p.cta__text= `Make this dream house yours!`
           
           if user
-            a.btn-small.span-all-rows#buy-property(data-property-id=`${property.id}`) Buy
+            a.btn-small.span-all-rows#buy-property(data-property-id=`${property.id}`) 
+              i.fas.fa-shopping-cart
+              | Buy
+            if isFavorite === true
+              a.btn-small-red.span-all-rows#remove-from-favourite(data-slug=`${property.slug}`)
+                i.fas.fa-heart
+                | Remove from favorite
+            else 
+              a.btn-small-red.span-all-rows#add-to-favourite(data-slug=`${property.slug}`)
+                i.fas.fa-heart
+                | Add to favorite
           else
             a.btn.btn-success.span-all-rows(href='/login') Log in to buy

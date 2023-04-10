@@ -4,7 +4,7 @@ const authController = require("../controllers/authController");
 
 const router = express.Router();
 
-router.route("/").post(queryController.createQuery);
+router.route("/").post(authController.isLoggedIn, queryController.createQuery);
 router
   .route("/replyQuery")
   .post(

@@ -71,6 +71,7 @@ block content
               label.form-label(for='biddingAmount') Place your bid now!
               input#biddingAmount.form-control(type='Number', placeholder=`${property.biddingPrice + 1}`, min=property.biddingPrice + 1, required)
             input#curPropertyAddress.form-control(type='hidden', value=`${property.address}`)
+            input#curTokenId.form-control(type='hidden', value=`${property.nftContract}`)
             input#curUser.form-control(type='hidden', value=`${user.id}`)
             div
               button(type="submit" class="btn btn-success") Place Bid

@@ -14,6 +14,7 @@ block content
         ul.side-nav
           +navItem('/me', 'Settings', 'settings')
           +navItem('#', 'My bidding', 'star', true)
+          +navItem('/myProperty', 'My property', 'home')
 
       .user-view__content
         .user-view__form-container
@@ -49,4 +50,4 @@ block content
 
                         if(property.currentHighestBidder === user.id && property.createdAt < Date.now())
                             td
-                                button.btn-xsmall.btn-xgreen#checkout-bidding-btn(value=`${property._id}`) Checkout
+                                a.btn-xsmall.btn-xgreen#checkout-bidding-btn(href=`checkoutBidProperty/${property.slug}`) Checkout

@@ -5,9 +5,6 @@ const Query = require("../models/queryModel");
 const AppError = require("../utils/appError");
 
 exports.getOverview = catchAsync(async (req, res, next) => {
-  // const { city, numBedrooms, numBathrooms, minPrice, maxPrice } = req.query;
-  // const mNumBedrooms = numBedrooms === "" ? 1 : Number(numBedrooms);
-  // const mNumBathrooms = numBathrooms === "" ? 1 : Number(numBathrooms);
   const { city, minPrice, maxPrice } = req.query;
   const mMinprice = minPrice === "" ? 0 : Number(minPrice);
   const mMaxPrice = maxPrice === "" ? Number.MAX_VALUE : Number(maxPrice);
@@ -27,10 +24,6 @@ exports.getOverview = catchAsync(async (req, res, next) => {
       .equals(false)
       .where("city")
       .equals(city)
-      // .where("numBedrooms")
-      // .gte(mNumBedrooms)
-      // .where("numBedrooms")
-      // .gte(mNumBathrooms)
       .where("price")
       .gte(mMinprice)
       .lte(mMaxPrice);
@@ -43,7 +36,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
 });
 
 exports.getHomePage = catchAsync(async (req, res, next) => {
-  const cities = ["Limerick", "Dublin", "Cork", "Galway"];
+  const cities = await Property.distinct("city");
 
   res.status(200).render("home_page", {
     title: "Home",
@@ -113,6 +106,19 @@ exports.getProperty = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getCheckoutForm = catchAsync(async (req, res, next) => {
+  const property = await Property.findOne({ slug: req.params.slug });
+
+  if (!property) {
+    return next(new AppError("There is no property with that name.", 404));
+  }
+
+  res.status(200).render("checkoutForm", {
+    title: `Checkout`,
+    property
+  });
+});
+
 exports.soldProperty = catchAsync(async (req, res, next) => {
   const { address } = req.body;
 
@@ -147,6 +153,12 @@ exports.contactAdmin = (req, res) => {
 exports.forgetPassword = (req, res) => {
   res.status(200).render("forgotPassword", {
     title: "Forget Password"
+  });
+};
+
+exports.getNewAdminRegistrationForm = (req, res) => {
+  res.status(200).render("addNewAdmin", {
+    title: "Add new admin"
   });
 };
 

@@ -6,7 +6,7 @@ module.exports = class Email {
   constructor(name, email) {
     this.to = email;
     this.firstName = name.split(" ")[0];
-    this.from = `Daniel Jong <${process.env.EMAIL_FROM}>`;
+    this.from = `Irish House Listings <${process.env.EMAIL_FROM}>`;
   }
 
   newTransport() {

@@ -24,7 +24,17 @@ router.get(
   viewsController.getRegistrationPage
 );
 router.get("/me", authController.protect, viewsController.getAccount);
+router.get(
+  "/checkoutBidProperty/:slug",
+  authController.protect,
+  viewsController.getCheckoutForm
+);
 router.get("/bidding", authController.protect, viewsController.getBiddings);
+router.get(
+  "/addAdmin",
+  authController.protect,
+  viewsController.getNewAdminRegistrationForm
+);
 router.get("/queries", authController.protect, viewsController.getQueries);
 router.get(
   "/replyCustomerQuery/:queryId",

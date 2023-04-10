@@ -4,16 +4,18 @@ import { login, logout } from './login';
 import { register } from './registration';
 import { updateSettings, forgetPassword, userPlaceBid, removeBidding, resetPassword } from './updateSettings';
 import { createProperty, getProperty, soldProperty, placeBid } from './property';
-import { createTokenNFT, connectWalletToken, buyNft } from './web3ModalFactory';
+import { createTokenNFT, connectWalletToken, buyNft, contractPlaceBid, depositPayment } from './web3ModalFactory';
 import { sendQuery,replyQuery } from './query';
 // DOM ELEMENTS
 const walletButton = document.getElementById("btn--wallet");
 const loginForm = document.querySelector(".form--login");
 const registrationForm = document.querySelector(".form--registration");
+const registrationAdminForm = document.querySelector(".form--registrationAdmin");
 const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
-const checkoutBiddingBtn = document.getElementById('checkout-bidding-btn');
+const buyBiddingBtn = document.getElementById('buy-bid-property');
+const depositBiddingBtn = document.getElementById('deposit-bid-property');
 const buyBtn = document.getElementById('buy-property');
 const removeBiddingBtn = document.getElementById('remove-bidding-btn');
 const createPropertyForm = document.querySelector(".form--createProperty");
@@ -25,10 +27,7 @@ const resetPasswordForm = document.querySelector(".form--resetPassword");
 
 const connectWallet = async (e) => {
   if (!window.ethereum) return alert('Please install MetaMask.');
-
   const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-  // await connectWalletToken(accounts[0]);
-  // window.location.reload();
 };
 
 const checkIfWalletIsConnect = async (e) => {
@@ -82,8 +81,9 @@ if (loginForm)
     const squareFeet = document.getElementById('squareFeet').value;
     const lotSize = document.getElementById('lotSize').value;
 
+    console.log(imageCover);
     createProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, price, imageCover, description, biddingPrice);
-    // createTokenNFT(price, address);
+    createTokenNFT(price, address, biddingPrice);
 
     document.getElementById('address').value = "";
     document.getElementById('listingNum').value = "";
@@ -91,7 +91,6 @@ if (loginForm)
     document.getElementById('numBedroom').value = "";
     document.getElementById('numBathroom').value = "";
     document.getElementById('price').value = "";
-    document.getElementById('imageCover').value = "";
     document.getElementById('squareFeet').value = "";
     document.getElementById('description').value = "";
     document.getElementById('lotSize').value = "";
@@ -106,6 +105,15 @@ if (registrationForm)
     const password = document.getElementById('password').value;
     const passwordConfirmation = document.getElementById('passwordConfirm').value;
     register(email, name, "user", password, passwordConfirmation);
+  });
+
+  if (registrationAdminForm)
+  registrationAdminForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const name = document.getElementById('name').value;
+    const password = document.getElementById('password').value;
+    register(email, name, "admin", password, password);
   });
 
 if (logOutBtn) logOutBtn.addEventListener('click', logout);
@@ -148,20 +156,8 @@ if (userPasswordForm)
     const { propertyId } = e.target.dataset;
     const curProperty = await getProperty(propertyId);
     console.log(curProperty);
-    await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.price);
+    await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.price, false);
     await soldProperty(curProperty.data.address);
-  });
-
-  if(checkoutBiddingBtn)
-  checkoutBiddingBtn.addEventListener('click',async e => {
-    console.log("button_click")
-    e.target.textContent = 'Processing...';
-    const propertyId = e.target.value;
-    console.log(propertyId);
-    const curProperty = await getProperty(propertyId);
-    console.log(curProperty);
-    // await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice);
-    // await soldProperty(curProperty.data.address);
   });
 
   if(biddingForm)
@@ -171,8 +167,13 @@ if (userPasswordForm)
     const biddingPrice = document.getElementById('biddingAmount').value;
     const curPropertyAddress = document.getElementById('curPropertyAddress').value;
     const curUser = document.getElementById('curUser').value;
+
+    // Can't allow admin to return deposit to customer automatically, will comment out for now.
+    const tokenId = BigInt(document.getElementById('curTokenId').value);
+    // await contractPlaceBid(tokenId, biddingPrice);
     await placeBid(curPropertyAddress, biddingPrice, curUser);
     await userPlaceBid(curPropertyAddress, curUser);
+    
     document.getElementById('biddingAmount').textContent = '';
   });
 
@@ -188,6 +189,31 @@ if (userPasswordForm)
   walletButton.addEventListener('click', e => {
     console.log("Button clicked!");
     checkIfWalletIsConnect(e);
+  });
+
+  if(buyBiddingBtn)
+  buyBiddingBtn.addEventListener('click', async(e) => {
+    e.target.textContent = 'Processing...';
+    const { propertyId } = e.target.dataset;
+    const curProperty = await getProperty(propertyId);
+    console.log(curProperty);
+    // await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
+    await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
+    await soldProperty(curProperty.data.address);
+    await removeBidding(curProperty.data.address);
+
+  });
+
+  if(depositBiddingBtn)
+  depositBiddingBtn.addEventListener('click', async(e) => {
+    e.target.textContent = 'Processing...';
+    const { propertyId } = e.target.dataset;
+    const curProperty = await getProperty(propertyId);
+    console.log(curProperty);
+    // await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
+    await depositPayment(BigInt(curProperty.data.nftContract), (curProperty.data.biddingPrice / 100 * 10));
+    await soldProperty(curProperty.data.address);
+    await removeBidding(curProperty.data.address);
   });
 
   if(contactAdminForm)

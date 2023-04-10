@@ -13,7 +13,11 @@ router.patch("/resetPassword/:token", authController.resetPassword);
 
 // Protect all routes after this middleware
 router.use(authController.protect);
-
+router.post(
+  "/addAdmin",
+  authController.restrictTo("admin"),
+  authController.signup
+);
 router.patch("/updateMyPassword", authController.updatePassword);
 router.get("/me", userController.getMe, userController.getUser);
 // router.post("/connectWalletToken", authController.connectWalletToken);

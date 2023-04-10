@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600&display=swap');
+
 :root {
     --section-rotate: 9vw;
   }
@@ -32,7 +34,6 @@
     font-weight: 300;
     font-family: 'Lato', sans-serif;
     color: #777;
-    padding: 3rem;
     min-height: 100vh;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -183,9 +184,9 @@
     z-index: 10;
   }
   
-  .btn,
-  .btn:link,
-  .btn:visited {
+  .btnn,
+  .btnn:link,
+  .btnn:visited {
     font-size: 1.6rem;
     padding: 1.4rem 3rem;
     border-radius: 10rem;
@@ -203,21 +204,21 @@
     cursor: pointer;
   }
   
-  .btn:hover {
+  .btnn:hover {
     -webkit-transform: translateY(-3px);
     transform: translateY(-3px);
     -webkit-box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
   }
   
-  .btn:active {
+  .btnn:active {
     -webkit-transform: translateY(-1px);
     transform: translateY(-1px);
     -webkit-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   }
   
-  .btn:focus {
+  .btnn:focus {
     outline: none;
     background-color: #2e864b;
   }
@@ -1361,4 +1362,35 @@
     -webkit-transform: translateY(-2px);
     transform: translateY(-2px);
   }
+
+  .hero-image {
+    background-image: url('/img/home-img/hero-image.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 45vh; /* Adjust this value according to your preference */
+
+  }
+
+  .search-form {
+    background-color: rgba(255, 255, 255, 0.85);
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  /* Style the company name */
+.company-name {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.5em;
+  margin-left: 1em;
+}
+
+/* Make the company name disappear on small screens */
+@media (max-width: 576px) {
+  .company-name {
+    display: none;
+  }
+}
+
   

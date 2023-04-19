@@ -26,6 +26,11 @@ router.get(
 );
 router.get("/me", authController.protect, viewsController.getAccount);
 router.get(
+  "/myProperty",
+  authController.protect,
+  viewsController.getUserProperty
+);
+router.get(
   "/checkoutBidProperty/:slug",
   authController.protect,
   viewsController.getCheckoutForm

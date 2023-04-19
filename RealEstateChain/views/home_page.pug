@@ -23,20 +23,68 @@ block content
                         div(class="text-center col-3")
                             button(type="submit" class="btnn btn--green") Filter
     // Details section
-    section(class="details-section mt-5 py-3")
-        div(class="container")
-            .row.g-4.py-5.row-cols-1.row-cols-lg-3
-                .feature.col
-                    h2 Enhanced security and transparency
-                    p  By leveraging blockchain technology, our app can provide a secure and transparent environment for property transactions. Each transaction is recorded on a decentralized ledger, making it tamper-proof and easily verifiable. This level of transparency can help build trust between buyers, sellers, and other stakeholders involved in the real estate process, reducing the risks of fraud and misrepresentation.
-                    button.btnn#btn--test test
+    if(role!="admin")
+        section(class="details-section mt-5 py-3")
+            div(class="container")
+                .row.g-4.py-5.row-cols-1.row-cols-lg-3
+                    .feature.col
+                        h2 Enhanced security and transparency
+                        p  By leveraging blockchain technology, our app can provide a secure and transparent environment for property transactions. Each transaction is recorded on a decentralized ledger, making it tamper-proof and easily verifiable. This level of transparency can help build trust between buyers, sellers, and other stakeholders involved in the real estate process, reducing the risks of fraud and misrepresentation.
+                        button.btnn#btn--test test
 
-                .feature.col
+                    .feature.col
 
-                    h2 Efficient ownership verification and transfer
-                    p Our app can streamline the process of property ownership verification and transfer by utilizing smart contracts on the blockchain. These self-executing contracts can automatically enforce the terms and conditions of a property transaction, reducing the need for intermediaries.
+                        h2 Efficient ownership verification and transfer
+                        p Our app can streamline the process of property ownership verification and transfer by utilizing smart contracts on the blockchain. These self-executing contracts can automatically enforce the terms and conditions of a property transaction, reducing the need for intermediaries.
 
-                .feature.col
+                    .feature.col
 
-                    h2 Tokenisation of real estate assets
-                    p The app can revolutionise the real estate industry by enabling the tokenisation of properties, creating digital representations of real estate assets on the blockchain. 
+                        h2 Tokenisation of real estate assets
+                        p The app can revolutionise the real estate industry by enabling the tokenisation of properties, creating digital representations of real estate assets on the blockchain.
+    else
+        .container
+            .row
+                .col
+                    h1.mt-3 Admin Dashboard
+
+            br
+
+            .row
+                .col-lg-6
+                    h2 Property Statistics
+                    table.table.table-striped
+                        thead
+                            tr
+                                th Metric
+                                th Count
+                        tbody
+                            tr
+                                td Total Properties
+                                td #{propertyStats.total}
+                            tr
+                                td Active Properties
+                                td #{propertyStats.active}
+                            tr
+                                td Sold Properties
+                                td #{propertyStats.sold}
+                            tr
+                                td Average Property Price
+                                td #{propertyStats.avgPrice}
+                            tr
+                                td Total Property Views
+                                td #{propertyStats.totalViews}
+
+                .col-lg-6
+                    h2 User Statistics
+                    table.table.table-striped
+                        thead
+                            tr
+                                th Metric
+                                th Count
+                        tbody
+                            tr
+                                td Active Users
+                                td #{userStats.active}
+                            tr
+                                td Banned Users
+                                td #{userStats.inactive}

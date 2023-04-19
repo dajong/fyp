@@ -1,0 +1,26 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+  li(class=`${active ? 'side-nav--active' : ''}`)
+    a(href=`${link}`)
+      svg
+        use(xlink:href=`img/icons.svg#icon-${icon}`)
+      | #{text}
+
+block content
+  main.main
+    .user-view
+      nav.user-view__menu
+        ul.side-nav
+          +navItem('#', 'Settings', 'settings')
+          if (role === 'user')
+            +navItem('/bidding', 'My Bidding', 'star')
+            +navItem('/getFavouriteProperties', 'Favourite Properties', 'heart')
+            +navItem('/myProperty', 'My Property', 'home', true)
+          else if (role === 'admin')
+            +navItem('/queries', 'Customer Queries', 'mail')
+            +navItem('/addAdmin', 'Add new admin', 'user')
+
+      .user-view__content
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Your property

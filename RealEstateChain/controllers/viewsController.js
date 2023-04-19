@@ -35,12 +35,43 @@ exports.getOverview = catchAsync(async (req, res, next) => {
   });
 });
 
+async function getPropertiesStatistics() {
+  const total = await Property.countDocuments();
+  const active = await Property.countDocuments({ propertySold: false });
+  const sold = await Property.countDocuments({ propertySold: true });
+  const avgPrice = await Property.aggregate([
+    { $group: { _id: null, avgPrice: { $avg: "$price" } } }
+  ]);
+  const totalViews = await Property.aggregate([
+    { $group: { _id: null, totalViews: { $sum: "$propertyViews" } } }
+  ]);
+
+  return {
+    total,
+    active,
+    sold,
+    avgPrice: avgPrice.length > 0 ? avgPrice[0].avgPrice : 0,
+    totalViews: totalViews.length > 0 ? totalViews[0].totalViews : 0
+  };
+}
+
+async function getUsersStatistics() {
+  const active = await User.countDocuments({ active: true, role: "user" });
+  const inactive = await User.countDocuments({ active: false, role: "user" });
+
+  return { active, inactive };
+}
+
 exports.getHomePage = catchAsync(async (req, res, next) => {
   const cities = await Property.distinct("city");
+  const propertyStats = await getPropertiesStatistics();
+  const userStats = await getUsersStatistics();
 
   res.status(200).render("home_page", {
     title: "Home",
-    cities
+    cities,
+    propertyStats,
+    userStats
   });
 });
 
@@ -178,6 +209,12 @@ exports.getNewAdminRegistrationForm = (req, res) => {
 exports.getAccount = (req, res) => {
   res.status(200).render("account", {
     title: "Your account"
+  });
+};
+
+exports.getUserProperty = (req, res) => {
+  res.status(200).render("userProperty", {
+    title: "Your property"
   });
 };
 

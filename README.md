@@ -1,16 +1,18 @@
 # Real estate web application leveraging blockchain technology
 
-### Introduction
+## Introduction
 This is a final year project for Technological University of Shannon. RealEstateChain is a web application that allows users to buy, sell, and manage real estate properties using blockchain technology. The application ensures transparency, security, and efficiency in real estate transactions by leveraging the power of decentralized ledger technology.
 
 This README provides an overview of the project, instructions on how to set up and use the application, and information about contributing to the project.
 
-### Prerequisites
+## Prerequisites
 Before you can run the RealEstateChain application, ensure you have the following installed on your system:
 
 - Node.js (version 14.x or higher)
 - npm (version 6.x or higher)
 - MongoDB (version 4.x or higher)
+- MetaMask (browser extension is recommended)
+- IDE (Visual Studio Code is recommended)
 
 ## Installation
 
@@ -39,7 +41,14 @@ npx hardhat node
 npx hardhat run scripts/deploy.js --network localhost
 ```
 
-### Author
+5) Running the application:
+``` shell
+npm start
+```
+
+6) To access the application, run  `http://localhost:3000` on your browser.
+
+## Author
 
 - Name: Daniel Jong
 - KNumber: K00244549

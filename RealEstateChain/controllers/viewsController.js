@@ -212,11 +212,18 @@ exports.getAccount = (req, res) => {
   });
 };
 
-exports.getUserProperty = (req, res) => {
+exports.getUserProperty = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  const properties = await Property.aggregate([
+    {
+      $match: { address: { $in: user.propertyPurchased } }
+    }
+  ]);
   res.status(200).render("userProperty", {
-    title: "Your property"
+    title: "Your property",
+    properties
   });
-};
+});
 
 exports.getBiddings = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
@@ -290,17 +297,3 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
     user: updatedUser
   });
 });
-
-// exports.getMyProperties = catchAsync(async (req, res, next) => {
-//   // 1) Find all bookings
-//   const bookings = await Booking.find({ user: req.user.id });
-
-//   // 2) Find properties with the returned IDs
-//   const proper = bookings.map(el => el.tour);
-//   const properties = await Property.find({ _id: { $in: tourIDs } });
-
-//   res.status(200).render("overview", {
-//     title: "My properties",
-//     properties
-//   });
-// });

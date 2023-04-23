@@ -51,13 +51,14 @@ export const getProperty = async (propertyId) => {
 }
 };
 
-export const soldProperty = catchAsync(async (propertyAddress) =>{
+export const soldProperty = catchAsync(async (propertyAddress, slug) =>{
   try {
     const res = await axios({
       method: "POST",
       url: "http://localhost:3000/api/v1/properties/soldProperty",
       data: {
-        address: propertyAddress
+        address: propertyAddress,
+        slug: slug
       }
     });
 
@@ -88,7 +89,7 @@ export const placeBid = catchAsync(async (propertyAddress, newBidPrice, curBidde
       showAlert("success", "New bid is placed");
       setTimeout(() => {
         document.location.reload();
-      }, 3000);
+      }, 1500);
     }
   } catch (err) {
     console.log(err)

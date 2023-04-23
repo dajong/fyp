@@ -4,7 +4,7 @@ mixin navItem(link, text, icon, active)
   li(class=`${active ? 'side-nav--active' : ''}`)
     a(href=`${link}`)
       svg
-        use(xlink:href=`img/icons.svg#icon-${icon}`)
+        use(xlink:href=`../img/icons.svg#icon-${icon}`)
       | #{text}
 
 block content
@@ -24,3 +24,19 @@ block content
       .user-view__content
         .user-view__form-container
           h2.heading-secondary.ma-bt-md Your property
+
+          table.table.table-responsive
+            thead
+                tr
+                    th(scope='col') Address          
+                    th(scope='col') View
+                    
+            tbody
+                each property in properties
+                    tr
+                        th(scope='row')
+                            =`${property.address}`
+                        td
+                            a.btn-xsmall.btn-xgreen(href=`property/${property.slug}`) View Property
+                        
+

@@ -78,6 +78,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.match;
+
 exports.addFavoriteProperty = catchAsync(async (req, res, next) => {
   // Get the user ID from the request
   const userId = req.user.id;

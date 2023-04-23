@@ -125,7 +125,11 @@ const propertySchema = new mongoose.Schema(
     propertySold: Boolean,
     propertyViews: Number,
     biddingPrice: Number,
-    currentHighestBidder: String
+    currentHighestBidder: String,
+    archive: {
+      type: Boolean,
+      default: false
+    }
   },
   {
     toJSON: { virtuals: true },

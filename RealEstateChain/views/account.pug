@@ -1,13 +1,14 @@
 extends base
 
-mixin navItem(link, text, icon, active)
+mixin navItem(link, text, icon, active, id)
   li(class=`${active ? 'side-nav--active' : ''}`)
-    a(href=`${link}`)
+    a(href=`${link}`, id=`${id ? id : ''}`)
       svg
         use(xlink:href=`img/icons.svg#icon-${icon}`)
       | #{text}
 
 block content
+
   main.main
     .user-view
       nav.user-view__menu
@@ -16,7 +17,7 @@ block content
           if (role === 'user')
             +navItem('/bidding', 'My Bidding', 'star')
             +navItem('/getFavouriteProperties', 'Favourite Properties', 'heart')
-            +navItem('/myProperty', 'My Property', 'home')
+            +navItem('/myProperty', 'My Property', 'home', false, 'my-property-link')
           else if (role === 'admin')
             +navItem('/queries', 'Customer Queries', 'mail')
             +navItem('/addAdmin', 'Add new admin', 'user')

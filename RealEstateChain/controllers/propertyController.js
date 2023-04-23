@@ -37,12 +37,39 @@ exports.addContract = catchAsync(async (req, res, next) => {
 });
 
 exports.soldProperty = catchAsync(async (req, res, next) => {
-  const { address } = req.body;
+  // Fetch
+  const { address, slug } = req.body;
 
-  // Filter
+  // Get users that either has them as favorite or bidding property
+  const usersToUpdate = await User.find({
+    $or: [{ favoriteProperties: slug }, { currentBiddingProperty: address }]
+  });
+
+  // Update each user by removing the sold property from the arrays
+  const updatedUsersPromises = usersToUpdate.map(async user => {
+    user.removeSoldProperty(address, slug);
+    await user.save({ validateBeforeSave: false });
+  });
+
+  // Wait for all users to be updated
+  await Promise.all(updatedUsersPromises);
+
+  // Update the buyer by adding the purchased property to the propertyPurchased array
+  await User.findByIdAndUpdate(
+    req.user.id,
+    {
+      $push: { propertyPurchased: address }
+    },
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  // Filter for updating property
   const filter = { address: address };
 
-  // Tickets
+  // field to update
   const update = { propertySold: true };
 
   const property = await Property.findOneAndUpdate(filter, update, {
@@ -73,12 +100,14 @@ exports.placeBid = catchAsync(async (req, res, next) => {
   console.log(property.currentHighestBidder);
 
   const preHighestBidder = await User.findById(property.currentHighestBidder);
-  const url = `http://localhost:3000/property/${property.slug}`;
-  await new EmailWithContent(
-    preHighestBidder.name,
-    preHighestBidder.email,
-    url
-  ).sendOutbidNotification(property.address);
+  if (preHighestBidder) {
+    const url = `http://localhost:3000/property/${property.slug}`;
+    await new EmailWithContent(
+      preHighestBidder.name,
+      preHighestBidder.email,
+      url
+    ).sendOutbidNotification(property.address);
+  }
   const updatedProperty = await Property.findOneAndUpdate(filter, update, {
     new: true
   });

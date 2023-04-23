@@ -51,6 +51,7 @@ const userSchema = new mongoose.Schema({
   },
   currentBiddingProperty: [String],
   favoriteProperties: [String],
+  propertyPurchased: [String],
   userAttempt: {
     type: Number,
     default: 0
@@ -123,6 +124,21 @@ userSchema.methods.createPasswordResetToken = function() {
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
   return resetToken;
+};
+
+// Add this function to your userSchema
+userSchema.methods.removeSoldProperty = function(
+  propertyAddress,
+  propertySlug
+) {
+  this.favoriteProperties = this.favoriteProperties.filter(
+    id => id !== propertySlug
+  );
+  this.currentBiddingProperty = this.currentBiddingProperty.filter(
+    id => id !== propertyAddress
+  );
+
+  return this;
 };
 
 const User = mongoose.model("User", userSchema);

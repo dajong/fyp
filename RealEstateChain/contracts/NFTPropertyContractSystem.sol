@@ -182,41 +182,57 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
     }
 
     /* Returns all unsold market items */
-    function fetchMarketItems() public view returns (MarketItem[] memory) {
+    function fetchMarketItems() public view returns (string[] memory) {
       uint itemCount = _tokenIds.current();
       uint unsoldItemCount = _tokenIds.current() - _itemsSold.current();
       uint currentIndex = 0;
 
-      MarketItem[] memory items = new MarketItem[](unsoldItemCount);
+      string[] memory items = new string[](unsoldItemCount);
       for (uint i = 0; i < itemCount; i++) {
         if (idToMarketItem[i + 1].owner == address(this)) {
           uint currentId = i + 1;
           MarketItem storage currentItem = idToMarketItem[currentId];
-          items[currentIndex] = currentItem;
+          items[currentIndex] = currentItem.propertyAddress;
           currentIndex += 1;
         }
       }
       return items;
     }
 
+    /* Returns all unsold market items */
+    function fetchAllItems() public view returns (string[] memory) {
+      uint itemCount = _tokenIds.current();
+      uint currentIndex = 0;
+
+      string[] memory items = new string[](itemCount);
+      for (uint i = 0; i < itemCount; i++) {
+          uint currentId = i + 1;
+          MarketItem storage currentItem = idToMarketItem[currentId];
+          items[currentIndex] = currentItem.propertyAddress;
+          currentIndex += 1;
+      }  
+
+      return items;
+    }
+
     /* Returns only items that a user has purchased */
-    function fetchMyNFTs() public view returns (MarketItem[] memory) {
+    function fetchMyNFTs(address buyer) public view returns (string[] memory) {
       uint totalItemCount = _tokenIds.current();
       uint itemCount = 0;
       uint currentIndex = 0;
 
       for (uint i = 0; i < totalItemCount; i++) {
-        if (idToMarketItem[i + 1].owner == msg.sender) {
+        if (idToMarketItem[i + 1].owner == buyer) {
           itemCount += 1;
         }
       }
 
-      MarketItem[] memory items = new MarketItem[](itemCount);
+      string[] memory items = new string[](itemCount);
       for (uint i = 0; i < totalItemCount; i++) {
-        if (idToMarketItem[i + 1].owner == msg.sender) {
+        if (idToMarketItem[i + 1].owner == buyer) {
           uint currentId = i + 1;
           MarketItem storage currentItem = idToMarketItem[currentId];
-          items[currentIndex] = currentItem;
+          items[currentIndex] = currentItem.propertyAddress;
           currentIndex += 1;
         }
       }

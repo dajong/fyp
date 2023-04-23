@@ -27,6 +27,7 @@ const resetPasswordForm = document.querySelector(".form--resetPassword");
 const addToFavouriteBtn = document.getElementById("add-to-favourite");
 const removeFromFavouriteBtn = document.getElementById("remove-from-favourite");
 const testBtn = document.getElementById("btn--test");
+const propertyLink = document.getElementById("my-property-link");
 
 const connectWallet = async (e) => {
   if (!window.ethereum) return alert('Please install MetaMask.');
@@ -273,3 +274,13 @@ if(testBtn)
     console.log("test run");
     await fetchMyNFTs();
   });
+
+if(propertyLink)
+propertyLink.addEventListener('click', async e => {
+  console.log("link clicked");
+  e.preventDefault();
+    const accounts = await window.ethereum.request({ method: "eth_accounts" });
+    const userAddress = accounts[0];
+    window.location.href = `/myProperty`;
+});
+  

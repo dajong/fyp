@@ -62,39 +62,41 @@ block content
   .w-75.mx-auto.text-center
     iframe.mb-5(src=`https://www.google.com/maps?q='${property.address},${property.city}'&output=embed`, width='800', height='600', style='border:0;', allowfullscreen='', loading='lazy', referrerpolicy='no-referrer-when-downgrade')
 
-  if (user && role==="user")
-    div(class="w-75 mx-auto my-5")  
-        h2(class="my-3 heading-secondary ma-bt-lg")=`Current Bidding: ${property.biddingPrice} ETH`
-        if user.id !== property.currentHighestBidder
-          form(class="form--bidding")
-            div.mb-3  
-              label.form__label(for='biddingAmount') Place your bid now! (Minimum 3 Eth higher than original bid)
-              input#biddingAmount.form__input(type='Number', placeholder=`${property.biddingPrice + 3}`, min=property.biddingPrice + 3, required)
-            input#curPropertyAddress.form-control(type='hidden', value=`${property.address}`)
-            input#curTokenId.form-control(type='hidden', value=`${property.nftContract}`)
-            input#curUser.form-control(type='hidden', value=`${user.id}`)
-            div
-              button(type="submit" class="btnn btn--green") Place Bid
-        else
-          p You are the highest bidder now!
-    
-  if(role==="user")
-    section.section-cta
-      .cta
-        .cta__img.cta__img--logo
-          img(src='/img/logo-white.png', alt='Napropertys logo')
-        .cta__content
-          h2.heading-secondary What are you waiting for?
-          p.cta__text= `Make this dream house yours!`
-          
-          if user
-            if isFavorite === true
-              a.btn-small-red.span-all-rows#remove-from-favourite(data-slug=`${property.slug}`)
-                i.fas.fa-heart
-                | Remove from favorite
-            else 
-              a.btn-small-red.span-all-rows#add-to-favourite(data-slug=`${property.slug}`)
-                i.fas.fa-heart
-                | Add to favorite
+  if !property.propertySold
+
+    if (user && role==="user")
+      div(class="w-75 mx-auto my-5")  
+          h2(class="my-3 heading-secondary ma-bt-lg")=`Current Bidding: ${property.biddingPrice} ETH`
+          if user.id !== property.currentHighestBidder
+            form(class="form--bidding")
+              div.mb-3  
+                label.form__label(for='biddingAmount') Place your bid now! (Minimum 3 Eth higher than original bid)
+                input#biddingAmount.form__input(type='Number', placeholder=`${property.biddingPrice + 3}`, min=property.biddingPrice + 3, required)
+              input#curPropertyAddress.form-control(type='hidden', value=`${property.address}`)
+              input#curTokenId.form-control(type='hidden', value=`${property.nftContract}`)
+              input#curUser.form-control(type='hidden', value=`${user.id}`)
+              div
+                button(type="submit" class="btnn btn--green") Place Bid
           else
-            a.btn.btn-success.span-all-rows(href='/login') Log in
+            p You are the highest bidder now!
+      
+    if(role==="user")
+      section.section-cta
+        .cta
+          .cta__img.cta__img--logo
+            img(src='/img/logo-white.png', alt='logo')
+          .cta__content
+            h2.heading-secondary What are you waiting for?
+            p.cta__text= `Make this dream house yours!`
+            
+            if user
+              if isFavorite === true
+                a.btn-small-red.span-all-rows#remove-from-favourite(data-slug=`${property.slug}`)
+                  i.fas.fa-heart
+                  | Remove from favorite
+              else 
+                a.btn-small-red.span-all-rows#add-to-favourite(data-slug=`${property.slug}`)
+                  i.fas.fa-heart
+                  | Add to favorite
+            else
+              a.btn.btn-success.span-all-rows(href='/login') Log in

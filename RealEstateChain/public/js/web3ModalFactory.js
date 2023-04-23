@@ -27,23 +27,18 @@ const fetchNFT = async (propertyAddress) => {
     return item;
   };
 
-
-export const fetchMyNFTs = async () => {
+// Used to check if user has the NFTs
+const fetchUserNFTs = async () => {
     const provider = new ethers.providers.JsonRpcProvider();
     const contract = fetchContract(provider);
-
-    const data = await contract.fetchMyNFTs();
-    // let contractID;
-    // const items = await Promise.all(data.map(async ({ tokenId, seller, owner, propertyAddress, price: unformattedPrice }) => {
-    //   const tokenURI = await contract.tokenURI(tokenId);
-    //   contractID = tokenId.toString();
-    //   console.log(tokenId);
-    // }));
+    const accounts = await window.ethereum.request({ method: "eth_accounts" });
+    console.log(accounts[0]);
+    const data = await contract.fetchMyNFTs(accounts[0]);
     console.log(data);
-    // const item = data.tokenId.toString();
-    // console.log(item);
-    // return item;
   };
+
+
+
 
 export const addContract = catchAsync(async (propertyAddress) =>{
   const contract = await fetchNFT(propertyAddress);

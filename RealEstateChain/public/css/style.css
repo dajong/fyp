@@ -1416,4 +1416,43 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
+.SectionPicker__SectionWrapper {
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.SectionPicker__Section {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 5px;
+  padding: 10px 20px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.SectionPicker__Section:focus {
+  outline: none;
+}
+
+.SectionPicker__Section:hover {
+  background-color: #f2f2f2;
+}
+
+.SectionPicker__Section.selected {
+  background-color: #0077b6;
+  color: #fff;
+  border-color: #0077b6;
+}
+
+.SectionPicker__Section.selected:hover {
+  background-color: #005f99;
+  border-color: #005f99;
+}
+
   

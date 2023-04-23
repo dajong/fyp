@@ -283,4 +283,13 @@ propertyLink.addEventListener('click', async e => {
     const userAddress = accounts[0];
     window.location.href = `/myProperty`;
 });
+
+const sections = document.querySelectorAll('.SectionPicker__Section');
+
+sections.forEach(section => {
+  section.addEventListener('click', () => {
+    sections.forEach(s => s.classList.remove('selected'));
+    section.classList.add('selected');
+  });
+});
   

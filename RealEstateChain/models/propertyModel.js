@@ -8,8 +8,8 @@ const propertySchema = new mongoose.Schema(
       required: [true, "A property must have an address"],
       unique: true,
       trim: true,
-      maxlength: [40, "A tour name must have less or equal then 40 characters"],
-      minlength: [10, "A tour name must have more or equal then 10 characters"]
+      maxlength: [200, "A address must have less or equal then 40 characters"],
+      minlength: [10, "A address must have more or equal then 10 characters"]
     },
     slug: String,
     city: {
@@ -111,7 +111,6 @@ const propertySchema = new mongoose.Schema(
       type: String,
       required: [true, "Image cover is required"]
     },
-    images: [String],
     createdAt: {
       type: Date,
       default: Date.now(),

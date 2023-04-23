@@ -2,10 +2,14 @@
 
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "hardhat/console.sol";
 
-contract RentalProperties is ERC721, Ownable {
+contract NFTRentalPropertyContractSystem is ERC721URIStorage, Ownable {
     uint256 private _tokenIdCounter;
 
     struct Property {
@@ -16,13 +20,15 @@ contract RentalProperties is ERC721, Ownable {
         bool isRented;
         address renter;
         uint256 lastPaidDate;
+        string propertyAddress;
+        uint256 contractExpiration;
     }
 
     mapping(uint256 => Property) public properties;
 
     constructor() ERC721("RentalProperties", "RPR") {}
 
-    function addProperty(uint256 rent, uint256 securityDeposit) public onlyOwner {
+    function addProperty(string memory tokenURI, uint256 rent, uint256 securityDeposit, string memory propertyAddress) public payable returns (uint) {
         _tokenIdCounter++;
 
         properties[_tokenIdCounter] = Property(
@@ -32,9 +38,17 @@ contract RentalProperties is ERC721, Ownable {
             securityDeposit,
             false,
             address(0),
+            0,
+            propertyAddress,
             0
         );
         _safeMint(msg.sender, _tokenIdCounter);
+        _setTokenURI(_tokenIdCounter, tokenURI);
+        return _tokenIdCounter; 
+    }
+
+    function compareStrings(string memory a, string memory b) public view returns (bool) {
+      return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
     }
 
     function rentProperty(uint256 propertyId) public payable {
@@ -45,7 +59,8 @@ contract RentalProperties is ERC721, Ownable {
 
         property.isRented = true;
         property.renter = msg.sender;
-        property.lastPaidDate = block.timestamp;
+        property.contractExpiration = block.timestamp + 365 days;
+        payable(property.owner).transfer(msg.value);
     }
 
     function payRent(uint256 propertyId) public payable {
@@ -63,10 +78,17 @@ contract RentalProperties is ERC721, Ownable {
     function endRental(uint256 propertyId) public {
         Property storage property = properties[propertyId];
 
-        require(property.renter == msg.sender, "Only the renter can end the rental");
-
         property.isRented = false;
         property.renter = address(0);
+    }
+
+    function renewContract(uint256 propertyId) public {
+        Property storage property = properties[propertyId];
+
+        require(property.renter == msg.sender, "Only the renter can renew the contract");
+        require(block.timestamp >= property.contractExpiration, "Contract has not expired yet");
+
+        property.contractExpiration = block.timestamp + 365 days;
     }
 
     function withdrawSecurityDeposit(uint256 propertyId) public {
@@ -78,5 +100,19 @@ contract RentalProperties is ERC721, Ownable {
         uint256 deposit = property.securityDeposit;
         property.securityDeposit = 0;
         payable(msg.sender).transfer(deposit);
+    }
+
+    function fetchNFTByPropertyAddress(string memory propertyAddress) public view returns (Property memory) {
+      uint totalItemCount = _tokenIdCounter;
+
+      Property memory item;
+      for (uint i = 0; i < totalItemCount; i++) {
+        if (compareStrings(properties[i + 1].propertyAddress, propertyAddress)) {
+          uint currentId = i + 1;
+          Property storage currentItem = properties[currentId];
+          item = currentItem;
+        }
+      }
+      return item;
     }
 }

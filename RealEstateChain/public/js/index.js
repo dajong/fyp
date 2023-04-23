@@ -3,6 +3,7 @@ import '@babel/polyfill';
 import { login, logout } from './login';
 import { register, addNewAdmin } from './registration';
 import { updateSettings, forgetPassword, userPlaceBid, removeBidding, resetPassword, addToFavourite, removeFromFavourite } from './updateSettings';
+import { createRentalTokenNFT, createRentalProperty, applyRental } from './rentalProperty';
 import { createProperty, getProperty, soldProperty, placeBid } from './property';
 import { createTokenNFT, buyNft, depositPayment, fetchMyNFTs } from './web3ModalFactory';
 import { sendQuery,replyQuery } from './query';
@@ -28,6 +29,8 @@ const addToFavouriteBtn = document.getElementById("add-to-favourite");
 const removeFromFavouriteBtn = document.getElementById("remove-from-favourite");
 const testBtn = document.getElementById("btn--test");
 const propertyLink = document.getElementById("my-property-link");
+const createRentalPropertyForm = document.querySelector(".form--createRentalProperty");
+const btnApplyRental = document.getElementById("apply-rental");
 
 const connectWallet = async (e) => {
   if (!window.ethereum) return alert('Please install MetaMask.');
@@ -99,6 +102,32 @@ if (loginForm)
     document.getElementById('description').value = "";
     document.getElementById('lotSize').value = "";
     document.getElementById('biddingPrice').value = "";
+  });
+
+  if(createRentalPropertyForm)
+    createRentalPropertyForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    console.log("Creating rental property..")
+
+    const address = document.getElementById('address').value;
+    const ownerEmail = document.getElementById('ownerEmail').value;
+    const city = document.getElementById('city').value;
+    const listingNum = document.getElementById('listingNum').value;
+    const propertyStyle = document.getElementById('propertyStyle').value;
+    const garageType = document.getElementById('garageType').value;
+    const garageSize = document.getElementById('garageSize').value;
+    const numBedroom = document.getElementById('numBedroom').value;
+    const numBathroom = document.getElementById('numBathroom').value;
+    const rent = document.getElementById('rent').value;
+    const imageCover = document.getElementById('imageCover').files[0];
+    const securityDeposit = document.getElementById('securityDeposit').value;
+    const description = document.getElementById('description').value;
+    const berRating = document.getElementById('berRating').value;
+    const squareFeet = document.getElementById('squareFeet').value;
+    const lotSize = document.getElementById('lotSize').value;
+
+    await createRentalProperty(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, rent, imageCover, description, securityDeposit);
+    await createRentalTokenNFT(rent, address, securityDeposit);
   });
 
 if (registrationForm)
@@ -292,4 +321,33 @@ sections.forEach(section => {
     section.classList.add('selected');
   });
 });
+
+const buyTab = document.getElementById("buyTab");
+const rentTab = document.getElementById("rentTab");
+const rentInput = document.getElementById("rent");
+
+if(buyTab){
+  buyTab.addEventListener('click', async e => {
+    buyTab.classList.add("selected");
+    rentTab.classList.remove("selected");
+    rentInput.value = "false";
+  });
+}
+
+if(rentTab){
+  rentTab.addEventListener('click', async e => {
+    buyTab.classList.remove("selected");
+    rentTab.classList.add("selected");
+    rentInput.value = "true";
+  });
+}
+
+if(btnApplyRental){
+  btnApplyRental.addEventListener('click', async e => {
+    const slug = btnApplyRental.dataset.slug;
+    await applyRental(slug);
+  });
+}
+
+
   

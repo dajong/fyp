@@ -1,37 +1,60 @@
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const Property = require("../models/propertyModel");
+const RentalProperty = require("../models/rentalPropertyModel");
 const Query = require("../models/queryModel");
 const AppError = require("../utils/appError");
 
 exports.getOverview = catchAsync(async (req, res, next) => {
-  const { city, minPrice, maxPrice } = req.query;
+  const { rent, city, minPrice, maxPrice } = req.query;
   const mMinprice = minPrice === "" ? 0 : Number(minPrice);
   const mMaxPrice = maxPrice === "" ? Number.MAX_VALUE : Number(maxPrice);
 
   let properties;
-  if (city === "") {
-    properties = await Property.find()
-      .where("propertySold")
-      .equals(false)
-      .where("price")
-      .gte(mMinprice)
-      .lte(mMaxPrice)
-      .sort({ propertyViews: -1 });
-  } else {
-    properties = await Property.find()
-      .where("propertySold")
-      .equals(false)
-      .where("city")
-      .equals(city)
-      .where("price")
-      .gte(mMinprice)
-      .lte(mMaxPrice);
+  if (rent === "false") {
+    if (city === "") {
+      properties = await Property.find()
+        .where("propertySold")
+        .equals(false)
+        .where("price")
+        .gte(mMinprice)
+        .lte(mMaxPrice)
+        .sort({ propertyViews: -1 });
+    } else {
+      properties = await Property.find()
+        .where("propertySold")
+        .equals(false)
+        .where("city")
+        .equals(city)
+        .where("price")
+        .gte(mMinprice)
+        .lte(mMaxPrice);
+    }
+  } else if (rent === "true") {
+    if (city === "") {
+      properties = await RentalProperty.find()
+        .where("rented")
+        .equals(false)
+        .where("rent")
+        .gte(mMinprice)
+        .lte(mMaxPrice)
+        .sort({ propertyViews: -1 });
+    } else {
+      properties = await RentalProperty.find()
+        .where("rented")
+        .equals(false)
+        .where("city")
+        .equals(city)
+        .where("rent")
+        .gte(mMinprice)
+        .lte(mMaxPrice);
+    }
   }
-
+  console.log(properties);
   res.status(200).render("overview", {
     title: "Search Results",
-    properties
+    properties,
+    rent
   });
 });
 
@@ -123,8 +146,67 @@ exports.getCreatePropertyPage = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.checkFavoriteStatus = catchAsync(async (req, res, next) => {
-  console.log(req.user);
+exports.getCreateRentalPropertyPage = catchAsync(async (req, res, next) => {
+  const cities = ["Limerick", "Dublin", "Cork", "Galway"];
+  const propertyTypes = [
+    "Bungalow",
+    "Semi-detached",
+    "Detached",
+    "Cottage",
+    "Terrace",
+    "Duplex",
+    "Condo",
+    "Apartment",
+    "Others"
+  ];
+
+  const garageTypes = ["Attached", "Detached", "Carport"];
+
+  const berRating = [
+    "A1",
+    "A2",
+    "A3",
+    "B1",
+    "B2",
+    "B3",
+    "C1",
+    "C2",
+    "C3",
+    "D1",
+    "D2",
+    "E1",
+    "E2",
+    "F",
+    "G"
+  ];
+  res.status(200).render("createRentalProperty", {
+    title: "Create Rental Property",
+    cities,
+    propertyTypes,
+    garageTypes,
+    berRating
+  });
+});
+
+// exports.checkFavoriteStatus = catchAsync(async (req, res, next) => {
+//   console.log(req.user);
+//   if (req.user) {
+//     const userId = req.user.id;
+//     const user = await User.findById(userId);
+//     const isFavorite = user.favoriteProperties.includes(req.params.slug);
+
+//     res.locals.isFavorite = isFavorite;
+//   }
+
+//   next();
+// });
+
+exports.getProperty = catchAsync(async (req, res, next) => {
+  const property = await Property.findOne({ slug: req.params.slug });
+
+  if (!property) {
+    return next(new AppError("There is no property with that name.", 404));
+  }
   if (req.user) {
     const userId = req.user.id;
     const user = await User.findById(userId);
@@ -133,18 +215,30 @@ exports.checkFavoriteStatus = catchAsync(async (req, res, next) => {
     res.locals.isFavorite = isFavorite;
   }
 
-  next();
+  await property.update({ propertyViews: property.propertyViews + 1 });
+  res.status(200).render("property", {
+    title: `${property.address}`,
+    property
+  });
 });
 
-exports.getProperty = catchAsync(async (req, res, next) => {
-  const property = await Property.findOne({ slug: req.params.slug });
+exports.getRentalProperty = catchAsync(async (req, res, next) => {
+  const property = await RentalProperty.findOne({ slug: req.params.slug });
 
   if (!property) {
     return next(new AppError("There is no property with that name.", 404));
   }
 
+  if (req.user) {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    const isFavorite = user.favoriteProperties.includes(req.params.slug);
+
+    res.locals.isFavorite = isFavorite;
+  }
+
   await property.update({ propertyViews: property.propertyViews + 1 });
-  res.status(200).render("property", {
+  res.status(200).render("rentalProperty", {
     title: `${property.address}`,
     property
   });
@@ -235,6 +329,20 @@ exports.getBiddings = catchAsync(async (req, res, next) => {
   ]);
   res.status(200).render("userBiddings", {
     title: "Current Biddings",
+    properties
+  });
+});
+
+exports.getRentalApplication = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  console.log(user);
+  const properties = await Property.aggregate([
+    {
+      $match: { slug: { $in: user.propertyAppliedRental } }
+    }
+  ]);
+  res.status(200).render("rentalApplications", {
+    title: "Rental Applications",
     properties
   });
 });

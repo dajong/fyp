@@ -15,9 +15,15 @@ router.get("/overview", authController.isLoggedIn, viewsController.getOverview);
 router.get(
   "/property/:slug",
   authController.protect,
-  viewsController.checkFavoriteStatus,
   viewsController.getProperty
 );
+
+router.get(
+  "/property/rent/:slug",
+  authController.protect,
+  viewsController.getRentalProperty
+);
+
 router.get("/login", authController.isLoggedIn, viewsController.getLoginForm);
 router.get(
   "/signup",
@@ -64,6 +70,18 @@ router.get(
   "/createProperty",
   authController.protect,
   viewsController.getCreatePropertyPage
+);
+
+router.get(
+  "/createRentalProperty",
+  authController.protect,
+  viewsController.getCreateRentalPropertyPage
+);
+
+router.get(
+  "/rentalApplications",
+  authController.protect,
+  viewsController.getRentalApplication
 );
 
 module.exports = router;

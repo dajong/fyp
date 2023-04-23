@@ -16,10 +16,96 @@ const rentalPropertySchema = new mongoose.Schema({
       "A property address must have more or equal than 10 characters"
     ]
   },
+  ownerEmail: {
+    type: String,
+    required: [true, "Owner email is required"]
+  },
   slug: String,
   city: {
     type: String,
     required: [true, "City value is required"]
+  },
+  listingNum: {
+    type: Number,
+    required: [true, "Listing number value is required"]
+  },
+  propertyStyle: {
+    type: String,
+    required: [true, "Property Style value is required"],
+    enum: {
+      values: [
+        "Bungalow",
+        "Semi-detached",
+        "Detached",
+        "Cottage",
+        "Terrace",
+        "Duplex",
+        "Condo",
+        "Apartment",
+        "Others"
+      ],
+      message: "Please pick a property style"
+    }
+  },
+  garageType: {
+    type: String,
+    required: [true, "Garage Type value is required"],
+    enum: {
+      values: ["Attached", "Detached", "Carport"],
+      message: "Please pick a garage type"
+    }
+  },
+
+  garageSize: {
+    type: Number,
+    required: [true, "Lot Size value is required"]
+  },
+
+  berRating: {
+    type: String,
+    required: [true, "Ber rating value is required"],
+    enum: {
+      values: [
+        "A1",
+        "A2",
+        "A3",
+        "B1",
+        "B2",
+        "B3",
+        "C1",
+        "C2",
+        "C3",
+        "D1",
+        "D2",
+        "E1",
+        "E2",
+        "F",
+        "G"
+      ],
+      message: "Please pick a value"
+    }
+  },
+
+  squareFeet: {
+    type: Number,
+    default: 1,
+    required: [true, "Ber rating value is required"]
+  },
+
+  lotSize: {
+    type: String,
+    required: [true, "Lot Size value is required"]
+  },
+
+  numBedroom: {
+    type: Number,
+    default: 1,
+    min: [1, "Number of bedrooms must be above 1.0"]
+  },
+  numBathroom: {
+    type: Number,
+    default: 1,
+    min: [1, "Number of bathrooms must be above 1.0"]
   },
   rent: {
     type: Number,
@@ -38,7 +124,6 @@ const rentalPropertySchema = new mongoose.Schema({
     type: String,
     required: [true, "Image cover is required"]
   },
-  images: [String],
   createdAt: {
     type: Date,
     default: Date.now()
@@ -47,9 +132,13 @@ const rentalPropertySchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  renter: {
-    type: mongoose.Schema.ObjectId,
-    ref: "User"
+  renter: String,
+  nftContract: String,
+  propertyViews: Number,
+  userApplied: [String],
+  archive: {
+    type: Boolean,
+    default: false
   }
 });
 rentalPropertySchema.index({ slug: 1 });

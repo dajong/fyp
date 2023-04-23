@@ -196,7 +196,7 @@ exports.createProperty = catchAsync(async (req, res, next) => {
     biddingPrice: biddingPrice
   });
 
-  res.status(200).json({
+  res.status(201).json({
     status: "success",
     data: {
       newProperty

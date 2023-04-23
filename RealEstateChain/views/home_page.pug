@@ -11,8 +11,9 @@ block content
                 form(method="get", action="/overview")
                     div(class="row")
                         ul.SectionPicker__SectionWrapper
-                            li(role="menuitem", tabindex="0", class="SectionPicker__Section selected") Buy
-                            li(role="menuitem", tabindex="0", class="SectionPicker__Section") Rent
+                            li(role="menuitem", tabindex="0", class="SectionPicker__Section selected", id="buyTab") Buy
+                            li(role="menuitem", tabindex="0", class="SectionPicker__Section",  id="rentTab") Rent
+                    input(type="hidden", name="rent", id="rent", value="false")
                     div(class="row g-3 mb-3")
                         div(class="col-3")
                             select(class="form__input", arial-label="city", name="city")

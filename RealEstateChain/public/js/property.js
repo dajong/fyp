@@ -29,6 +29,9 @@ export const createProperty = async (address, city, listingNum, propertyStyle, g
   
       if (res.data.status === 'success') {
         showAlert('success', 'Property created successfully!');
+        window.setTimeout(() => {
+          location.assign('/');
+        }, 1500);
       }
     } catch (err) {
       showAlert('error', err.response.data.message);

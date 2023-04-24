@@ -41101,8 +41101,8 @@ var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
 // eslint-disable-next-line import/prefer-default-export
 exports.addContract = addContract;
 var createTokenNFT = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(formInputPrice, propertyAddress, biddingPrice) {
-    var web3modal, connection, provider, signer, price, bidPrice, contract, url, transaction;
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(propertyAddress, biddingPrice) {
+    var web3modal, connection, provider, signer, bidPrice, contract, url, transaction;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
         case 0:
@@ -41113,27 +41113,26 @@ var createTokenNFT = (0, _catchAsync.default)( /*#__PURE__*/function () {
         case 3:
           connection = _context4.sent;
           provider = new _ethers.ethers.providers.Web3Provider(connection);
-          signer = provider.getSigner();
-          price = _ethers.ethers.utils.parseUnits(formInputPrice, "ether");
+          signer = provider.getSigner(); // const price = ethers.utils.parseUnits(formInputPrice, "ether");
           bidPrice = _ethers.ethers.utils.parseUnits(biddingPrice, "ether");
           contract = fetchContract(signer);
-          url = "https://gateway.pinata.cloud/ipfs/QmXA7GCd4pWNKXkQ5FGrMMnzMHsRAAzex2WXtWFVdu32ji";
-          _context4.next = 12;
-          return contract.createTokenNFT(url, price, propertyAddress, bidPrice);
-        case 12:
+          url = "https://gateway.pinata.cloud/ipfs/QmXA7GCd4pWNKXkQ5FGrMMnzMHsRAAzex2WXtWFVdu32ji"; // const transaction = await contract.createTokenNFT(url, price, propertyAddress, bidPrice);
+          _context4.next = 11;
+          return contract.createTokenNFT(url, propertyAddress, bidPrice);
+        case 11:
           transaction = _context4.sent;
-          _context4.next = 15;
+          _context4.next = 14;
           return transaction.wait();
-        case 15:
-          _context4.next = 17;
+        case 14:
+          _context4.next = 16;
           return addContract(propertyAddress);
-        case 17:
+        case 16:
         case "end":
           return _context4.stop();
       }
     }, _callee4);
   }));
-  return function (_x3, _x4, _x5) {
+  return function (_x3, _x4) {
     return _ref4.apply(this, arguments);
   };
 }());
@@ -41179,7 +41178,7 @@ var contractPlaceBid = /*#__PURE__*/function () {
       }
     }, _callee5);
   }));
-  return function contractPlaceBid(_x6, _x7) {
+  return function contractPlaceBid(_x5, _x6) {
     return _ref5.apply(this, arguments);
   };
 }();
@@ -41229,7 +41228,7 @@ var buyNft = /*#__PURE__*/function () {
       }
     }, _callee6);
   }));
-  return function buyNft(_x8, _x9, _x10) {
+  return function buyNft(_x7, _x8, _x9) {
     return _ref6.apply(this, arguments);
   };
 }();
@@ -41264,7 +41263,7 @@ var depositPayment = /*#__PURE__*/function () {
       }
     }, _callee7);
   }));
-  return function depositPayment(_x11, _x12) {
+  return function depositPayment(_x10, _x11) {
     return _ref7.apply(this, arguments);
   };
 }();
@@ -41624,7 +41623,7 @@ if (createPropertyForm) createPropertyForm.addEventListener('submit', function (
   var garageSize = document.getElementById('garageSize').value;
   var numBedroom = document.getElementById('numBedroom').value;
   var numBathroom = document.getElementById('numBathroom').value;
-  var price = document.getElementById('price').value;
+  // const price = document.getElementById('price').value;
   var imageCover = document.getElementById('imageCover').files[0];
   var biddingPrice = document.getElementById('biddingPrice').value;
   var description = document.getElementById('description').value;
@@ -41633,13 +41632,14 @@ if (createPropertyForm) createPropertyForm.addEventListener('submit', function (
   var lotSize = document.getElementById('lotSize').value;
   console.log(imageCover);
   (0, _property.createProperty)(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, price, imageCover, description, biddingPrice);
-  (0, _web3ModalFactory.createTokenNFT)(price, address, biddingPrice);
+  // createTokenNFT(price, address, biddingPrice);
+  (0, _web3ModalFactory.createTokenNFT)(address, biddingPrice);
   document.getElementById('address').value = "";
   document.getElementById('listingNum').value = "";
   document.getElementById('garageSize').value = "";
   document.getElementById('numBedroom').value = "";
   document.getElementById('numBathroom').value = "";
-  document.getElementById('price').value = "";
+  // document.getElementById('price').value = "";
   document.getElementById('squareFeet').value = "";
   document.getElementById('description').value = "";
   document.getElementById('lotSize').value = "";

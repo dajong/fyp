@@ -26,7 +26,7 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       address payable owner;
       string propertyAddress;
       uint256 bidPrice;
-      uint256 price;
+      // uint256 price;
       uint256 paidAmount;
       address payable currentBidder;
       bool sold;
@@ -38,7 +38,6 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       address owner,
       string propertyAddress,
       uint256 bidPrice,
-      uint256 price,
       uint256 paidAmount,
       address payable currentBidder,
       bool sold
@@ -68,23 +67,33 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
     }
 
     /* Mints a token and lists it in the marketplace */
-    function createTokenNFT(string memory tokenURI, uint256 price, string memory propertyAddress, uint256 bidPrice) public payable returns (uint) {
+    // function createTokenNFT(string memory tokenURI, uint256 price, string memory propertyAddress, uint256 bidPrice) public payable returns (uint) {
+    //   _tokenIds.increment();
+    //   uint256 newTokenId = _tokenIds.current();
+
+    //   _mint(msg.sender, newTokenId);
+    //   _setTokenURI(newTokenId, tokenURI);
+    //   createMarketItem(newTokenId, price, propertyAddress, bidPrice);
+    //   return newTokenId;
+    // }
+
+    function createTokenNFT(string memory tokenURI, string memory propertyAddress, uint256 bidPrice) public payable returns (uint) {
       _tokenIds.increment();
       uint256 newTokenId = _tokenIds.current();
 
       _mint(msg.sender, newTokenId);
       _setTokenURI(newTokenId, tokenURI);
-      createMarketItem(newTokenId, price, propertyAddress, bidPrice);
+      createMarketItem(newTokenId, propertyAddress, bidPrice);
       return newTokenId;
     }
 
     function createMarketItem(
       uint256 tokenId,
-      uint256 price,
+      // uint256 price,
       string memory propertyAddress,
       uint256 bidPrice
     ) private {
-      require(price > 0, "Price must be at least 1 wei");
+      require(bidPrice > 0, "Price must be at least 1 wei");
 
       idToMarketItem[tokenId] =  MarketItem(
         tokenId,
@@ -92,7 +101,7 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
         payable(address(this)),
         propertyAddress,
         bidPrice,
-        price,
+        // price,
         0,
         payable(address(this)),
         false
@@ -105,7 +114,7 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
         address(this),
         propertyAddress,
         bidPrice,
-        price,
+        // price,
         0,
         payable(address(this)),
         false
@@ -114,19 +123,19 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
 
     /* Creates the sale of a marketplace item */
     /* Transfers ownership of the item, as well as funds between parties */
-    function createMarketSale(
-      uint256 tokenId
-      ) public payable {
-      uint price = idToMarketItem[tokenId].price;
-      require(msg.value == price, "Please pay the full amount in order to complete the transaction!");
-      idToMarketItem[tokenId].owner = payable(msg.sender);
-      idToMarketItem[tokenId].sold = true;
-      idToMarketItem[tokenId].seller = payable(address(0));
-      _itemsSold.increment();
-      _transfer(address(this), msg.sender, tokenId);
+    // function createMarketSale(
+    //   uint256 tokenId
+    //   ) public payable {
+    //   uint price = idToMarketItem[tokenId].price;
+    //   require(msg.value == price, "Please pay the full amount in order to complete the transaction!");
+    //   idToMarketItem[tokenId].owner = payable(msg.sender);
+    //   idToMarketItem[tokenId].sold = true;
+    //   idToMarketItem[tokenId].seller = payable(address(0));
+    //   _itemsSold.increment();
+    //   _transfer(address(this), msg.sender, tokenId);
 
-      payable(owner).transfer(msg.value);
-    }
+    //   payable(owner).transfer(msg.value);
+    // }
 
     function buyBidProperty(
       uint256 tokenId
@@ -182,7 +191,7 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
     }
 
     /* Returns all unsold market items */
-    function fetchMarketItems() public view returns (string[] memory) {
+    function fetchUnsoldItems() public view returns (string[] memory) {
       uint itemCount = _tokenIds.current();
       uint unsoldItemCount = _tokenIds.current() - _itemsSold.current();
       uint currentIndex = 0;

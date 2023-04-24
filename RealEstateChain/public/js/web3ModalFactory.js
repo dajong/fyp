@@ -61,19 +61,20 @@ export const addContract = catchAsync(async (propertyAddress) =>{
 });
 
 // eslint-disable-next-line import/prefer-default-export
-export const createTokenNFT = catchAsync(async (formInputPrice, propertyAddress, biddingPrice) => {
+export const createTokenNFT = catchAsync(async (propertyAddress, biddingPrice) => {
   // using hardcoded value for now..
   const web3modal = new Web3Modal();
   const connection = await web3modal.connect();
   const provider = new ethers.providers.Web3Provider(connection);
   const signer = provider.getSigner();
-  const price = ethers.utils.parseUnits(formInputPrice, "ether");
+  // const price = ethers.utils.parseUnits(formInputPrice, "ether");
   const bidPrice = ethers.utils.parseUnits(biddingPrice, "ether");
   const contract = fetchContract(signer);
   const url =
     "https://gateway.pinata.cloud/ipfs/QmXA7GCd4pWNKXkQ5FGrMMnzMHsRAAzex2WXtWFVdu32ji";
 
-  const transaction = await contract.createTokenNFT(url, price, propertyAddress, bidPrice);
+  // const transaction = await contract.createTokenNFT(url, price, propertyAddress, bidPrice);
+  const transaction = await contract.createTokenNFT(url, propertyAddress, bidPrice);
   await transaction.wait();
   await addContract(propertyAddress);
 });

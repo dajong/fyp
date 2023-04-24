@@ -80,7 +80,7 @@ if (loginForm)
     const garageSize = document.getElementById('garageSize').value;
     const numBedroom = document.getElementById('numBedroom').value;
     const numBathroom = document.getElementById('numBathroom').value;
-    const price = document.getElementById('price').value;
+    // const price = document.getElementById('price').value;
     const imageCover = document.getElementById('imageCover').files[0];
     const biddingPrice = document.getElementById('biddingPrice').value;
     const description = document.getElementById('description').value;
@@ -90,14 +90,15 @@ if (loginForm)
 
     console.log(imageCover);
     createProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, price, imageCover, description, biddingPrice);
-    createTokenNFT(price, address, biddingPrice);
+    // createTokenNFT(price, address, biddingPrice);
+    createTokenNFT(address, biddingPrice);
 
     document.getElementById('address').value = "";
     document.getElementById('listingNum').value = "";
     document.getElementById('garageSize').value = "";
     document.getElementById('numBedroom').value = "";
     document.getElementById('numBathroom').value = "";
-    document.getElementById('price').value = "";
+    // document.getElementById('price').value = "";
     document.getElementById('squareFeet').value = "";
     document.getElementById('description').value = "";
     document.getElementById('lotSize').value = "";

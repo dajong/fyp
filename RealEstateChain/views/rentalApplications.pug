@@ -35,14 +35,21 @@ block content
                         th(scope='row')
                             //- img(src=`img/properties/thumbs/${property.listingNum}.jpg`, alt=`${property.photo}`)
                             =`${property.address}, ${property.city}`
-
-                        td Not working yet :)
+                        if(property.rented===false)
+                          td Results pending
+                        else if (property.rented===true && property.userApproved != userid)
+                          td Fail
+                        else if (property.rented===true && property.userApproved == userid)
+                          td Success
                         td
                             a.btn-xsmall.btn-xgreen(href=`property/rent/${property.slug}`) View Property
-                        if(property.currentHighestBidder !== user.id)
+                        if(property.rented===false)
                             td
-                                button.btn-xsmall.btn-red#remove-bidding-btn(value=`${property.address}`) Stop Watching
+                              a.btn-xsmall.btn-red#withdraw-rental-btn(data-slug=`${property.slug}`) Withdraw
+                        else if (property.rented && property.userApproved !== user.id)
+                            td
+                              a.btn-xsmall.btn-red#withdraw-rental-btn(data-slug=`${property.slug}`) Withdraw
+                        else if (property.rented && property.userApproved == user.id)
+                            td
+                              a.btn-xsmall.btn--green#proceed-rental-btn(data-slug=`${property.slug}`) Proceed
 
-                        if(property.currentHighestBidder === user.id && property.createdAt < Date.now())
-                            td
-                                a.btn-xsmall.btn-xgreen#checkout-bidding-btn(href=`checkoutBidProperty/${property.slug}`) Checkout

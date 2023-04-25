@@ -228,6 +228,7 @@ exports.isLoggedIn = async (req, res, next) => {
       }
 
       // THERE IS A LOGGED IN USER
+      req.user = currentUser;
       res.locals.user = currentUser;
       if (currentUser.role === "admin") res.locals.role = "admin";
       else res.locals.role = "user";

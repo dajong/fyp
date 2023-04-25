@@ -3,8 +3,8 @@ import '@babel/polyfill';
 import { login, logout } from './login';
 import { register, addNewAdmin } from './registration';
 import { updateSettings, forgetPassword, userPlaceBid, removeBidding, resetPassword, addToFavourite, removeFromFavourite } from './updateSettings';
-import { createRentalTokenNFT, createRentalProperty, applyRental } from './rentalProperty';
-import { createProperty, getProperty, soldProperty, placeBid } from './property';
+import { createRentalTokenNFT, createRentalProperty, applyRental, withdrawRental, approveRental, updateRentalProperty } from './rentalProperty';
+import { createProperty, getProperty, soldProperty, placeBid, updateProperty } from './property';
 import { createTokenNFT, buyNft, depositPayment, fetchMyNFTs } from './web3ModalFactory';
 import { sendQuery,replyQuery } from './query';
 // DOM ELEMENTS
@@ -31,6 +31,11 @@ const testBtn = document.getElementById("btn--test");
 const propertyLink = document.getElementById("my-property-link");
 const createRentalPropertyForm = document.querySelector(".form--createRentalProperty");
 const btnApplyRental = document.getElementById("apply-rental");
+const btnWithdrawRentalApplication = document.getElementById("withdraw-rental-btn");
+const btnApproveRentalApplication = document.getElementById("approve-rental-btn");
+const updatePropertyForm = document.getElementById('form--updateProperty');
+const updateRentalPropertyForm = document.getElementById('form--updateRentalProperty');
+
 
 const connectWallet = async (e) => {
   if (!window.ethereum) return alert('Please install MetaMask.');
@@ -349,6 +354,76 @@ if(btnApplyRental){
     await applyRental(slug);
   });
 }
+
+if(btnWithdrawRentalApplication){
+  btnWithdrawRentalApplication.addEventListener('click', async e => {
+    const slug = btnWithdrawRentalApplication.dataset.slug;
+    await withdrawRental(slug);
+  });
+}
+
+if(btnApproveRentalApplication){
+  btnApproveRentalApplication.addEventListener('click', async e => {
+    const slug = btnApproveRentalApplication.dataset.slug;
+    const userid = btnApproveRentalApplication.dataset.userid;
+    await approveRental(slug, userid);
+  });
+}
+
+if(updatePropertyForm)
+updatePropertyForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  console.log("updating property..")
+
+  const address = document.getElementById('address').value;
+  const city = document.getElementById('city').value;
+  const listingNum = document.getElementById('listingNum').value;
+  const propertyStyle = document.getElementById('propertyStyle').value;
+  const garageType = document.getElementById('garageType').value;
+  const garageSize = document.getElementById('garageSize').value;
+  const numBedroom = document.getElementById('numBedroom').value;
+  const numBathroom = document.getElementById('numBathroom').value;
+  const biddingPrice = document.getElementById('biddingPrice').value;
+  const description = document.getElementById('description').value;
+  const berRating = document.getElementById('berRating').value;
+  const squareFeet = document.getElementById('squareFeet').value;
+  const lotSize = document.getElementById('lotSize').value;
+  const slug = document.getElementById('slug').value;
+  const propertyId = document.getElementById('propertyId').value;
+
+  await updateProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, description, biddingPrice, slug,propertyId);
+});
+
+if (updateRentalPropertyForm) {
+  updateRentalPropertyForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    console.log("updating rental property...");
+
+    const address = document.getElementById('address').value;
+    const city = document.getElementById('city').value;
+    const listingNum = document.getElementById('listingNum').value;
+    const propertyStyle = document.getElementById('propertyStyle').value;
+    const garageType = document.getElementById('garageType').value;
+    const garageSize = document.getElementById('garageSize').value;
+    const numBedroom = document.getElementById('numBedroom').value;
+    const numBathroom = document.getElementById('numBathroom').value;
+    const rent = document.getElementById('rent').value;
+    const securityDeposit = document.getElementById('securityDeposit').value;
+    const description = document.getElementById('description').value;
+    const berRating = document.getElementById('berRating').value;
+    const squareFeet = document.getElementById('squareFeet').value;
+    const lotSize = document.getElementById('lotSize').value;
+    const ownerEmail = document.getElementById('ownerEmail').value;
+    //const archive = document.getElementById('archive').checked;
+    const slug = document.getElementById('slug').value;
+    const rentalPropertyId = document.getElementById('rentalPropertyId').value;
+    console.log(rentalPropertyId)
+    await updateRentalProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId);
+  });
+}
+
+
+
 
 
   

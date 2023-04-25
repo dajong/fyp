@@ -53,6 +53,7 @@ const userSchema = new mongoose.Schema({
   favoriteProperties: [String],
   propertyPurchased: [String],
   propertyAppliedRental: [String],
+  propertiesRented: [String],
   userAttempt: {
     type: Number,
     default: 0

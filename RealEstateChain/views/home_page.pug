@@ -18,7 +18,7 @@ block content
                         div(class="col-3")
                             select(class="form__input", arial-label="city", name="city")
                                 option(value="" selected) City
-                                each city in cities
+                                each city in _cities
                                     option(value=`${city}`)= `${city}`
                         div(class="col-3")
                             input(type="number", class="form__input", placeholder="Min Price", name="minPrice")

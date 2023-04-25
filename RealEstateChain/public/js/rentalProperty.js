@@ -70,7 +70,52 @@ export const applyRental = catchAsync(async (slug) => {
     if (res.data.status === 'success') {
       showAlert('success', 'Application sent successfully');
       window.setTimeout(() => {
-          location.assign('/');
+          location.assign('/rentalApplications');
+        }, 1500);
+    }
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+    console.log(err);
+  }
+});
+
+export const approveRental = catchAsync(async (slug, userid) => {
+  try {
+    const res = await axios({
+      method: 'POST',
+      url: 'http://localhost:3000/api/v1/rentals/approveRental',
+      data: {
+        slug: slug,
+        userId: userid
+      }
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'Application approved');
+      window.setTimeout(() => {
+          location.assign('/property/rent/' + slug);
+        }, 1500);
+    }
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+    console.log(err);
+  }
+});
+
+export const withdrawRental = catchAsync(async (slug) => {
+  try {
+    const res = await axios({
+      method: 'POST',
+      url: 'http://localhost:3000/api/v1/rentals/withdrawApplication',
+      data: {
+        slug
+      }
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'Withdraw application successfully');
+      window.setTimeout(() => {
+          location.assign('/rentalApplications');
         }, 1500);
     }
   } catch (err) {
@@ -116,3 +161,39 @@ const addContract = catchAsync(async (propertyAddress, tx) =>{
         showAlert("error", err);
     }
 });
+
+export const updateRentalProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId) => {
+  try {
+    const res = await axios({
+      method: 'PATCH',
+      url: 'http://localhost:3000/api/v1/rentals/updateRentalProperty/' + rentalPropertyId,
+      data: {
+        address,
+        city,
+        listingNum,
+        propertyStyle,
+        garageType,
+        garageSize,
+        berRating,
+        squareFeet,
+        lotSize,
+        numBedroom,
+        numBathroom,
+        rent,
+        securityDeposit,
+        description,
+        ownerEmail
+      }
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'Rental property updated successfully!');
+      window.setTimeout(() => {
+        location.assign('/property/rent/' + slug);
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert('error', err);
+    console.log(err);
+  }
+};

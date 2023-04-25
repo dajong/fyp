@@ -14,13 +14,25 @@ router.get("/forgetPassword", viewsController.forgetPassword);
 router.get("/overview", authController.isLoggedIn, viewsController.getOverview);
 router.get(
   "/property/:slug",
-  authController.protect,
+  authController.isLoggedIn,
   viewsController.getProperty
 );
 
 router.get(
-  "/property/rent/:slug",
+  "/property/edit/:slug",
   authController.protect,
+  viewsController.getEditPropertyForm
+);
+
+router.get(
+  "/property/rent/edit/:slug",
+  authController.protect,
+  viewsController.getEditRentalPropertyForm
+);
+
+router.get(
+  "/property/rent/:slug",
+  authController.isLoggedIn,
   viewsController.getRentalProperty
 );
 

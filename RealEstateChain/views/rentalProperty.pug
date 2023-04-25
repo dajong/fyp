@@ -62,7 +62,7 @@ block content
   .w-75.mx-auto.text-center
     iframe.mb-5(src=`https://www.google.com/maps?q='${property.address},${property.city}'&output=embed`, width='800', height='600', style='border:0;', allowfullscreen='', loading='lazy', referrerpolicy='no-referrer-when-downgrade')
 
-  if property.rented===false
+  if (property.rented===false && role !== "admin")
       section.section-cta
         .cta
           .cta__img.cta__img--logo
@@ -72,9 +72,14 @@ block content
             p.cta__text= `Contact owner: ${property.ownerEmail}`
             
             if user
-              a.btnn.btn--small.btn--green.span-all-rows#apply-rental(data-slug=`${property.slug}`)
-                  i.fas.fa-star
-                  | Apply
+              if !hasApplied
+                a.btnn.btn--small.btn--green.span-all-rows#apply-rental(data-slug=`${property.slug}`)
+                    i.fas.fa-star
+                    | Apply
+              else 
+                a.btnn.btn--small.btn--green.span-all-rows#withdraw-rental-btn(data-slug=`${property.slug}`)
+                    i.fas.fa-star
+                    | Withdraw
 
               if isFavorite === true
                 a.btn-small-red.span-all-rows#remove-from-favourite(data-slug=`${property.slug}`)
@@ -86,3 +91,33 @@ block content
                   | Add to favorite
             else
               a.btnn.btn--green.span-all-rows(href='/login') Log in
+  
+  if (role === "admin")
+    section.section-cta
+        .cta  
+          .cta__img.cta__img--logo
+            img(src='/img/logo-white.png', alt='logo')
+          .cta__content
+            h2.heading-secondary Edit the property
+
+            a.btn-small.span-all-rows(href=`/property/rent/edit/${property.slug}`)
+              | Edit
+
+
+    section.section-cta
+      h2.heading-secondary.ma-bt-lg Applicants
+      table.table.table-responsive
+            thead
+                tr
+                    th(scope='col') User Email
+                    th(scope='col') Name
+                    th(scope='col') Approve
+            tbody
+                each user in usersApplied
+                    tr
+                        th(scope='row')
+                          = user.email 
+                        td 
+                          = user.name 
+                        td 
+                          button.btn-xsmall.btn--green#approve-rental-btn(data-userid=`${user._id}`,data-slug=`${property.slug}`) Approve 

@@ -133,6 +133,7 @@ const rentalPropertySchema = new mongoose.Schema({
     default: false
   },
   renter: String,
+  userApproved: String,
   nftContract: String,
   propertyViews: Number,
   userApplied: [String],

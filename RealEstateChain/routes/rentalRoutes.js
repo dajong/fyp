@@ -16,6 +16,22 @@ router
   .route("/applyForRental")
   .post(authController.protect, rentalController.applyForRental);
 
+router
+  .route("/withdrawApplication")
+  .post(authController.protect, rentalController.removeRentalApplication);
+
+router
+  .route("/approveRental")
+  .post(authController.protect, rentalController.approveRental);
+
+router
+  .route("/updateRentalProperty/:id")
+  .patch(
+    authController.protect,
+    authController.restrictTo("admin"),
+    rentalController.updateRentalProperty
+  );
+
 // Add more routes for rentProperty, payRent, endRental, and withdrawSecurityDeposit
 // router
 //   .route("/")

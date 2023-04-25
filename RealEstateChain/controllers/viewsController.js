@@ -1,9 +1,43 @@
+const mongoose = require("mongoose");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const Property = require("../models/propertyModel");
 const RentalProperty = require("../models/rentalPropertyModel");
 const Query = require("../models/queryModel");
 const AppError = require("../utils/appError");
+
+const cities = ["Limerick", "Dublin", "Cork", "Galway"];
+const propertyTypes = [
+  "Bungalow",
+  "Semi-detached",
+  "Detached",
+  "Cottage",
+  "Terrace",
+  "Duplex",
+  "Condo",
+  "Apartment",
+  "Others"
+];
+
+const garageTypes = ["Attached", "Detached", "Carport"];
+
+const berRating = [
+  "A1",
+  "A2",
+  "A3",
+  "B1",
+  "B2",
+  "B3",
+  "C1",
+  "C2",
+  "C3",
+  "D1",
+  "D2",
+  "E1",
+  "E2",
+  "F",
+  "G"
+];
 
 exports.getOverview = catchAsync(async (req, res, next) => {
   const { rent, city, minPrice, maxPrice } = req.query;
@@ -86,13 +120,13 @@ async function getUsersStatistics() {
 }
 
 exports.getHomePage = catchAsync(async (req, res, next) => {
-  const cities = await Property.distinct("city");
+  const _cities = await Property.distinct("city");
   const propertyStats = await getPropertiesStatistics();
   const userStats = await getUsersStatistics();
 
   res.status(200).render("home_page", {
     title: "Home",
-    cities,
+    _cities,
     propertyStats,
     userStats
   });
@@ -105,38 +139,6 @@ exports.getRegistrationPage = catchAsync(async (req, res, next) => {
 });
 
 exports.getCreatePropertyPage = catchAsync(async (req, res, next) => {
-  const cities = ["Limerick", "Dublin", "Cork", "Galway"];
-  const propertyTypes = [
-    "Bungalow",
-    "Semi-detached",
-    "Detached",
-    "Cottage",
-    "Terrace",
-    "Duplex",
-    "Condo",
-    "Apartment",
-    "Others"
-  ];
-
-  const garageTypes = ["Attached", "Detached", "Carport"];
-
-  const berRating = [
-    "A1",
-    "A2",
-    "A3",
-    "B1",
-    "B2",
-    "B3",
-    "C1",
-    "C2",
-    "C3",
-    "D1",
-    "D2",
-    "E1",
-    "E2",
-    "F",
-    "G"
-  ];
   res.status(200).render("createProperty", {
     title: "Create Property",
     cities,
@@ -147,38 +149,6 @@ exports.getCreatePropertyPage = catchAsync(async (req, res, next) => {
 });
 
 exports.getCreateRentalPropertyPage = catchAsync(async (req, res, next) => {
-  const cities = ["Limerick", "Dublin", "Cork", "Galway"];
-  const propertyTypes = [
-    "Bungalow",
-    "Semi-detached",
-    "Detached",
-    "Cottage",
-    "Terrace",
-    "Duplex",
-    "Condo",
-    "Apartment",
-    "Others"
-  ];
-
-  const garageTypes = ["Attached", "Detached", "Carport"];
-
-  const berRating = [
-    "A1",
-    "A2",
-    "A3",
-    "B1",
-    "B2",
-    "B3",
-    "C1",
-    "C2",
-    "C3",
-    "D1",
-    "D2",
-    "E1",
-    "E2",
-    "F",
-    "G"
-  ];
   res.status(200).render("createRentalProperty", {
     title: "Create Rental Property",
     cities,
@@ -187,19 +157,6 @@ exports.getCreateRentalPropertyPage = catchAsync(async (req, res, next) => {
     berRating
   });
 });
-
-// exports.checkFavoriteStatus = catchAsync(async (req, res, next) => {
-//   console.log(req.user);
-//   if (req.user) {
-//     const userId = req.user.id;
-//     const user = await User.findById(userId);
-//     const isFavorite = user.favoriteProperties.includes(req.params.slug);
-
-//     res.locals.isFavorite = isFavorite;
-//   }
-
-//   next();
-// });
 
 exports.getProperty = catchAsync(async (req, res, next) => {
   const property = await Property.findOne({ slug: req.params.slug });
@@ -222,8 +179,45 @@ exports.getProperty = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getRentalProperty = catchAsync(async (req, res, next) => {
+exports.getEditPropertyForm = catchAsync(async (req, res, next) => {
+  const property = await Property.findOne({ slug: req.params.slug });
+
+  if (!property) {
+    return next(new AppError("There is no property with that name.", 404));
+  }
+
+  res.status(200).render("editProperty", {
+    title: `Edit property`,
+    property,
+    cities,
+    propertyTypes,
+    garageTypes,
+    berRating
+  });
+});
+
+exports.getEditRentalPropertyForm = catchAsync(async (req, res, next) => {
   const property = await RentalProperty.findOne({ slug: req.params.slug });
+
+  if (!property) {
+    return next(new AppError("There is no property with that name.", 404));
+  }
+
+  res.status(200).render("editRentalProperty", {
+    title: `Edit Rental Property`,
+    property,
+    cities,
+    propertyTypes,
+    garageTypes,
+    berRating
+  });
+});
+
+exports.getRentalProperty = catchAsync(async (req, res, next) => {
+  const { slug } = req.params;
+  const property = await RentalProperty.findOne({ slug: slug });
+  let hasApplied = false;
+  let isFavorite = false;
 
   if (!property) {
     return next(new AppError("There is no property with that name.", 404));
@@ -232,15 +226,27 @@ exports.getRentalProperty = catchAsync(async (req, res, next) => {
   if (req.user) {
     const userId = req.user.id;
     const user = await User.findById(userId);
-    const isFavorite = user.favoriteProperties.includes(req.params.slug);
-
-    res.locals.isFavorite = isFavorite;
+    isFavorite = user.favoriteProperties.includes(slug);
+    hasApplied = user.propertyAppliedRental.includes(slug);
   }
-
-  await property.update({ propertyViews: property.propertyViews + 1 });
+  const usersApplied = await User.aggregate([
+    {
+      $match: {
+        _id: {
+          $in: property.userApplied.map(userId =>
+            mongoose.Types.ObjectId(userId)
+          )
+        }
+      }
+    }
+  ]);
+  await property.updateOne({ propertyViews: property.propertyViews + 1 });
   res.status(200).render("rentalProperty", {
     title: `${property.address}`,
-    property
+    property,
+    usersApplied,
+    isFavorite,
+    hasApplied
   });
 });
 
@@ -335,15 +341,21 @@ exports.getBiddings = catchAsync(async (req, res, next) => {
 
 exports.getRentalApplication = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
-  console.log(user);
-  const properties = await Property.aggregate([
+  const properties = await RentalProperty.aggregate([
     {
       $match: { slug: { $in: user.propertyAppliedRental } }
     }
   ]);
+  properties.forEach(property => {
+    console.log(property);
+    console.log(property.userApproved);
+    console.log(property.userApproved === user._id.toString());
+  });
+  const userid = user._id.toString();
   res.status(200).render("rentalApplications", {
     title: "Rental Applications",
-    properties
+    properties,
+    userid
   });
 });
 

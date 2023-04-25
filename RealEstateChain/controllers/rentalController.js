@@ -7,6 +7,8 @@ const catchAsync = require("./../utils/catchAsync");
 const factory = require("./handlerFactory");
 const AppError = require("./../utils/appError");
 
+exports.updateRentalProperty = factory.updateOne(RentalProperty);
+
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
@@ -198,7 +200,7 @@ exports.withdrawSecurityDeposit = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (property.isRented) {
+  if (property.rented) {
     return next(new AppError("Property is still rented", 400));
   }
 
@@ -271,3 +273,89 @@ exports.applyForRental = catchAsync(async (req, res, next) => {
     }
   });
 });
+
+exports.removeRentalApplication = catchAsync(async (req, res, next) => {
+  const { slug } = req.body;
+  const userId = req.user.id;
+
+  if (!slug) {
+    return next(new AppError("Please provide a property address.", 400));
+  }
+
+  const user = await User.findById(userId);
+  const rentalProperty = await RentalProperty.findOne({ slug: slug });
+
+  if (!rentalProperty) {
+    return next(
+      new AppError("No rental property found with the provided address.", 404)
+    );
+  }
+
+  const propertyIndex = user.propertyAppliedRental.indexOf(slug);
+  if (propertyIndex !== -1) {
+    user.propertyAppliedRental.splice(propertyIndex, 1);
+    await user.save({ validateBeforeSave: false });
+  }
+
+  const userIndex = rentalProperty.userApplied.indexOf(userId);
+  if (userIndex !== -1) {
+    rentalProperty.userApplied.splice(userIndex, 1);
+    await rentalProperty.save();
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "Property rental application removed successfully.",
+    data: {
+      user,
+      rentalProperty
+    }
+  });
+});
+
+exports.approveRental = async (req, res, next) => {
+  try {
+    const { slug, userId } = req.body;
+
+    // Update the rental property
+    const property = await RentalProperty.findOneAndUpdate(
+      { slug },
+      {
+        rented: true,
+        // renter: userId,
+        userApproved: userId,
+        $pull: { userApplied: userId }
+      },
+      { new: true }
+    );
+
+    if (!property) {
+      return next(new AppError("No property found with that slug", 404));
+    }
+
+    // Update the user
+    // const user = await User.findByIdAndUpdate(
+    //   userId,
+    //   {
+    //     $pull: { propertyAppliedRental: slug }
+    //     // $addToSet: { propertiesRented: slug },
+    //   },
+    //   { new: true }
+    // );
+
+    // if (!user) {
+    //   return next(new AppError("No user found with that ID", 404));
+    // }
+
+    // Send success response
+    res.status(200).json({
+      status: "success",
+      data: {
+        property
+        // user
+      }
+    });
+  } catch (error) {
+    return next(new AppError("Error approving rental", 500));
+  }
+};

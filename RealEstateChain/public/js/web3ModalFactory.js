@@ -6,26 +6,15 @@ import { MarketAddress, MarketAddressABI } from "../../context/constants";
 
 import axios from 'axios';
 import { showAlert } from "./alerts";
-// import { create as ipfsHttpClient } from 'ipfs-http-client';
+import { uploadToIPFS } from './ipfsUtils';
 
 const fetchContract = signerOrProvider =>
   new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
 
-
-  // const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
-  
-  // const uploadToIPFS = async (buffer) => {
-  //   try {
-  //     const result = await client.add(buffer);
-  //     return result.cid.toString();
-  //   } catch (error) {
-  //     console.error('Error uploading to IPFS:', error);
-  //     throw error;
-  //   }
-  // };
-
 const createProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, imageCover, description, biddingPrice) => {
     try {
+      
+
       const formData = new FormData();
       formData.append('address', address);
       formData.append('city', city);
@@ -107,21 +96,18 @@ export const addContract = catchAsync(async (propertyAddress) =>{
 
 // eslint-disable-next-line import/prefer-default-export
 export const createTokenNFT = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, imageCover, description, biddingPrice) => {
-  
-  // const cid = await uploadToIPFS(imageCover);
-  
-  // const web3modal = new Web3Modal();
-  // const connection = await web3modal.connect();
-  // const provider = new ethers.providers.Web3Provider(connection);
-  // const signer = provider.getSigner();
-  // const bidPrice = ethers.utils.parseUnits(biddingPrice.toString(), "ether");
-  // const contract = fetchContract(signer);
-  // const url = `https://ipfs.infura.io/ipfs/${cid}`;
+  const web3modal = new Web3Modal();
+  const connection = await web3modal.connect();
+  const provider = new ethers.providers.Web3Provider(connection);
+  const signer = provider.getSigner();
+  const bidPrice = ethers.utils.parseUnits(biddingPrice.toString(), "ether");
+  const contract = fetchContract(signer);
+  const url = await uploadToIPFS(imageCover);
 
-  // const transaction = await contract.createTokenNFT(url, address, bidPrice);
-  // await transaction.wait();
+  const transaction = await contract.createTokenNFT(url, address, bidPrice);
+  await transaction.wait();
   await createProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, imageCover, description, biddingPrice);
-  // await addContract(address);
+  await addContract(address);
 };
 
 export const contractPlaceBid = async (tokenId, biddingPrice) => {

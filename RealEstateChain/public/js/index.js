@@ -247,7 +247,6 @@ if (userPasswordForm)
     const { propertyId } = e.target.dataset;
     const curProperty = await getProperty(propertyId);
     console.log(curProperty);
-    // await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
     await depositPayment(BigInt(curProperty.data.nftContract), (curProperty.data.biddingPrice / 100 * 10));
     await soldProperty(curProperty.data.address);
     await removeBidding(curProperty.data.address);

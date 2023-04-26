@@ -139,19 +139,23 @@ exports.uploadImageCover = upload.single("imageCover");
 
 exports.resizeImageCover = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
-  req.file.imageCover = `${req.body.listingNum}.JPG`;
+
+  const imageName = `${req.body.listingNum}.JPG`;
   const dir = `public/img/properties/large/${req.body.listingNum}`;
 
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
+
+  const imagePath = `public/img/properties/large/${req.body.listingNum}/${imageName}`;
+
   await sharp(req.file.buffer)
     .resize(500, 500)
-    .toFormat("JPG")
+    .toFormat("jpeg")
     .jpeg({ quality: 90 })
-    .toFile(
-      `public/img/properties/large/${req.body.listingNum}/${req.file.imageCover}`
-    );
+    .toFile(imagePath);
+
+  req.body.imageCover = imageName;
 
   next();
 });
@@ -171,11 +175,11 @@ exports.createProperty = catchAsync(async (req, res, next) => {
     lotSize,
     numBedroom,
     numBathroom,
-    price,
+    imageCover,
     description,
     biddingPrice
   } = req.body;
-
+  console.log(imageCover);
   const newProperty = await Property.create({
     address: address,
     city: city,
@@ -188,9 +192,8 @@ exports.createProperty = catchAsync(async (req, res, next) => {
     lotSize: lotSize,
     numBedroom: numBedroom,
     numBathroom: numBathroom,
-    price: price,
     description: description,
-    imageCover: "test.JPG",
+    imageCover: imageCover,
     propertySold: false,
     propertyViews: 0,
     biddingPrice: biddingPrice

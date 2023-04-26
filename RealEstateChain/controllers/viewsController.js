@@ -49,11 +49,11 @@ exports.getOverview = catchAsync(async (req, res, next) => {
     if (city === "") {
       properties = await Property.find()
         .where("propertySold")
-        .equals(false)
-        .where("price")
-        .gte(mMinprice)
-        .lte(mMaxPrice)
-        .sort({ propertyViews: -1 });
+        .equals(false);
+      // .where("price")
+      // .gte(mMinprice)
+      // .lte(mMaxPrice);
+      // .sort({ propertyViews: -1 });
     } else {
       properties = await Property.find()
         .where("propertySold")
@@ -71,8 +71,8 @@ exports.getOverview = catchAsync(async (req, res, next) => {
         .equals(false)
         .where("rent")
         .gte(mMinprice)
-        .lte(mMaxPrice)
-        .sort({ propertyViews: -1 });
+        .lte(mMaxPrice);
+      // .sort({ propertyViews: -1 });
     } else {
       properties = await RentalProperty.find()
         .where("rented")

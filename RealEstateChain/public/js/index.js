@@ -88,7 +88,6 @@ if (loginForm)
     const garageSize = document.getElementById('garageSize').value;
     const numBedroom = document.getElementById('numBedroom').value;
     const numBathroom = document.getElementById('numBathroom').value;
-    // const price = document.getElementById('price').value;
     const imageCover = document.getElementById('imageCover').files[0];
     const biddingPrice = document.getElementById('biddingPrice').value;
     const description = document.getElementById('description').value;

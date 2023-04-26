@@ -16,6 +16,7 @@
   "author": "Daniel",
   "license": "ISC",
   "dependencies": {
+    "@babel/core": "^7.21.4",
     "@babel/polyfill": "^7.12.1",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
     "@nomiclabs/hardhat-ethers": "^2.2.1",
@@ -35,7 +36,7 @@
     "helmet": "^3.16.0",
     "hpp": "^0.2.2",
     "html-to-text": "^5.1.1",
-    "ipfs-http-client": "^59.0.0",
+    "ipfs-http-client": "^60.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.8.2",
     "morgan": "^1.9.1",

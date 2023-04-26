@@ -3,11 +3,15 @@ extends base
 block content
   main
     div(class="w-75 mx-auto my-5")
-      h1.heading-secondary.ma-bt-md Create Property
-      form(class="form--createProperty")
+      h1.heading-secondary.ma-bt-md Create Rental Property
+      form(class="form--createRentalProperty")
         div.mb-3
           label.form__label(for='address') Address
           input#address.form__input(type='text', value="13 Lisheen Homes Caherdavin", required)
+
+        div.mb-3
+          label.form__label(for='ownerEmail') Owner Email
+          input#ownerEmail.form__input(type='text', value="danieljong5201@gmail.com", required)
 
         div.mb-3
           label.form__label(for='city') City
@@ -57,13 +61,13 @@ block content
           label.form__label(for='numBathroom') Number of Bathrooms
           input#numBathroom.form__input(type='number', value="3", required)
 
-        //- div.mb-3
-        //-   label.form__label(for='price') Buy Price
-        //-   input#price.form__input(type='number', value="200", required)
+        div.mb-3
+          label.form__label(for='rent') Rent Price
+          input#rent.form__input(type='number', value="0.5", required)
 
         div.mb-3
-          label.form__label(for='biddingPrice') Start Bidding Price
-          input#biddingPrice.form__input(type='number', value="100", required)
+          label.form__label(for='securityDeposit') Deposit Price
+          input#securityDeposit.form__input(type='number', value="1", required)
 
         div.mb-3
           label.form__label(for='description') Description

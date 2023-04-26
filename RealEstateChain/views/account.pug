@@ -17,7 +17,9 @@ block content
           if (role === 'user')
             +navItem('/bidding', 'My Bidding', 'star')
             +navItem('/getFavouriteProperties', 'Favourite Properties', 'heart')
-            +navItem('/myProperty', 'My Property', 'home', false, 'my-property-link')
+            +navItem('/myProperty', 'Purchased Property', 'home', false, 'my-property-link')
+            +navItem('/rentalApplications', 'Rental Application', 'mail')
+            +navItem('/myRentalProperty', 'Rented Properties', 'lock')
           else if (role === 'admin')
             +navItem('/queries', 'Customer Queries', 'mail')
             +navItem('/addAdmin', 'Add new admin', 'user')
@@ -25,11 +27,7 @@ block content
       .user-view__content
         .user-view__form-container
           h2.heading-secondary.ma-bt-md Your account settings
-
-          //- WITHOUT API
-          //- form.form.form-user-data(action='/submit-user-data' method='POST' enctype='multipart/form-data')
           
-          //- WITH API
           form.form.form-user-data
             .form__group
               label.form__label(for='name') Name

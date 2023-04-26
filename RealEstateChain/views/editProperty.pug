@@ -3,75 +3,69 @@ extends base
 block content
   main
     div(class="w-75 mx-auto my-5")
-      h1.heading-secondary.ma-bt-md Create Property
-      form(class="form--createProperty")
+      h1.heading-secondary.ma-bt-md Update Property
+      form(id="form--updateProperty")
         div.mb-3
           label.form__label(for='address') Address
-          input#address.form__input(type='text', value="13 Lisheen Homes Caherdavin", required)
+          input#address.form__input(type='text', value=property.address, required)
 
         div.mb-3
           label.form__label(for='city') City
           select(class="form__input", arial-label="city", name="city" id="city")
             each city in cities
-                option(value=`${city}`)= `${city}`
+                option(value=`${city}`, selected=city === property.city ? 'selected' : '')= `${city}`
 
         div.mb-3
           label.form__label(for='listingNum') Listing Number
-          input#listingNum.form__input(type='number', value="123456", required)
+          input#listingNum.form__input(type='number', value=property.listingNum, required)
 
         div.mb-3e
           label.form__label(for='propertyStyle') Property Style
           select(class="form__input", arial-label="propertyType", name="propertyStyle" id="propertyStyle")
             each pType in propertyTypes
-                option(value=`${pType}`)= `${pType}`
+                option(value=`${pType}`, selected=pType === property.propertyStyle ? 'selected' : '')= `${pType}`
 
         div.mb-3
           label.form__label(for='garageType') Garage Type
           select(class="form__input", arial-label="garageType", name="garageType" id="garageType")
             each gType in garageTypes
-                option(value=`${gType}`)= `${gType}`
+                option(value=`${gType}`, selected=gType === property.garageType ? 'selected' : '')= `${gType}`
 
         div.mb-3
           label.form__label(for='garageSize') Garage Size
-          input#garageSize.form__input(type='number', value="123", required)
+          input#garageSize.form__input(type='number', value=property.garageSize, required)
 
         div.mb-3
           label.form__label(for='berRating') Ber Rating
           select(class="form__input", arial-label="berRating", name="berRating" id="berRating")
             each rating in berRating
-                option(value=`${rating}`)= `${rating}`
+                option(value=`${rating}`, selected=rating === property.berRating ? 'selected' : '')= `${rating}`
 
         div.mb-3
           label.form__label(for='squareFeet') Square Feet
-          input#squareFeet.form__input(type='number', value="1800", required)
-        
+          input#squareFeet.form__input(type='number', value=property.squareFeet, required)
+
         div.mb-3
           label.form__label(for='lotSize') Lot Size
-          input#lotSize.form__input(type='text', value="60x180", required)
-          
+          input#lotSize.form__input(type='text', value=property.lotSize, required)
+
         div.mb-3
           label.form__label(for='numBedroom') Number of Bedrooms
-          input#numBedroom.form__input(type='number', value="5",required)
+          input#numBedroom.form__input(type='number', value=property.numBedroom, required)
 
         div.mb-3
           label.form__label(for='numBathroom') Number of Bathrooms
-          input#numBathroom.form__input(type='number', value="3", required)
-
-        //- div.mb-3
-        //-   label.form__label(for='price') Buy Price
-        //-   input#price.form__input(type='number', value="200", required)
+          input#numBathroom.form__input(type='number', value=property.numBathroom, required)
 
         div.mb-3
           label.form__label(for='biddingPrice') Start Bidding Price
-          input#biddingPrice.form__input(type='number', value="100", required)
+          input#biddingPrice.form__input(type='number', value=property.biddingPrice, required)
 
         div.mb-3
           label.form__label(for='description') Description
-          textarea#description.form__input(rows="3", value="tset description", required)  test description
+          textarea#description.form__input(rows="3", required) #{property.description}
 
-        div.mb-3
-          .form__group.form__photo-upload
-              input.form__upload(type='file', accept='image/*', id='imageCover', name='imageCover' required)
-              label(for='imageCover') Upload Property Image Cover
+        input#slug(type='hidden', value=property.slug)
+        input#propertyId(type='hidden', value=property._id)
 
-        button(type="submit" class="btnn btn--green") Create 
+        button(type="submit" class="btnn btn--green") Update

@@ -14,12 +14,19 @@ block content
                 span= property.address + ", " + property.city
 
             .card__details
-              h4.card__sub-heading= `Price: ${property.price} ETH`
+              if(rent === 'true')
+                h4.card__sub-heading= `Rent price: ${property.rent} ETH`
+              if(rent === 'false')
+                h4.card__sub-heading= `Price: ${property.price} ETH`
+
               p.card__text= `${property.numBedroom} bedrooms, ${property.numBathroom} bathrooms`
               p.card__text= `${property.squareFeet} m², ${property.propertyStyle} `
 
             .card__footer
-              a.btnn.btn--green.btn--small(href=`/property/${property.slug}`) Details
+              if(rent === 'true')
+                a.btnn.btn--green.btn--small(href=`/property/rent/${property.slug}`) Details
+              if(rent === 'false')
+                a.btnn.btn--green.btn--small(href=`/property/${property.slug}`) Details
     else 
       h1 No results found
       a.btnn.btn--green.btn--small(href=`/`) Back to home

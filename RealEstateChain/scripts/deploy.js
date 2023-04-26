@@ -10,13 +10,25 @@ async function main() {
   const NFTPropertyContractSystem = await hre.ethers.getContractFactory(
     "NFTPropertyContractSystem"
   );
+  const NFTRentalPropertyContractSystem = await hre.ethers.getContractFactory(
+    "NFTRentalPropertyContractSystem"
+  );
+
   const nftPropertyContractSystem = await NFTPropertyContractSystem.deploy();
+  const nftRentalPropertyContractSystem = await NFTRentalPropertyContractSystem.deploy();
 
   await nftPropertyContractSystem.deployed();
 
   console.log(
     "NFTPropertyContractSystem deployed to: ",
     nftPropertyContractSystem.address
+  );
+
+  await nftRentalPropertyContractSystem.deployed();
+
+  console.log(
+    "NFTPropertyContractSystem deployed to: ",
+    nftRentalPropertyContractSystem.address
   );
 }
 

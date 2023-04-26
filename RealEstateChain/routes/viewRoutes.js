@@ -14,10 +14,34 @@ router.get("/forgetPassword", viewsController.forgetPassword);
 router.get("/overview", authController.isLoggedIn, viewsController.getOverview);
 router.get(
   "/property/:slug",
-  authController.protect,
-  viewsController.checkFavoriteStatus,
+  authController.isLoggedIn,
   viewsController.getProperty
 );
+
+router.get(
+  "/property/edit/:slug",
+  authController.protect,
+  viewsController.getEditPropertyForm
+);
+
+router.get(
+  "/property/rent/edit/:slug",
+  authController.protect,
+  viewsController.getEditRentalPropertyForm
+);
+
+router.get(
+  "/property/rent/deposit/:slug",
+  authController.protect,
+  viewsController.getRentalDepositPage
+);
+
+router.get(
+  "/property/rent/:slug",
+  authController.isLoggedIn,
+  viewsController.getRentalProperty
+);
+
 router.get("/login", authController.isLoggedIn, viewsController.getLoginForm);
 router.get(
   "/signup",
@@ -30,6 +54,13 @@ router.get(
   authController.protect,
   viewsController.getUserProperty
 );
+
+router.get(
+  "/myRentalProperty",
+  authController.protect,
+  viewsController.getUserRentalProperty
+);
+
 router.get(
   "/checkoutBidProperty/:slug",
   authController.protect,
@@ -64,6 +95,18 @@ router.get(
   "/createProperty",
   authController.protect,
   viewsController.getCreatePropertyPage
+);
+
+router.get(
+  "/createRentalProperty",
+  authController.protect,
+  viewsController.getCreateRentalPropertyPage
+);
+
+router.get(
+  "/rentalApplications",
+  authController.protect,
+  viewsController.getRentalApplication
 );
 
 module.exports = router;

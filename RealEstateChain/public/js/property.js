@@ -3,7 +3,7 @@ import axios from 'axios';
 import catchAsync from "../../utils/catchAsync";
 import { showAlert } from './alerts';
 
-export const createProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, price, imageCover, description, biddingPrice) => {
+export const createProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, imageCover, description, biddingPrice) => {
     try {
       const res = await axios({
         method: 'POST',
@@ -20,7 +20,6 @@ export const createProperty = async (address, city, listingNum, propertyStyle, g
           lotSize,
           numBedroom,
           numBathroom,
-          price,
           imageCover,
           description,
           biddingPrice
@@ -29,9 +28,46 @@ export const createProperty = async (address, city, listingNum, propertyStyle, g
   
       if (res.data.status === 'success') {
         showAlert('success', 'Property created successfully!');
+        // window.setTimeout(() => {
+        //   location.assign('/');
+        // }, 1500);
       }
     } catch (err) {
       showAlert('error', err.response.data.message);
+      console.log(err);
+    }
+  };
+
+  export const updateProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, description, biddingPrice, slug, propertyId) => {
+    try {
+      const res = await axios({
+        method: 'PATCH',
+        url: 'http://localhost:3000/api/v1/properties/' + propertyId,
+        data: {
+          address,
+          city,
+          listingNum,
+          propertyStyle,
+          garageType,
+          garageSize,
+          berRating,
+          squareFeet,
+          lotSize,
+          numBedroom,
+          numBathroom,
+          description,
+          biddingPrice
+        }
+      });
+  
+      if (res.data.status === 'success') {
+        showAlert('success', 'Property updated successfully!');
+        window.setTimeout(() => {
+          location.assign('/property/' + slug);
+        }, 1500);
+      }
+    } catch (err) {
+      showAlert('error', err);
       console.log(err);
     }
   };

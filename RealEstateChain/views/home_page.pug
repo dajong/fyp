@@ -9,11 +9,16 @@ block content
             // Main content
             div(class="search-form bg-white p-4 rounded")
                 form(method="get", action="/overview")
+                    div(class="row")
+                        ul.SectionPicker__SectionWrapper
+                            li(role="menuitem", tabindex="0", class="SectionPicker__Section selected", id="buyTab") Buy
+                            li(role="menuitem", tabindex="0", class="SectionPicker__Section",  id="rentTab") Rent
+                    input(type="hidden", name="rent", id="rent", value="false")
                     div(class="row g-3 mb-3")
                         div(class="col-3")
                             select(class="form__input", arial-label="city", name="city")
                                 option(value="" selected) City
-                                each city in cities
+                                each city in _cities
                                     option(value=`${city}`)= `${city}`
                         div(class="col-3")
                             input(type="number", class="form__input", placeholder="Min Price", name="minPrice")
@@ -30,7 +35,6 @@ block content
                     .feature.col
                         h2 Enhanced security and transparency
                         p  By leveraging blockchain technology, our app can provide a secure and transparent environment for property transactions. Each transaction is recorded on a decentralized ledger, making it tamper-proof and easily verifiable. This level of transparency can help build trust between buyers, sellers, and other stakeholders involved in the real estate process, reducing the risks of fraud and misrepresentation.
-                        button.btnn#btn--test test
 
                     .feature.col
 

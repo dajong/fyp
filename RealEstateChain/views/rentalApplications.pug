@@ -1,0 +1,56 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+  li(class=`${active ? 'side-nav--active' : ''}`)
+    a(href=`${link}`)
+      svg
+        use(xlink:href=`img/icons.svg#icon-${icon}`)
+      | #{text}
+
+block content
+  main.main
+    .user-view
+      nav.user-view__menu
+        ul.side-nav
+          +navItem('/me', 'Settings', 'settings')
+          +navItem('/bidding', 'My bidding', 'star')
+          +navItem('/getFavouriteProperties', 'Favourite Properties', 'heart')
+          +navItem('/myProperty', 'My property', 'home')
+          +navItem('#', 'Rental Applications', 'mail', true)
+          +navItem('/myRentalProperty', 'Rented Properties', 'lock')
+
+      .user-view__content
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Your current rental applications
+
+          table.table.table-responsive
+            thead
+                tr
+                    th(scope='col') Address
+                    th(scope='col') Status
+                    th(scope='col') View
+                    th(scope='col') Withdraw / Sign
+            tbody
+                each property in properties
+                    tr
+                        th(scope='row')
+                            //- img(src=`img/properties/thumbs/${property.listingNum}.jpg`, alt=`${property.photo}`)
+                            =`${property.address}, ${property.city}`
+                        if(property.rented===false)
+                          td Results pending
+                        else if (property.rented===true && property.userApproved != userid)
+                          td Fail
+                        else if (property.rented===true && property.userApproved == userid)
+                          td Success
+                        td
+                            a.btn-xsmall.btn-xgreen(href=`property/rent/${property.slug}`) View Property
+                        if(property.rented===false)
+                            td
+                              a.btn-xsmall.btn-red.withdraw-rental-btn(data-slug=`${property.slug}`) Withdraw
+                        else if (property.rented && property.userApproved !== user.id)
+                            td
+                              a.btn-xsmall.btn-red.withdraw-rental-btn(data-slug=`${property.slug}`) Withdraw
+                        else if (property.rented && property.userApproved == user.id)
+                            td
+                              a.btn-xsmall.btn--green.proceed-rental-btn(data-propertyid=`${property._id}`) Proceed
+

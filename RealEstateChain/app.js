@@ -13,6 +13,7 @@ const globalErrorHandler = require("./controllers/errorController");
 const userRouter = require("./routes/userRoutes");
 const propertyRouter = require("./routes/propertyRoutes");
 const queryRouter = require("./routes/queryRoutes");
+const rentalRouter = require("./routes/rentalRoutes");
 const viewRouter = require("./routes/viewRoutes");
 
 const app = express();
@@ -76,6 +77,7 @@ app.use((req, res, next) => {
 
 // 3) ROUTES
 app.use("/api/v1/properties", propertyRouter);
+app.use("/api/v1/rentals", rentalRouter);
 app.use("/", viewRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/queries", queryRouter);

@@ -52,6 +52,8 @@ const userSchema = new mongoose.Schema({
   currentBiddingProperty: [String],
   favoriteProperties: [String],
   propertyPurchased: [String],
+  propertyAppliedRental: [String],
+  propertiesRented: [String],
   userAttempt: {
     type: Number,
     default: 0

@@ -23,7 +23,9 @@ block content
               // Password input
               .form__group.mb-4
                 label.form__label(for="password") Password
-                input.form__input(type='password', id="password", placeholder='••••••••', pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})', required, minlength='8', maxlength='20')
+                input.form__input(type='password', id="password", placeholder='••••••••', pattern='^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,20}$', required, minlength='8', maxlength='20')
+                p.form-text.text-muted Password must be 8-20 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character (!@#$%^&*_=+-).
+
                 
               // Confirm Password input
               .form__group.mb-4

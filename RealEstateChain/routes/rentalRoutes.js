@@ -32,6 +32,22 @@ router
     rentalController.updateRentalProperty
   );
 
+router
+  .route("/rentProperty")
+  .post(authController.protect, rentalController.rentProperty);
+
+router.route("/:id").get(authController.protect, rentalController.getProperty);
+
+router.route("/payRent").post(authController.protect, rentalController.payRent);
+
+router
+  .route("/endRentalContract")
+  .post(authController.protect, rentalController.endRentalContract);
+
+router
+  .route("/renewRentalContract")
+  .post(authController.protect, rentalController.renewRentalContract);
+
 // Add more routes for rentProperty, payRent, endRental, and withdrawSecurityDeposit
 // router
 //   .route("/")

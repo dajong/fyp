@@ -137,6 +137,8 @@ const rentalPropertySchema = new mongoose.Schema({
   nftContract: String,
   propertyViews: Number,
   userApplied: [String],
+  nextPayDate: Date,
+  contractExpires: Date,
   archive: {
     type: Boolean,
     default: false

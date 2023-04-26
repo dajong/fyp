@@ -12,12 +12,13 @@ block content
     .user-view
       nav.user-view__menu
         ul.side-nav
-          +navItem('#', 'Settings', 'settings')
+          +navItem('/me', 'Settings', 'settings')
           if (role === 'user')
             +navItem('/bidding', 'My Bidding', 'star')
             +navItem('/getFavouriteProperties', 'Favourite Properties', 'heart')
-            +navItem('/myProperty', 'My Property', 'home', true)
+            +navItem('/myProperty', 'Purchased Property', 'home', true)
             +navItem('/rentalApplications', 'Rental Application', 'mail')
+            +navItem('/myRentalProperty', 'Rented Properties', 'lock')
 
           else if (role === 'admin')
             +navItem('/queries', 'Customer Queries', 'mail')

@@ -8,6 +8,7 @@ const factory = require("./handlerFactory");
 const AppError = require("./../utils/appError");
 
 exports.updateRentalProperty = factory.updateOne(RentalProperty);
+exports.getProperty = factory.getOne(RentalProperty);
 
 const multerStorage = multer.memoryStorage();
 
@@ -94,37 +95,6 @@ exports.createRentalProperty = catchAsync(async (req, res, next) => {
   });
 });
 
-//exports.createRentalProperty = factory.createOne(RentalProperty);
-exports.rentProperty = catchAsync(async (req, res, next) => {
-  const { propertyId } = req.params;
-  const renterId = req.user.id;
-  const depositAmount = req.body.deposit;
-
-  const property = await RentalProperty.findById(propertyId);
-
-  if (property.isRented) {
-    return res
-      .status(400)
-      .json({ status: "fail", message: "Property already rented" });
-  }
-
-  if (depositAmount !== property.securityDeposit) {
-    return res
-      .status(400)
-      .json({ status: "fail", message: "Incorrect security deposit" });
-  }
-
-  await RentalProperty.findByIdAndUpdate(propertyId, {
-    isRented: true,
-    renter: renterId,
-    lastPaidDate: Date.now()
-  });
-
-  res
-    .status(200)
-    .json({ status: "success", message: "Property rented successfully" });
-});
-
 exports.payRent = catchAsync(async (req, res, next) => {
   const { propertyId } = req.params;
   const renterId = req.user.id;
@@ -164,28 +134,6 @@ exports.payRent = catchAsync(async (req, res, next) => {
   res
     .status(200)
     .json({ status: "success", message: "Rent paid successfully" });
-});
-
-exports.endRental = catchAsync(async (req, res, next) => {
-  const { propertyId } = req.params;
-  const renterId = req.user.id;
-
-  const property = await RentalProperty.findById(propertyId);
-
-  if (property.renter.toString() !== renterId) {
-    return res
-      .status(400)
-      .json({ status: "fail", message: "Only the renter can end the rental" });
-  }
-
-  await RentalProperty.findByIdAndUpdate(propertyId, {
-    isRented: false,
-    renter: null
-  });
-
-  res
-    .status(200)
-    .json({ status: "success", message: "Rental ended successfully" });
 });
 
 exports.withdrawSecurityDeposit = catchAsync(async (req, res, next) => {
@@ -333,20 +281,6 @@ exports.approveRental = async (req, res, next) => {
       return next(new AppError("No property found with that slug", 404));
     }
 
-    // Update the user
-    // const user = await User.findByIdAndUpdate(
-    //   userId,
-    //   {
-    //     $pull: { propertyAppliedRental: slug }
-    //     // $addToSet: { propertiesRented: slug },
-    //   },
-    //   { new: true }
-    // );
-
-    // if (!user) {
-    //   return next(new AppError("No user found with that ID", 404));
-    // }
-
     // Send success response
     res.status(200).json({
       status: "success",
@@ -357,5 +291,239 @@ exports.approveRental = async (req, res, next) => {
     });
   } catch (error) {
     return next(new AppError("Error approving rental", 500));
+  }
+};
+
+exports.rentProperty = async (req, res, next) => {
+  try {
+    const { propertyId } = req.body;
+    const userId = req.user.id;
+    // Find the property by its id
+    const property = await RentalProperty.findById(propertyId);
+
+    // Check if the property exists
+    if (!property) {
+      return next(new AppError("No property found with that ID", 404));
+    }
+
+    // Create a new Date object representing the current date
+    const today = new Date();
+
+    // Add 30 days to the current date
+    today.setDate(today.getDate() + 30);
+
+    // Update the property's next pay date
+    property.nextPayDate = today;
+
+    // Update the rental property's status
+    property.renter = userId;
+
+    // Add 365 days to the current date for the contract expiration date
+    const contractExpires = new Date(today);
+    contractExpires.setDate(contractExpires.getDate() + 365);
+    property.contractExpires = contractExpires;
+
+    // Save the updated property to the database
+    await property.save();
+
+    // Find the user by their id and remove the property from propertyAppliedRental
+    await User.findByIdAndUpdate(
+      userId,
+      { $pull: { propertyAppliedRental: property.slug } },
+      { new: true, runValidators: true }
+    );
+
+    // Remove the user from userApplied in the RentalProperty model
+    await RentalProperty.findByIdAndUpdate(
+      propertyId,
+      { $pull: { userApplied: userId } },
+      { new: true, runValidators: true }
+    );
+
+    // Find the updated user
+    const user = await User.findById(userId);
+
+    // Check if the user exists
+    if (!user) {
+      return next(new AppError("No user found with that ID", 404));
+    }
+
+    // Add the rented property ID to the user's propertiesRented array
+    user.propertiesRented.push(property.slug);
+
+    // Save the updated user to the database
+    await user.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        property
+      }
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      message: err.message
+    });
+  }
+};
+
+exports.endRentalContract = async (req, res, next) => {
+  try {
+    const { propertyId } = req.body;
+    const userId = req.user.id;
+
+    // Find the rental property by its id
+    const property = await RentalProperty.findById(propertyId);
+
+    // Check if the property exists
+    if (!property) {
+      return next(new AppError("No property found with that ID", 404));
+    }
+
+    // Check if the user is the renter or the owner of the property
+    if (property.renter !== userId) {
+      return next(
+        new AppError("You do not have permission to end this contract", 403)
+      );
+    }
+
+    // Set the property's rented status to false and clear renter-related fields
+    property.rented = false;
+    property.renter = null;
+    property.userApproved = null;
+    property.nextPayDate = null;
+    property.contractExpires = null;
+
+    // Save the updated property to the database
+    await property.save();
+
+    // Find the user by their id
+    const user = await User.findById(userId);
+
+    // Check if the user exists
+    if (!user) {
+      return next(new AppError("No user found with that ID", 404));
+    }
+
+    // Remove the rented property ID from the user's propertiesRented array
+    user.propertiesRented.pull(propertyId);
+
+    // Save the updated user to the database
+    await user.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        property
+      }
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      message: err.message
+    });
+  }
+};
+
+exports.renewRentalContract = async (req, res, next) => {
+  try {
+    const { propertyId } = req.body;
+    const userId = req.user.id;
+
+    // Find the rental property by its id
+    const property = await RentalProperty.findById(propertyId);
+
+    // Check if the property exists
+    if (!property) {
+      return next(new AppError("No property found with that ID", 404));
+    }
+
+    // Check if the user is the renter of the property
+    if (property.renter !== userId && property.userApproved !== userId) {
+      return next(
+        new AppError("You do not have permission to renew this contract", 403)
+      );
+    }
+
+    // Set the next pay date to 30 days from today
+    const currentDate = new Date();
+    const nextPayDate = new Date(
+      currentDate.setMonth(currentDate.getMonth() + 1)
+    );
+    property.nextPayDate = nextPayDate;
+
+    // Set the contract expiration date to 1 year from today
+    const contractExpires = new Date(
+      currentDate.setFullYear(currentDate.getFullYear() + 1)
+    );
+    property.contractExpires = contractExpires;
+
+    // Save the updated property to the database
+    await property.save();
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        property
+      }
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      message: err.message
+    });
+  }
+};
+
+exports.payRent = async (req, res, next) => {
+  try {
+    const { propertyId } = req.body;
+    const userId = req.user.id;
+
+    // Find the rental property by its id
+    const property = await RentalProperty.findById(propertyId);
+
+    // Check if the property exists
+    if (!property) {
+      return next(new AppError("No property found with that ID", 404));
+    }
+
+    // Check if the user is the renter of the property
+    if (property.renter !== userId) {
+      return next(
+        new AppError(
+          "You do not have permission to pay rent for this property",
+          403
+        )
+      );
+    }
+
+    // Verify if the rent is due
+    const currentDate = new Date();
+    if (property.nextPayDate > currentDate) {
+      return next(new AppError("Rent is not due yet", 400));
+    }
+
+    // Set the next pay date to 30 days from today
+    const nextPayDate = new Date(
+      currentDate.setMonth(currentDate.getMonth() + 1)
+    );
+    property.nextPayDate = nextPayDate;
+
+    // Save the updated property to the database
+    await property.save();
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        property
+      }
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      message: err.message
+    });
   }
 };

@@ -17,6 +17,7 @@ block content
           +navItem('/getFavouriteProperties', 'Favourite Properties', 'heart')
           +navItem('/myProperty', 'My property', 'home')
           +navItem('#', 'Rental Applications', 'mail', true)
+          +navItem('/myRentalProperty', 'Rented Properties', 'lock')
 
       .user-view__content
         .user-view__form-container
@@ -45,11 +46,11 @@ block content
                             a.btn-xsmall.btn-xgreen(href=`property/rent/${property.slug}`) View Property
                         if(property.rented===false)
                             td
-                              a.btn-xsmall.btn-red#withdraw-rental-btn(data-slug=`${property.slug}`) Withdraw
+                              a.btn-xsmall.btn-red.withdraw-rental-btn(data-slug=`${property.slug}`) Withdraw
                         else if (property.rented && property.userApproved !== user.id)
                             td
-                              a.btn-xsmall.btn-red#withdraw-rental-btn(data-slug=`${property.slug}`) Withdraw
+                              a.btn-xsmall.btn-red.withdraw-rental-btn(data-slug=`${property.slug}`) Withdraw
                         else if (property.rented && property.userApproved == user.id)
                             td
-                              a.btn-xsmall.btn--green#proceed-rental-btn(data-slug=`${property.slug}`) Proceed
+                              a.btn-xsmall.btn--green.proceed-rental-btn(data-propertyid=`${property._id}`) Proceed
 

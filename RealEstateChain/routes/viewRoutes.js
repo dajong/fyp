@@ -31,6 +31,12 @@ router.get(
 );
 
 router.get(
+  "/property/rent/deposit/:slug",
+  authController.protect,
+  viewsController.getRentalDepositPage
+);
+
+router.get(
   "/property/rent/:slug",
   authController.isLoggedIn,
   viewsController.getRentalProperty
@@ -48,6 +54,13 @@ router.get(
   authController.protect,
   viewsController.getUserProperty
 );
+
+router.get(
+  "/myRentalProperty",
+  authController.protect,
+  viewsController.getUserRentalProperty
+);
+
 router.get(
   "/checkoutBidProperty/:slug",
   authController.protect,

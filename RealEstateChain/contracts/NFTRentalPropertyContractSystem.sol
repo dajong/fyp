@@ -51,14 +51,33 @@ contract NFTRentalPropertyContractSystem is ERC721URIStorage, Ownable {
       return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
     }
 
+    function updateRentalProperty(
+        uint256 propertyId,
+        uint256 newRent,
+        uint256 newSecurityDeposit
+    ) public {
+        // Require that the sender is the owner of the property
+        require(
+            msg.sender == properties[propertyId].owner,
+            "Only the owner can update the property"
+        );
+
+        // Update rent and security deposit
+        properties[propertyId].rent = newRent;
+        properties[propertyId].securityDeposit = newSecurityDeposit;
+
+        // Update other fields as needed
+    }
+
     function rentProperty(uint256 propertyId) public payable {
         Property storage property = properties[propertyId];
 
         require(!property.isRented, "Property already rented");
-        require(msg.value == property.securityDeposit, "Incorrect security deposit");
+        require(msg.value == (property.securityDeposit + property.rent), "Incorrect security deposit");
 
         property.isRented = true;
         property.renter = msg.sender;
+        property.lastPaidDate = block.timestamp;
         property.contractExpiration = block.timestamp + 365 days;
         payable(property.owner).transfer(msg.value);
     }
@@ -71,7 +90,7 @@ contract NFTRentalPropertyContractSystem is ERC721URIStorage, Ownable {
         require(msg.value == property.rent, "Incorrect rent amount");
         require(block.timestamp >= property.lastPaidDate + 30 days, "Rent already paid for the current period");
 
-        property.lastPaidDate = block.timestamp;
+        property.lastPaidDate = property.lastPaidDate + 30 days;
         payable(property.owner).transfer(msg.value);
     }
 
@@ -113,6 +132,11 @@ contract NFTRentalPropertyContractSystem is ERC721URIStorage, Ownable {
           item = currentItem;
         }
       }
+      return item;
+    }
+
+    function fetchNFTById(uint tokenId) public view returns (Property memory) {
+      Property memory item = properties[tokenId];
       return item;
     }
 }

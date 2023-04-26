@@ -263,6 +263,19 @@ exports.getCheckoutForm = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getRentalDepositPage = catchAsync(async (req, res, next) => {
+  const property = await RentalProperty.findOne({ slug: req.params.slug });
+
+  if (!property) {
+    return next(new AppError("There is no property with that name.", 404));
+  }
+
+  res.status(200).render("rentalDeposit", {
+    title: `Sign Contract`,
+    property
+  });
+});
+
 exports.soldProperty = catchAsync(async (req, res, next) => {
   const { address } = req.body;
 
@@ -339,6 +352,34 @@ exports.getBiddings = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getUserRentalProperty = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  const properties = await RentalProperty.aggregate([
+    {
+      $match: { slug: { $in: user.propertiesRented } }
+    }
+  ]);
+  console.log(properties);
+  res.status(200).render("manageRental", {
+    title: "Rented Properties",
+    properties
+  });
+});
+
+exports.getBiddings = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  console.log(user);
+  const properties = await Property.aggregate([
+    {
+      $match: { address: { $in: user.currentBiddingProperty } }
+    }
+  ]);
+  res.status(200).render("userBiddings", {
+    title: "User Biddings",
+    properties
+  });
+});
+
 exports.getRentalApplication = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   const properties = await RentalProperty.aggregate([
@@ -346,11 +387,6 @@ exports.getRentalApplication = catchAsync(async (req, res, next) => {
       $match: { slug: { $in: user.propertyAppliedRental } }
     }
   ]);
-  properties.forEach(property => {
-    console.log(property);
-    console.log(property.userApproved);
-    console.log(property.userApproved === user._id.toString());
-  });
   const userid = user._id.toString();
   res.status(200).render("rentalApplications", {
     title: "Rental Applications",

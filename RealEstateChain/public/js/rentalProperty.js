@@ -20,6 +20,21 @@ const fetchNFT = async (propertyAddress) => {
     return item;
 };
 
+export const getRentalProperty = async (propertyId) => {
+  try {
+  const res = await axios({
+    method: 'GET',
+    url: `http://localhost:3000/api/v1/rentals/${propertyId}`
+  });
+
+  if(res.data.status === 'success'){
+    return res.data.data;
+  }
+}catch (err) {
+  showAlert('error', err.response.data.message);
+}
+};
+
 export const createRentalProperty = async (address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, rent, imageCover, description, securityDeposit) => {
     try {
       const res = await axios({
@@ -47,9 +62,9 @@ export const createRentalProperty = async (address, ownerEmail, city, listingNum
   
       if (res.data.status === 'success') {
         showAlert('success', 'Rental Property created successfully!');
-        window.setTimeout(() => {
-            location.assign('/');
-          }, 1500);
+        // window.setTimeout(() => {
+        //     location.assign('/');
+        //   }, 1500);
       }
     } catch (err) {
       showAlert('error', err.response.data.message);
@@ -102,6 +117,28 @@ export const approveRental = catchAsync(async (slug, userid) => {
   }
 });
 
+const rentProperty = catchAsync(async (propertyId) => {
+  try {
+    const res = await axios({
+      method: 'POST',
+      url: 'http://localhost:3000/api/v1/rentals/rentProperty',
+      data: {
+        propertyId: propertyId
+      }
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'Contract signed successfully');
+      window.setTimeout(() => {
+        location.assign('/myRentalProperties');
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+    console.log(err);
+  }
+});
+
 export const withdrawRental = catchAsync(async (slug) => {
   try {
     const res = await axios({
@@ -124,6 +161,98 @@ export const withdrawRental = catchAsync(async (slug) => {
   }
 });
 
+const payRentMongo = catchAsync(async (propertyId) =>{
+  try {
+      const res = await axios({
+      method: "POST",
+      url: "http://localhost:3000/api/v1/rentals/payRent",
+      data: {
+          propertyId: propertyId
+      }
+      });
+
+      if (res.data.status === "success") {
+        showAlert("success", "Rent Paid");
+      }
+  } catch (err) {
+      showAlert("error", err);
+  }
+});
+
+const endContractMongo = catchAsync(async (propertyId) =>{
+  try {
+      const res = await axios({
+      method: "POST",
+      url: "http://localhost:3000/api/v1/rentals/endRentalContract",
+      data: {
+          propertyId: propertyId
+      }
+      });
+
+      if (res.data.status === "success") {
+        showAlert("success", "Contract Terminated");
+      }
+  } catch (err) {
+      showAlert("error", err);
+  }
+});
+
+const renewContractMongo = catchAsync(async (propertyId) =>{
+  try {
+      const res = await axios({
+      method: "POST",
+      url: "http://localhost:3000/api/v1/rentals/renewRentalContract",
+      data: {
+          propertyId: propertyId
+      }
+      });
+
+      if (res.data.status === "success") {
+        showAlert("success", "Contract Renewed");
+      }
+  } catch (err) {
+      showAlert("error", err);
+  }
+});
+
+export const payRent = catchAsync(async (propertyId, rent, tokenId) => {
+  console.log("pay rent");
+  const web3Modal = new Web3Modal();
+  const connection = await web3Modal.connect();
+  const provider = new ethers.providers.Web3Provider(connection);
+  const signer = provider.getSigner();
+  const contract = new ethers.Contract(RentalAddress, RentalAddressABI, signer);
+
+  const price = ethers.utils.parseUnits(rent.toString(), 'ether');
+  const transaction = await contract.payRent(tokenId, { value: price });
+  await transaction.wait();
+  await payRentMongo(propertyId);
+});
+
+export const endRentalContract = catchAsync(async (propertyId, tokenId) => {
+  console.log("end contract");
+  const web3Modal = new Web3Modal();
+  const connection = await web3Modal.connect();
+  const provider = new ethers.providers.Web3Provider(connection);
+  const signer = provider.getSigner();
+  const contract = new ethers.Contract(RentalAddress, RentalAddressABI, signer);
+  const transaction = await contract.endRental(tokenId);
+  await transaction.wait();
+  await endContractMongo(propertyId);
+});
+
+export const renewRentalContract = catchAsync(async (propertyId, tokenId) => {
+  console.log("renew contract");
+  const web3Modal = new Web3Modal();
+  const connection = await web3Modal.connect();
+  const provider = new ethers.providers.Web3Provider(connection);
+  const signer = provider.getSigner();
+  const contract = new ethers.Contract(RentalAddress, RentalAddressABI, signer);
+  const transaction = await contract.renewContract(tokenId);
+  await transaction.wait();
+  await renewContractMongo(propertyId);
+});
+
   // eslint-disable-next-line import/prefer-def\ault-export
 export const createRentalTokenNFT = catchAsync(async (rentPrice, propertyAddress, securityDeposit) => {
     // using hardcoded value for now..
@@ -141,6 +270,21 @@ export const createRentalTokenNFT = catchAsync(async (rentPrice, propertyAddress
     await transaction.wait();
     await addContract(propertyAddress, transaction);
   });
+
+  export const signRentalContract = async (tokenId, tokenPrice, propertyId) => {
+    console.log("running rental contract");
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(RentalAddress, RentalAddressABI, signer);
+  
+    const price = ethers.utils.parseUnits(tokenPrice.toString(), 'ether');
+    const transaction = await contract.rentProperty(tokenId, { value: price });
+     
+    await transaction.wait();
+    await rentProperty(propertyId);
+  };
 
 const addContract = catchAsync(async (propertyAddress, tx) =>{
     const contract = await fetchNFT(propertyAddress);
@@ -161,6 +305,8 @@ const addContract = catchAsync(async (propertyAddress, tx) =>{
         showAlert("error", err);
     }
 });
+
+
 
 export const updateRentalProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId) => {
   try {

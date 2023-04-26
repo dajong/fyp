@@ -40525,7 +40525,7 @@ module.exports = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.withdrawRental = exports.updateRentalProperty = exports.createRentalTokenNFT = exports.createRentalProperty = exports.approveRental = exports.applyRental = void 0;
+exports.withdrawRental = exports.updateRentalProperty = exports.signRentalContract = exports.renewRentalContract = exports.payRent = exports.getRentalProperty = exports.endRentalContract = exports.createRentalTokenNFT = exports.createRentalProperty = exports.approveRental = exports.applyRental = void 0;
 var _axios = _interopRequireDefault(require("axios"));
 var _catchAsync = _interopRequireDefault(require("../../utils/catchAsync"));
 var _alerts = require("./alerts");
@@ -40565,14 +40565,51 @@ var fetchNFT = /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }();
-var createRentalProperty = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit) {
+var getRentalProperty = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(propertyId) {
     var res;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
           _context2.prev = 0;
           _context2.next = 3;
+          return (0, _axios.default)({
+            method: 'GET',
+            url: "http://localhost:3000/api/v1/rentals/".concat(propertyId)
+          });
+        case 3:
+          res = _context2.sent;
+          if (!(res.data.status === 'success')) {
+            _context2.next = 6;
+            break;
+          }
+          return _context2.abrupt("return", res.data.data);
+        case 6:
+          _context2.next = 11;
+          break;
+        case 8:
+          _context2.prev = 8;
+          _context2.t0 = _context2["catch"](0);
+          (0, _alerts.showAlert)('error', _context2.t0.response.data.message);
+        case 11:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2, null, [[0, 8]]);
+  }));
+  return function getRentalProperty(_x2) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+exports.getRentalProperty = getRentalProperty;
+var createRentalProperty = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit) {
+    var res;
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.prev = 0;
+          _context3.next = 3;
           return (0, _axios.default)({
             method: 'POST',
             url: 'http://localhost:3000/api/v1/rentals/createRentalProperty',
@@ -40596,53 +40633,12 @@ var createRentalProperty = /*#__PURE__*/function () {
             }
           });
         case 3:
-          res = _context2.sent;
-          if (res.data.status === 'success') {
-            (0, _alerts.showAlert)('success', 'Rental Property created successfully!');
-            window.setTimeout(function () {
-              location.assign('/');
-            }, 1500);
-          }
-          _context2.next = 11;
-          break;
-        case 7:
-          _context2.prev = 7;
-          _context2.t0 = _context2["catch"](0);
-          (0, _alerts.showAlert)('error', _context2.t0.response.data.message);
-          console.log(_context2.t0);
-        case 11:
-        case "end":
-          return _context2.stop();
-      }
-    }, _callee2, null, [[0, 7]]);
-  }));
-  return function createRentalProperty(_x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9, _x10, _x11, _x12, _x13, _x14, _x15, _x16, _x17) {
-    return _ref2.apply(this, arguments);
-  };
-}();
-exports.createRentalProperty = createRentalProperty;
-var applyRental = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(slug) {
-    var res;
-    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-      while (1) switch (_context3.prev = _context3.next) {
-        case 0:
-          _context3.prev = 0;
-          _context3.next = 3;
-          return (0, _axios.default)({
-            method: 'POST',
-            url: 'http://localhost:3000/api/v1/rentals/applyForRental',
-            data: {
-              slug: slug
-            }
-          });
-        case 3:
           res = _context3.sent;
           if (res.data.status === 'success') {
-            (0, _alerts.showAlert)('success', 'Application sent successfully');
-            window.setTimeout(function () {
-              location.assign('/rentalApplications');
-            }, 1500);
+            (0, _alerts.showAlert)('success', 'Rental Property created successfully!');
+            // window.setTimeout(() => {
+            //     location.assign('/');
+            //   }, 1500);
           }
           _context3.next = 11;
           break;
@@ -40657,13 +40653,13 @@ var applyRental = (0, _catchAsync.default)( /*#__PURE__*/function () {
       }
     }, _callee3, null, [[0, 7]]);
   }));
-  return function (_x18) {
+  return function createRentalProperty(_x3, _x4, _x5, _x6, _x7, _x8, _x9, _x10, _x11, _x12, _x13, _x14, _x15, _x16, _x17, _x18) {
     return _ref3.apply(this, arguments);
   };
-}());
-exports.applyRental = applyRental;
-var approveRental = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(slug, userid) {
+}();
+exports.createRentalProperty = createRentalProperty;
+var applyRental = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(slug) {
     var res;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
@@ -40672,18 +40668,17 @@ var approveRental = (0, _catchAsync.default)( /*#__PURE__*/function () {
           _context4.next = 3;
           return (0, _axios.default)({
             method: 'POST',
-            url: 'http://localhost:3000/api/v1/rentals/approveRental',
+            url: 'http://localhost:3000/api/v1/rentals/applyForRental',
             data: {
-              slug: slug,
-              userId: userid
+              slug: slug
             }
           });
         case 3:
           res = _context4.sent;
           if (res.data.status === 'success') {
-            (0, _alerts.showAlert)('success', 'Application approved');
+            (0, _alerts.showAlert)('success', 'Application sent successfully');
             window.setTimeout(function () {
-              location.assign('/property/rent/' + slug);
+              location.assign('/rentalApplications');
             }, 1500);
           }
           _context4.next = 11;
@@ -40699,13 +40694,13 @@ var approveRental = (0, _catchAsync.default)( /*#__PURE__*/function () {
       }
     }, _callee4, null, [[0, 7]]);
   }));
-  return function (_x19, _x20) {
+  return function (_x19) {
     return _ref4.apply(this, arguments);
   };
 }());
-exports.approveRental = approveRental;
-var withdrawRental = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(slug) {
+exports.applyRental = applyRental;
+var approveRental = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(slug, userid) {
     var res;
     return _regeneratorRuntime().wrap(function _callee5$(_context5) {
       while (1) switch (_context5.prev = _context5.next) {
@@ -40714,17 +40709,18 @@ var withdrawRental = (0, _catchAsync.default)( /*#__PURE__*/function () {
           _context5.next = 3;
           return (0, _axios.default)({
             method: 'POST',
-            url: 'http://localhost:3000/api/v1/rentals/withdrawApplication',
+            url: 'http://localhost:3000/api/v1/rentals/approveRental',
             data: {
-              slug: slug
+              slug: slug,
+              userId: userid
             }
           });
         case 3:
           res = _context5.sent;
           if (res.data.status === 'success') {
-            (0, _alerts.showAlert)('success', 'Withdraw application successfully');
+            (0, _alerts.showAlert)('success', 'Application approved');
             window.setTimeout(function () {
-              location.assign('/rentalApplications');
+              location.assign('/property/rent/' + slug);
             }, 1500);
           }
           _context5.next = 11;
@@ -40740,63 +40736,398 @@ var withdrawRental = (0, _catchAsync.default)( /*#__PURE__*/function () {
       }
     }, _callee5, null, [[0, 7]]);
   }));
-  return function (_x21) {
+  return function (_x20, _x21) {
     return _ref5.apply(this, arguments);
+  };
+}());
+exports.approveRental = approveRental;
+var rentProperty = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(propertyId) {
+    var res;
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
+        case 0:
+          _context6.prev = 0;
+          _context6.next = 3;
+          return (0, _axios.default)({
+            method: 'POST',
+            url: 'http://localhost:3000/api/v1/rentals/rentProperty',
+            data: {
+              propertyId: propertyId
+            }
+          });
+        case 3:
+          res = _context6.sent;
+          if (res.data.status === 'success') {
+            (0, _alerts.showAlert)('success', 'Contract signed successfully');
+            window.setTimeout(function () {
+              location.assign('/myRentalProperties');
+            }, 1500);
+          }
+          _context6.next = 11;
+          break;
+        case 7:
+          _context6.prev = 7;
+          _context6.t0 = _context6["catch"](0);
+          (0, _alerts.showAlert)('error', _context6.t0.response.data.message);
+          console.log(_context6.t0);
+        case 11:
+        case "end":
+          return _context6.stop();
+      }
+    }, _callee6, null, [[0, 7]]);
+  }));
+  return function (_x22) {
+    return _ref6.apply(this, arguments);
+  };
+}());
+var withdrawRental = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(slug) {
+    var res;
+    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+      while (1) switch (_context7.prev = _context7.next) {
+        case 0:
+          _context7.prev = 0;
+          _context7.next = 3;
+          return (0, _axios.default)({
+            method: 'POST',
+            url: 'http://localhost:3000/api/v1/rentals/withdrawApplication',
+            data: {
+              slug: slug
+            }
+          });
+        case 3:
+          res = _context7.sent;
+          if (res.data.status === 'success') {
+            (0, _alerts.showAlert)('success', 'Withdraw application successfully');
+            window.setTimeout(function () {
+              location.assign('/rentalApplications');
+            }, 1500);
+          }
+          _context7.next = 11;
+          break;
+        case 7:
+          _context7.prev = 7;
+          _context7.t0 = _context7["catch"](0);
+          (0, _alerts.showAlert)('error', _context7.t0.response.data.message);
+          console.log(_context7.t0);
+        case 11:
+        case "end":
+          return _context7.stop();
+      }
+    }, _callee7, null, [[0, 7]]);
+  }));
+  return function (_x23) {
+    return _ref7.apply(this, arguments);
+  };
+}());
+exports.withdrawRental = withdrawRental;
+var payRentMongo = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(propertyId) {
+    var res;
+    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+      while (1) switch (_context8.prev = _context8.next) {
+        case 0:
+          _context8.prev = 0;
+          _context8.next = 3;
+          return (0, _axios.default)({
+            method: "POST",
+            url: "http://localhost:3000/api/v1/rentals/payRent",
+            data: {
+              propertyId: propertyId
+            }
+          });
+        case 3:
+          res = _context8.sent;
+          if (res.data.status === "success") {
+            (0, _alerts.showAlert)("success", "Rent Paid");
+          }
+          _context8.next = 10;
+          break;
+        case 7:
+          _context8.prev = 7;
+          _context8.t0 = _context8["catch"](0);
+          (0, _alerts.showAlert)("error", _context8.t0);
+        case 10:
+        case "end":
+          return _context8.stop();
+      }
+    }, _callee8, null, [[0, 7]]);
+  }));
+  return function (_x24) {
+    return _ref8.apply(this, arguments);
+  };
+}());
+var endContractMongo = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(propertyId) {
+    var res;
+    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+      while (1) switch (_context9.prev = _context9.next) {
+        case 0:
+          _context9.prev = 0;
+          _context9.next = 3;
+          return (0, _axios.default)({
+            method: "POST",
+            url: "http://localhost:3000/api/v1/rentals/endRentalContract",
+            data: {
+              propertyId: propertyId
+            }
+          });
+        case 3:
+          res = _context9.sent;
+          if (res.data.status === "success") {
+            (0, _alerts.showAlert)("success", "Contract Terminated");
+          }
+          _context9.next = 10;
+          break;
+        case 7:
+          _context9.prev = 7;
+          _context9.t0 = _context9["catch"](0);
+          (0, _alerts.showAlert)("error", _context9.t0);
+        case 10:
+        case "end":
+          return _context9.stop();
+      }
+    }, _callee9, null, [[0, 7]]);
+  }));
+  return function (_x25) {
+    return _ref9.apply(this, arguments);
+  };
+}());
+var renewContractMongo = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref10 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10(propertyId) {
+    var res;
+    return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+      while (1) switch (_context10.prev = _context10.next) {
+        case 0:
+          _context10.prev = 0;
+          _context10.next = 3;
+          return (0, _axios.default)({
+            method: "POST",
+            url: "http://localhost:3000/api/v1/rentals/renewRentalContract",
+            data: {
+              propertyId: propertyId
+            }
+          });
+        case 3:
+          res = _context10.sent;
+          if (res.data.status === "success") {
+            (0, _alerts.showAlert)("success", "Contract Renewed");
+          }
+          _context10.next = 10;
+          break;
+        case 7:
+          _context10.prev = 7;
+          _context10.t0 = _context10["catch"](0);
+          (0, _alerts.showAlert)("error", _context10.t0);
+        case 10:
+        case "end":
+          return _context10.stop();
+      }
+    }, _callee10, null, [[0, 7]]);
+  }));
+  return function (_x26) {
+    return _ref10.apply(this, arguments);
+  };
+}());
+var payRent = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref11 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee11(propertyId, rent, tokenId) {
+    var web3Modal, connection, provider, signer, contract, price, transaction;
+    return _regeneratorRuntime().wrap(function _callee11$(_context11) {
+      while (1) switch (_context11.prev = _context11.next) {
+        case 0:
+          console.log("pay rent");
+          web3Modal = new _web3modal.default();
+          _context11.next = 4;
+          return web3Modal.connect();
+        case 4:
+          connection = _context11.sent;
+          provider = new _ethers.ethers.providers.Web3Provider(connection);
+          signer = provider.getSigner();
+          contract = new _ethers.ethers.Contract(_constants.RentalAddress, _constants.RentalAddressABI, signer);
+          price = _ethers.ethers.utils.parseUnits(rent.toString(), 'ether');
+          _context11.next = 11;
+          return contract.payRent(tokenId, {
+            value: price
+          });
+        case 11:
+          transaction = _context11.sent;
+          _context11.next = 14;
+          return transaction.wait();
+        case 14:
+          _context11.next = 16;
+          return payRentMongo(propertyId);
+        case 16:
+        case "end":
+          return _context11.stop();
+      }
+    }, _callee11);
+  }));
+  return function (_x27, _x28, _x29) {
+    return _ref11.apply(this, arguments);
+  };
+}());
+exports.payRent = payRent;
+var endRentalContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref12 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee12(propertyId, tokenId) {
+    var web3Modal, connection, provider, signer, contract, transaction;
+    return _regeneratorRuntime().wrap(function _callee12$(_context12) {
+      while (1) switch (_context12.prev = _context12.next) {
+        case 0:
+          console.log("end contract");
+          web3Modal = new _web3modal.default();
+          _context12.next = 4;
+          return web3Modal.connect();
+        case 4:
+          connection = _context12.sent;
+          provider = new _ethers.ethers.providers.Web3Provider(connection);
+          signer = provider.getSigner();
+          contract = new _ethers.ethers.Contract(_constants.RentalAddress, _constants.RentalAddressABI, signer);
+          _context12.next = 10;
+          return contract.endRental(tokenId);
+        case 10:
+          transaction = _context12.sent;
+          _context12.next = 13;
+          return transaction.wait();
+        case 13:
+          _context12.next = 15;
+          return endContractMongo(propertyId);
+        case 15:
+        case "end":
+          return _context12.stop();
+      }
+    }, _callee12);
+  }));
+  return function (_x30, _x31) {
+    return _ref12.apply(this, arguments);
+  };
+}());
+exports.endRentalContract = endRentalContract;
+var renewRentalContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref13 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee13(propertyId, tokenId) {
+    var web3Modal, connection, provider, signer, contract, transaction;
+    return _regeneratorRuntime().wrap(function _callee13$(_context13) {
+      while (1) switch (_context13.prev = _context13.next) {
+        case 0:
+          console.log("renew contract");
+          web3Modal = new _web3modal.default();
+          _context13.next = 4;
+          return web3Modal.connect();
+        case 4:
+          connection = _context13.sent;
+          provider = new _ethers.ethers.providers.Web3Provider(connection);
+          signer = provider.getSigner();
+          contract = new _ethers.ethers.Contract(_constants.RentalAddress, _constants.RentalAddressABI, signer);
+          _context13.next = 10;
+          return contract.renewContract(tokenId);
+        case 10:
+          transaction = _context13.sent;
+          _context13.next = 13;
+          return transaction.wait();
+        case 13:
+          _context13.next = 15;
+          return renewContractMongo(propertyId);
+        case 15:
+        case "end":
+          return _context13.stop();
+      }
+    }, _callee13);
+  }));
+  return function (_x32, _x33) {
+    return _ref13.apply(this, arguments);
   };
 }());
 
 // eslint-disable-next-line import/prefer-def\ault-export
-exports.withdrawRental = withdrawRental;
+exports.renewRentalContract = renewRentalContract;
 var createRentalTokenNFT = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(rentPrice, propertyAddress, securityDeposit) {
+  var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(rentPrice, propertyAddress, securityDeposit) {
     var web3modal, connection, provider, signer, price, deposit, contract, url, transaction;
-    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-      while (1) switch (_context6.prev = _context6.next) {
+    return _regeneratorRuntime().wrap(function _callee14$(_context14) {
+      while (1) switch (_context14.prev = _context14.next) {
         case 0:
           // using hardcoded value for now..
           web3modal = new _web3modal.default();
-          _context6.next = 3;
+          _context14.next = 3;
           return web3modal.connect();
         case 3:
-          connection = _context6.sent;
+          connection = _context14.sent;
           provider = new _ethers.ethers.providers.Web3Provider(connection);
           signer = provider.getSigner();
           price = _ethers.ethers.utils.parseUnits(rentPrice, "ether");
           deposit = _ethers.ethers.utils.parseUnits(securityDeposit, "ether");
           contract = fetchContract(signer);
           url = "https://gateway.pinata.cloud/ipfs/QmXA7GCd4pWNKXkQ5FGrMMnzMHsRAAzex2WXtWFVdu32ji";
-          _context6.next = 12;
+          _context14.next = 12;
           return contract.addProperty(url, price, deposit, propertyAddress);
         case 12:
-          transaction = _context6.sent;
-          _context6.next = 15;
+          transaction = _context14.sent;
+          _context14.next = 15;
           return transaction.wait();
         case 15:
-          _context6.next = 17;
+          _context14.next = 17;
           return addContract(propertyAddress, transaction);
         case 17:
         case "end":
-          return _context6.stop();
+          return _context14.stop();
       }
-    }, _callee6);
+    }, _callee14);
   }));
-  return function (_x22, _x23, _x24) {
-    return _ref6.apply(this, arguments);
+  return function (_x34, _x35, _x36) {
+    return _ref14.apply(this, arguments);
   };
 }());
 exports.createRentalTokenNFT = createRentalTokenNFT;
-var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(propertyAddress, tx) {
-    var contract, res;
-    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-      while (1) switch (_context7.prev = _context7.next) {
+var signRentalContract = /*#__PURE__*/function () {
+  var _ref15 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee15(tokenId, tokenPrice, propertyId) {
+    var web3Modal, connection, provider, signer, contract, price, transaction;
+    return _regeneratorRuntime().wrap(function _callee15$(_context15) {
+      while (1) switch (_context15.prev = _context15.next) {
         case 0:
-          _context7.next = 2;
+          console.log("running rental contract");
+          web3Modal = new _web3modal.default();
+          _context15.next = 4;
+          return web3Modal.connect();
+        case 4:
+          connection = _context15.sent;
+          provider = new _ethers.ethers.providers.Web3Provider(connection);
+          signer = provider.getSigner();
+          contract = new _ethers.ethers.Contract(_constants.RentalAddress, _constants.RentalAddressABI, signer);
+          price = _ethers.ethers.utils.parseUnits(tokenPrice.toString(), 'ether');
+          _context15.next = 11;
+          return contract.rentProperty(tokenId, {
+            value: price
+          });
+        case 11:
+          transaction = _context15.sent;
+          _context15.next = 14;
+          return transaction.wait();
+        case 14:
+          _context15.next = 16;
+          return rentProperty(propertyId);
+        case 16:
+        case "end":
+          return _context15.stop();
+      }
+    }, _callee15);
+  }));
+  return function signRentalContract(_x37, _x38, _x39) {
+    return _ref15.apply(this, arguments);
+  };
+}();
+exports.signRentalContract = signRentalContract;
+var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref16 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee16(propertyAddress, tx) {
+    var contract, res;
+    return _regeneratorRuntime().wrap(function _callee16$(_context16) {
+      while (1) switch (_context16.prev = _context16.next) {
+        case 0:
+          _context16.next = 2;
           return fetchNFT(propertyAddress);
         case 2:
-          contract = _context7.sent;
-          _context7.prev = 3;
-          _context7.next = 6;
+          contract = _context16.sent;
+          _context16.prev = 3;
+          _context16.next = 6;
           return (0, _axios.default)({
             method: "POST",
             url: "http://localhost:3000/api/v1/rentals/addContract",
@@ -40806,34 +41137,34 @@ var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
             }
           });
         case 6:
-          res = _context7.sent;
+          res = _context16.sent;
           if (res.data.status === "success") {
             (0, _alerts.showAlert)("success", "Contract added successfully!");
           }
-          _context7.next = 13;
+          _context16.next = 13;
           break;
         case 10:
-          _context7.prev = 10;
-          _context7.t0 = _context7["catch"](3);
-          (0, _alerts.showAlert)("error", _context7.t0);
+          _context16.prev = 10;
+          _context16.t0 = _context16["catch"](3);
+          (0, _alerts.showAlert)("error", _context16.t0);
         case 13:
         case "end":
-          return _context7.stop();
+          return _context16.stop();
       }
-    }, _callee7, null, [[3, 10]]);
+    }, _callee16, null, [[3, 10]]);
   }));
-  return function (_x25, _x26) {
-    return _ref7.apply(this, arguments);
+  return function (_x40, _x41) {
+    return _ref16.apply(this, arguments);
   };
 }());
 var updateRentalProperty = /*#__PURE__*/function () {
-  var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId) {
+  var _ref17 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee17(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId) {
     var res;
-    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-      while (1) switch (_context8.prev = _context8.next) {
+    return _regeneratorRuntime().wrap(function _callee17$(_context17) {
+      while (1) switch (_context17.prev = _context17.next) {
         case 0:
-          _context8.prev = 0;
-          _context8.next = 3;
+          _context17.prev = 0;
+          _context17.next = 3;
           return (0, _axios.default)({
             method: 'PATCH',
             url: 'http://localhost:3000/api/v1/rentals/updateRentalProperty/' + rentalPropertyId,
@@ -40856,28 +41187,28 @@ var updateRentalProperty = /*#__PURE__*/function () {
             }
           });
         case 3:
-          res = _context8.sent;
+          res = _context17.sent;
           if (res.data.status === 'success') {
             (0, _alerts.showAlert)('success', 'Rental property updated successfully!');
             window.setTimeout(function () {
               location.assign('/property/rent/' + slug);
             }, 1500);
           }
-          _context8.next = 11;
+          _context17.next = 11;
           break;
         case 7:
-          _context8.prev = 7;
-          _context8.t0 = _context8["catch"](0);
-          (0, _alerts.showAlert)('error', _context8.t0);
-          console.log(_context8.t0);
+          _context17.prev = 7;
+          _context17.t0 = _context17["catch"](0);
+          (0, _alerts.showAlert)('error', _context17.t0);
+          console.log(_context17.t0);
         case 11:
         case "end":
-          return _context8.stop();
+          return _context17.stop();
       }
-    }, _callee8, null, [[0, 7]]);
+    }, _callee17, null, [[0, 7]]);
   }));
-  return function updateRentalProperty(_x27, _x28, _x29, _x30, _x31, _x32, _x33, _x34, _x35, _x36, _x37, _x38, _x39, _x40, _x41, _x42, _x43) {
-    return _ref8.apply(this, arguments);
+  return function updateRentalProperty(_x42, _x43, _x44, _x45, _x46, _x47, _x48, _x49, _x50, _x51, _x52, _x53, _x54, _x55, _x56, _x57, _x58) {
+    return _ref17.apply(this, arguments);
   };
 }();
 exports.updateRentalProperty = updateRentalProperty;
@@ -40928,9 +41259,9 @@ var createProperty = /*#__PURE__*/function () {
           res = _context.sent;
           if (res.data.status === 'success') {
             (0, _alerts.showAlert)('success', 'Property created successfully!');
-            window.setTimeout(function () {
-              location.assign('/');
-            }, 1500);
+            // window.setTimeout(() => {
+            //   location.assign('/');
+            // }, 1500);
           }
           _context.next = 11;
           break;
@@ -41726,10 +42057,14 @@ var testBtn = document.getElementById("btn--test");
 var propertyLink = document.getElementById("my-property-link");
 var createRentalPropertyForm = document.querySelector(".form--createRentalProperty");
 var btnApplyRental = document.getElementById("apply-rental");
-var btnWithdrawRentalApplication = document.getElementById("withdraw-rental-btn");
-var btnApproveRentalApplication = document.getElementById("approve-rental-btn");
+var btnWithdrawRentalApplication = document.querySelectorAll(".withdraw-rental-btn");
+var btnApproveRentalApplication = document.querySelectorAll(".approve-rental-btn");
 var updatePropertyForm = document.getElementById('form--updateProperty');
 var updateRentalPropertyForm = document.getElementById('form--updateRentalProperty');
+var btnProceedRental = document.querySelectorAll(".proceed-rental-btn");
+var btnPayRent = document.querySelectorAll(".pay-rent-btn");
+var btnRenewContract = document.querySelectorAll(".renew-contract-btn");
+var btnEndContract = document.querySelectorAll(".end-contract-btn");
 var connectWallet = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {
     var accounts;
@@ -42310,47 +42645,53 @@ if (btnApplyRental) {
   }());
 }
 if (btnWithdrawRentalApplication) {
-  btnWithdrawRentalApplication.addEventListener('click', /*#__PURE__*/function () {
-    var _ref20 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee20(e) {
-      var slug;
-      return _regeneratorRuntime().wrap(function _callee20$(_context20) {
-        while (1) switch (_context20.prev = _context20.next) {
-          case 0:
-            slug = btnWithdrawRentalApplication.dataset.slug;
-            _context20.next = 3;
-            return (0, _rentalProperty.withdrawRental)(slug);
-          case 3:
-          case "end":
-            return _context20.stop();
-        }
-      }, _callee20);
-    }));
-    return function (_x20) {
-      return _ref20.apply(this, arguments);
-    };
-  }());
+  btnWithdrawRentalApplication.forEach(function (btn) {
+    btn.addEventListener("click", /*#__PURE__*/function () {
+      var _ref20 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee20(e) {
+        var slug;
+        return _regeneratorRuntime().wrap(function _callee20$(_context20) {
+          while (1) switch (_context20.prev = _context20.next) {
+            case 0:
+              e.preventDefault();
+              slug = btn.getAttribute("data-slug");
+              _context20.next = 4;
+              return (0, _rentalProperty.withdrawRental)(slug);
+            case 4:
+            case "end":
+              return _context20.stop();
+          }
+        }, _callee20);
+      }));
+      return function (_x20) {
+        return _ref20.apply(this, arguments);
+      };
+    }());
+  });
 }
 if (btnApproveRentalApplication) {
-  btnApproveRentalApplication.addEventListener('click', /*#__PURE__*/function () {
-    var _ref21 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee21(e) {
-      var slug, userid;
-      return _regeneratorRuntime().wrap(function _callee21$(_context21) {
-        while (1) switch (_context21.prev = _context21.next) {
-          case 0:
-            slug = btnApproveRentalApplication.dataset.slug;
-            userid = btnApproveRentalApplication.dataset.userid;
-            _context21.next = 4;
-            return (0, _rentalProperty.approveRental)(slug, userid);
-          case 4:
-          case "end":
-            return _context21.stop();
-        }
-      }, _callee21);
-    }));
-    return function (_x21) {
-      return _ref21.apply(this, arguments);
-    };
-  }());
+  btnApproveRentalApplication.forEach(function (btn) {
+    btn.addEventListener("click", /*#__PURE__*/function () {
+      var _ref21 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee21(e) {
+        var userId, propertySlug;
+        return _regeneratorRuntime().wrap(function _callee21$(_context21) {
+          while (1) switch (_context21.prev = _context21.next) {
+            case 0:
+              e.preventDefault();
+              userId = btn.getAttribute("data-userid");
+              propertySlug = btn.getAttribute("data-slug");
+              _context21.next = 5;
+              return (0, _rentalProperty.approveRental)(propertySlug, userId);
+            case 5:
+            case "end":
+              return _context21.stop();
+          }
+        }, _callee21);
+      }));
+      return function (_x21) {
+        return _ref21.apply(this, arguments);
+      };
+    }());
+  });
 }
 if (updatePropertyForm) updatePropertyForm.addEventListener('submit', /*#__PURE__*/function () {
   var _ref22 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee22(e) {
@@ -42426,6 +42767,137 @@ if (updateRentalPropertyForm) {
       return _ref23.apply(this, arguments);
     };
   }());
+}
+if (btnProceedRental) btnProceedRental.addEventListener('click', /*#__PURE__*/function () {
+  var _ref24 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee24(e) {
+    var propertyId, curProperty;
+    return _regeneratorRuntime().wrap(function _callee24$(_context24) {
+      while (1) switch (_context24.prev = _context24.next) {
+        case 0:
+          propertyId = btn.getAttribute("data-propertyid");
+          _context24.next = 3;
+          return (0, _rentalProperty.getRentalProperty)(propertyId);
+        case 3:
+          curProperty = _context24.sent;
+          console.log(curProperty);
+          console.log(curProperty.data._id);
+          _context24.next = 8;
+          return (0, _rentalProperty.signRentalContract)(BigInt(curProperty.data.nftContract), curProperty.data.rent + curProperty.data.securityDeposit, propertyId);
+        case 8:
+        case "end":
+          return _context24.stop();
+      }
+    }, _callee24);
+  }));
+  return function (_x24) {
+    return _ref24.apply(this, arguments);
+  };
+}());
+if (btnProceedRental) {
+  btnProceedRental.forEach(function (btn) {
+    btn.addEventListener("click", /*#__PURE__*/function () {
+      var _ref25 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee25(e) {
+        var propertyId, curProperty;
+        return _regeneratorRuntime().wrap(function _callee25$(_context25) {
+          while (1) switch (_context25.prev = _context25.next) {
+            case 0:
+              e.preventDefault();
+              propertyId = btn.getAttribute("data-propertyid");
+              _context25.next = 4;
+              return (0, _rentalProperty.getRentalProperty)(propertyId);
+            case 4:
+              curProperty = _context25.sent;
+              console.log(curProperty);
+              console.log(curProperty.data._id);
+              _context25.next = 9;
+              return (0, _rentalProperty.signRentalContract)(BigInt(curProperty.data.nftContract), curProperty.data.rent + curProperty.data.securityDeposit, propertyId);
+            case 9:
+            case "end":
+              return _context25.stop();
+          }
+        }, _callee25);
+      }));
+      return function (_x25) {
+        return _ref25.apply(this, arguments);
+      };
+    }());
+  });
+}
+if (btnPayRent) {
+  btnPayRent.forEach(function (btn) {
+    btn.addEventListener("click", /*#__PURE__*/function () {
+      var _ref26 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee26(e) {
+        var propertyId, rent, tokenId;
+        return _regeneratorRuntime().wrap(function _callee26$(_context26) {
+          while (1) switch (_context26.prev = _context26.next) {
+            case 0:
+              e.preventDefault();
+              propertyId = btn.getAttribute("data-propertyid");
+              rent = btn.getAttribute("data-rent");
+              tokenId = btn.getAttribute("data-tokenId");
+              _context26.next = 6;
+              return (0, _rentalProperty.payRent)(propertyId, rent, BigInt(tokenId));
+            case 6:
+            case "end":
+              return _context26.stop();
+          }
+        }, _callee26);
+      }));
+      return function (_x26) {
+        return _ref26.apply(this, arguments);
+      };
+    }());
+  });
+}
+if (btnEndContract) {
+  btnEndContract.forEach(function (btn) {
+    btn.addEventListener("click", /*#__PURE__*/function () {
+      var _ref27 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee27(e) {
+        var propertyId, tokenId;
+        return _regeneratorRuntime().wrap(function _callee27$(_context27) {
+          while (1) switch (_context27.prev = _context27.next) {
+            case 0:
+              e.preventDefault();
+              propertyId = btn.getAttribute("data-propertyid");
+              tokenId = btn.getAttribute("data-tokenId");
+              _context27.next = 5;
+              return (0, _rentalProperty.endRentalContract)(propertyId, BigInt(tokenId));
+            case 5:
+            case "end":
+              return _context27.stop();
+          }
+        }, _callee27);
+      }));
+      return function (_x27) {
+        return _ref27.apply(this, arguments);
+      };
+    }());
+  });
+}
+if (btnRenewContract) {
+  btnRenewContract.forEach(function (btn) {
+    btn.addEventListener("click", /*#__PURE__*/function () {
+      var _ref28 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee28(e) {
+        var propertyId, tokenId;
+        return _regeneratorRuntime().wrap(function _callee28$(_context28) {
+          while (1) switch (_context28.prev = _context28.next) {
+            case 0:
+              e.preventDefault();
+              propertyId = btn.getAttribute("data-propertyid");
+              tokenId = btn.getAttribute("data-tokenId");
+              _context28.next = 5;
+              return (0, _rentalProperty.renewRentalContract)(propertyId, BigInt(tokenId));
+            case 5:
+            case "end":
+              return _context28.stop();
+          }
+        }, _callee28);
+      }));
+      return function (_x28) {
+        return _ref28.apply(this, arguments);
+      };
+    }());
+  });
 }
 },{"core-js/modules/es6.array.copy-within.js":"../../node_modules/core-js/modules/es6.array.copy-within.js","core-js/modules/es6.array.fill.js":"../../node_modules/core-js/modules/es6.array.fill.js","core-js/modules/es6.array.filter.js":"../../node_modules/core-js/modules/es6.array.filter.js","core-js/modules/es6.array.find.js":"../../node_modules/core-js/modules/es6.array.find.js","core-js/modules/es6.array.find-index.js":"../../node_modules/core-js/modules/es6.array.find-index.js","core-js/modules/es7.array.flat-map.js":"../../node_modules/core-js/modules/es7.array.flat-map.js","core-js/modules/es6.array.from.js":"../../node_modules/core-js/modules/es6.array.from.js","core-js/modules/es7.array.includes.js":"../../node_modules/core-js/modules/es7.array.includes.js","core-js/modules/es6.array.iterator.js":"../../node_modules/core-js/modules/es6.array.iterator.js","core-js/modules/es6.array.map.js":"../../node_modules/core-js/modules/es6.array.map.js","core-js/modules/es6.array.of.js":"../../node_modules/core-js/modules/es6.array.of.js","core-js/modules/es6.array.slice.js":"../../node_modules/core-js/modules/es6.array.slice.js","core-js/modules/es6.array.sort.js":"../../node_modules/core-js/modules/es6.array.sort.js","core-js/modules/es6.array.species.js":"../../node_modules/core-js/modules/es6.array.species.js","core-js/modules/es6.date.to-primitive.js":"../../node_modules/core-js/modules/es6.date.to-primitive.js","core-js/modules/es6.function.has-instance.js":"../../node_modules/core-js/modules/es6.function.has-instance.js","core-js/modules/es6.function.name.js":"../../node_modules/core-js/modules/es6.function.name.js","core-js/modules/es6.map.js":"../../node_modules/core-js/modules/es6.map.js","core-js/modules/es6.math.acosh.js":"../../node_modules/core-js/modules/es6.math.acosh.js","core-js/modules/es6.math.asinh.js":"../../node_modules/core-js/modules/es6.math.asinh.js","core-js/modules/es6.math.atanh.js":"../../node_modules/core-js/modules/es6.math.atanh.js","core-js/modules/es6.math.cbrt.js":"../../node_modules/core-js/modules/es6.math.cbrt.js","core-js/modules/es6.math.clz32.js":"../../node_modules/core-js/modules/es6.math.clz32.js","core-js/modules/es6.math.cosh.js":"../../node_modules/core-js/modules/es6.math.cosh.js","core-js/modules/es6.math.expm1.js":"../../node_modules/core-js/modules/es6.math.expm1.js","core-js/modules/es6.math.fround.js":"../../node_modules/core-js/modules/es6.math.fround.js","core-js/modules/es6.math.hypot.js":"../../node_modules/core-js/modules/es6.math.hypot.js","core-js/modules/es6.math.imul.js":"../../node_modules/core-js/modules/es6.math.imul.js","core-js/modules/es6.math.log1p.js":"../../node_modules/core-js/modules/es6.math.log1p.js","core-js/modules/es6.math.log10.js":"../../node_modules/core-js/modules/es6.math.log10.js","core-js/modules/es6.math.log2.js":"../../node_modules/core-js/modules/es6.math.log2.js","core-js/modules/es6.math.sign.js":"../../node_modules/core-js/modules/es6.math.sign.js","core-js/modules/es6.math.sinh.js":"../../node_modules/core-js/modules/es6.math.sinh.js","core-js/modules/es6.math.tanh.js":"../../node_modules/core-js/modules/es6.math.tanh.js","core-js/modules/es6.math.trunc.js":"../../node_modules/core-js/modules/es6.math.trunc.js","core-js/modules/es6.number.constructor.js":"../../node_modules/core-js/modules/es6.number.constructor.js","core-js/modules/es6.number.epsilon.js":"../../node_modules/core-js/modules/es6.number.epsilon.js","core-js/modules/es6.number.is-finite.js":"../../node_modules/core-js/modules/es6.number.is-finite.js","core-js/modules/es6.number.is-integer.js":"../../node_modules/core-js/modules/es6.number.is-integer.js","core-js/modules/es6.number.is-nan.js":"../../node_modules/core-js/modules/es6.number.is-nan.js","core-js/modules/es6.number.is-safe-integer.js":"../../node_modules/core-js/modules/es6.number.is-safe-integer.js","core-js/modules/es6.number.max-safe-integer.js":"../../node_modules/core-js/modules/es6.number.max-safe-integer.js","core-js/modules/es6.number.min-safe-integer.js":"../../node_modules/core-js/modules/es6.number.min-safe-integer.js","core-js/modules/es6.number.parse-float.js":"../../node_modules/core-js/modules/es6.number.parse-float.js","core-js/modules/es6.number.parse-int.js":"../../node_modules/core-js/modules/es6.number.parse-int.js","core-js/modules/es6.object.assign.js":"../../node_modules/core-js/modules/es6.object.assign.js","core-js/modules/es7.object.define-getter.js":"../../node_modules/core-js/modules/es7.object.define-getter.js","core-js/modules/es7.object.define-setter.js":"../../node_modules/core-js/modules/es7.object.define-setter.js","core-js/modules/es7.object.entries.js":"../../node_modules/core-js/modules/es7.object.entries.js","core-js/modules/es6.object.freeze.js":"../../node_modules/core-js/modules/es6.object.freeze.js","core-js/modules/es6.object.get-own-property-descriptor.js":"../../node_modules/core-js/modules/es6.object.get-own-property-descriptor.js","core-js/modules/es7.object.get-own-property-descriptors.js":"../../node_modules/core-js/modules/es7.object.get-own-property-descriptors.js","core-js/modules/es6.object.get-own-property-names.js":"../../node_modules/core-js/modules/es6.object.get-own-property-names.js","core-js/modules/es6.object.get-prototype-of.js":"../../node_modules/core-js/modules/es6.object.get-prototype-of.js","core-js/modules/es7.object.lookup-getter.js":"../../node_modules/core-js/modules/es7.object.lookup-getter.js","core-js/modules/es7.object.lookup-setter.js":"../../node_modules/core-js/modules/es7.object.lookup-setter.js","core-js/modules/es6.object.prevent-extensions.js":"../../node_modules/core-js/modules/es6.object.prevent-extensions.js","core-js/modules/es6.object.to-string.js":"../../node_modules/core-js/modules/es6.object.to-string.js","core-js/modules/es6.object.is.js":"../../node_modules/core-js/modules/es6.object.is.js","core-js/modules/es6.object.is-frozen.js":"../../node_modules/core-js/modules/es6.object.is-frozen.js","core-js/modules/es6.object.is-sealed.js":"../../node_modules/core-js/modules/es6.object.is-sealed.js","core-js/modules/es6.object.is-extensible.js":"../../node_modules/core-js/modules/es6.object.is-extensible.js","core-js/modules/es6.object.keys.js":"../../node_modules/core-js/modules/es6.object.keys.js","core-js/modules/es6.object.seal.js":"../../node_modules/core-js/modules/es6.object.seal.js","core-js/modules/es6.object.set-prototype-of.js":"../../node_modules/core-js/modules/es6.object.set-prototype-of.js","core-js/modules/es7.object.values.js":"../../node_modules/core-js/modules/es7.object.values.js","core-js/modules/es6.promise.js":"../../node_modules/core-js/modules/es6.promise.js","core-js/modules/es7.promise.finally.js":"../../node_modules/core-js/modules/es7.promise.finally.js","core-js/modules/es6.reflect.apply.js":"../../node_modules/core-js/modules/es6.reflect.apply.js","core-js/modules/es6.reflect.construct.js":"../../node_modules/core-js/modules/es6.reflect.construct.js","core-js/modules/es6.reflect.define-property.js":"../../node_modules/core-js/modules/es6.reflect.define-property.js","core-js/modules/es6.reflect.delete-property.js":"../../node_modules/core-js/modules/es6.reflect.delete-property.js","core-js/modules/es6.reflect.get.js":"../../node_modules/core-js/modules/es6.reflect.get.js","core-js/modules/es6.reflect.get-own-property-descriptor.js":"../../node_modules/core-js/modules/es6.reflect.get-own-property-descriptor.js","core-js/modules/es6.reflect.get-prototype-of.js":"../../node_modules/core-js/modules/es6.reflect.get-prototype-of.js","core-js/modules/es6.reflect.has.js":"../../node_modules/core-js/modules/es6.reflect.has.js","core-js/modules/es6.reflect.is-extensible.js":"../../node_modules/core-js/modules/es6.reflect.is-extensible.js","core-js/modules/es6.reflect.own-keys.js":"../../node_modules/core-js/modules/es6.reflect.own-keys.js","core-js/modules/es6.reflect.prevent-extensions.js":"../../node_modules/core-js/modules/es6.reflect.prevent-extensions.js","core-js/modules/es6.reflect.set.js":"../../node_modules/core-js/modules/es6.reflect.set.js","core-js/modules/es6.reflect.set-prototype-of.js":"../../node_modules/core-js/modules/es6.reflect.set-prototype-of.js","core-js/modules/es6.regexp.constructor.js":"../../node_modules/core-js/modules/es6.regexp.constructor.js","core-js/modules/es6.regexp.flags.js":"../../node_modules/core-js/modules/es6.regexp.flags.js","core-js/modules/es6.regexp.match.js":"../../node_modules/core-js/modules/es6.regexp.match.js","core-js/modules/es6.regexp.replace.js":"../../node_modules/core-js/modules/es6.regexp.replace.js","core-js/modules/es6.regexp.split.js":"../../node_modules/core-js/modules/es6.regexp.split.js","core-js/modules/es6.regexp.search.js":"../../node_modules/core-js/modules/es6.regexp.search.js","core-js/modules/es6.regexp.to-string.js":"../../node_modules/core-js/modules/es6.regexp.to-string.js","core-js/modules/es6.set.js":"../../node_modules/core-js/modules/es6.set.js","core-js/modules/es6.symbol.js":"../../node_modules/core-js/modules/es6.symbol.js","core-js/modules/es7.symbol.async-iterator.js":"../../node_modules/core-js/modules/es7.symbol.async-iterator.js","core-js/modules/es6.string.anchor.js":"../../node_modules/core-js/modules/es6.string.anchor.js","core-js/modules/es6.string.big.js":"../../node_modules/core-js/modules/es6.string.big.js","core-js/modules/es6.string.blink.js":"../../node_modules/core-js/modules/es6.string.blink.js","core-js/modules/es6.string.bold.js":"../../node_modules/core-js/modules/es6.string.bold.js","core-js/modules/es6.string.code-point-at.js":"../../node_modules/core-js/modules/es6.string.code-point-at.js","core-js/modules/es6.string.ends-with.js":"../../node_modules/core-js/modules/es6.string.ends-with.js","core-js/modules/es6.string.fixed.js":"../../node_modules/core-js/modules/es6.string.fixed.js","core-js/modules/es6.string.fontcolor.js":"../../node_modules/core-js/modules/es6.string.fontcolor.js","core-js/modules/es6.string.fontsize.js":"../../node_modules/core-js/modules/es6.string.fontsize.js","core-js/modules/es6.string.from-code-point.js":"../../node_modules/core-js/modules/es6.string.from-code-point.js","core-js/modules/es6.string.includes.js":"../../node_modules/core-js/modules/es6.string.includes.js","core-js/modules/es6.string.italics.js":"../../node_modules/core-js/modules/es6.string.italics.js","core-js/modules/es6.string.iterator.js":"../../node_modules/core-js/modules/es6.string.iterator.js","core-js/modules/es6.string.link.js":"../../node_modules/core-js/modules/es6.string.link.js","core-js/modules/es7.string.pad-start.js":"../../node_modules/core-js/modules/es7.string.pad-start.js","core-js/modules/es7.string.pad-end.js":"../../node_modules/core-js/modules/es7.string.pad-end.js","core-js/modules/es6.string.raw.js":"../../node_modules/core-js/modules/es6.string.raw.js","core-js/modules/es6.string.repeat.js":"../../node_modules/core-js/modules/es6.string.repeat.js","core-js/modules/es6.string.small.js":"../../node_modules/core-js/modules/es6.string.small.js","core-js/modules/es6.string.starts-with.js":"../../node_modules/core-js/modules/es6.string.starts-with.js","core-js/modules/es6.string.strike.js":"../../node_modules/core-js/modules/es6.string.strike.js","core-js/modules/es6.string.sub.js":"../../node_modules/core-js/modules/es6.string.sub.js","core-js/modules/es6.string.sup.js":"../../node_modules/core-js/modules/es6.string.sup.js","core-js/modules/es7.string.trim-left.js":"../../node_modules/core-js/modules/es7.string.trim-left.js","core-js/modules/es7.string.trim-right.js":"../../node_modules/core-js/modules/es7.string.trim-right.js","core-js/modules/es6.typed.array-buffer.js":"../../node_modules/core-js/modules/es6.typed.array-buffer.js","core-js/modules/es6.typed.int8-array.js":"../../node_modules/core-js/modules/es6.typed.int8-array.js","core-js/modules/es6.typed.uint8-array.js":"../../node_modules/core-js/modules/es6.typed.uint8-array.js","core-js/modules/es6.typed.uint8-clamped-array.js":"../../node_modules/core-js/modules/es6.typed.uint8-clamped-array.js","core-js/modules/es6.typed.int16-array.js":"../../node_modules/core-js/modules/es6.typed.int16-array.js","core-js/modules/es6.typed.uint16-array.js":"../../node_modules/core-js/modules/es6.typed.uint16-array.js","core-js/modules/es6.typed.int32-array.js":"../../node_modules/core-js/modules/es6.typed.int32-array.js","core-js/modules/es6.typed.uint32-array.js":"../../node_modules/core-js/modules/es6.typed.uint32-array.js","core-js/modules/es6.typed.float32-array.js":"../../node_modules/core-js/modules/es6.typed.float32-array.js","core-js/modules/es6.typed.float64-array.js":"../../node_modules/core-js/modules/es6.typed.float64-array.js","core-js/modules/es6.weak-map.js":"../../node_modules/core-js/modules/es6.weak-map.js","core-js/modules/es6.weak-set.js":"../../node_modules/core-js/modules/es6.weak-set.js","core-js/modules/web.timers.js":"../../node_modules/core-js/modules/web.timers.js","core-js/modules/web.immediate.js":"../../node_modules/core-js/modules/web.immediate.js","core-js/modules/web.dom.iterable.js":"../../node_modules/core-js/modules/web.dom.iterable.js","regenerator-runtime/runtime.js":"../../node_modules/regenerator-runtime/runtime.js","./login":"login.js","./registration":"registration.js","./updateSettings":"updateSettings.js","./rentalProperty":"rentalProperty.js","./property":"property.js","./web3ModalFactory":"web3ModalFactory.js","./query":"query.js"}]},{},["index.js"], null)
 //# sourceMappingURL=/js/bundle.js.map

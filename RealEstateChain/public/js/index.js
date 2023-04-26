@@ -3,7 +3,7 @@ import '@babel/polyfill';
 import { login, logout } from './login';
 import { register, addNewAdmin } from './registration';
 import { updateSettings, forgetPassword, userPlaceBid, removeBidding, resetPassword, addToFavourite, removeFromFavourite } from './updateSettings';
-import { createRentalTokenNFT, createRentalProperty, applyRental, withdrawRental, approveRental, updateRentalProperty } from './rentalProperty';
+import { createRentalTokenNFT, createRentalProperty, applyRental, withdrawRental, approveRental, updateRentalProperty,getRentalProperty, signRentalContract, payRent, endRentalContract, renewRentalContract } from './rentalProperty';
 import { createProperty, getProperty, soldProperty, placeBid, updateProperty } from './property';
 import { createTokenNFT, buyNft, depositPayment, fetchMyNFTs } from './web3ModalFactory';
 import { sendQuery,replyQuery } from './query';
@@ -31,11 +31,14 @@ const testBtn = document.getElementById("btn--test");
 const propertyLink = document.getElementById("my-property-link");
 const createRentalPropertyForm = document.querySelector(".form--createRentalProperty");
 const btnApplyRental = document.getElementById("apply-rental");
-const btnWithdrawRentalApplication = document.getElementById("withdraw-rental-btn");
-const btnApproveRentalApplication = document.getElementById("approve-rental-btn");
+const btnWithdrawRentalApplication = document.querySelectorAll(".withdraw-rental-btn");
+const btnApproveRentalApplication = document.querySelectorAll(".approve-rental-btn");
 const updatePropertyForm = document.getElementById('form--updateProperty');
 const updateRentalPropertyForm = document.getElementById('form--updateRentalProperty');
-
+const btnProceedRental = document.querySelectorAll(".proceed-rental-btn");
+const btnPayRent = document.querySelectorAll(".pay-rent-btn");
+const btnRenewContract = document.querySelectorAll(".renew-contract-btn");
+const btnEndContract = document.querySelectorAll(".end-contract-btn");
 
 const connectWallet = async (e) => {
   if (!window.ethereum) return alert('Please install MetaMask.');
@@ -356,17 +359,23 @@ if(btnApplyRental){
 }
 
 if(btnWithdrawRentalApplication){
-  btnWithdrawRentalApplication.addEventListener('click', async e => {
-    const slug = btnWithdrawRentalApplication.dataset.slug;
-    await withdrawRental(slug);
+  btnWithdrawRentalApplication.forEach((btn) => {
+    btn.addEventListener("click", async e => {
+      e.preventDefault();
+      const slug = btn.getAttribute("data-slug");
+      await withdrawRental(slug);
+    });
   });
 }
 
 if(btnApproveRentalApplication){
-  btnApproveRentalApplication.addEventListener('click', async e => {
-    const slug = btnApproveRentalApplication.dataset.slug;
-    const userid = btnApproveRentalApplication.dataset.userid;
-    await approveRental(slug, userid);
+  btnApproveRentalApplication.forEach((btn) => {
+    btn.addEventListener("click", async e => {
+      e.preventDefault();
+      const userId = btn.getAttribute("data-userid");
+      const propertySlug = btn.getAttribute("data-slug");
+      await approveRental(propertySlug, userId);
+    });
   });
 }
 
@@ -421,6 +430,68 @@ if (updateRentalPropertyForm) {
     await updateRentalProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId);
   });
 }
+
+if(btnProceedRental)
+btnProceedRental.addEventListener('click',async e => {
+  const propertyId = btn.getAttribute("data-propertyid");
+  const curProperty = await getRentalProperty(propertyId);
+  console.log(curProperty);
+  console.log(curProperty.data._id);
+
+  await signRentalContract(BigInt(curProperty.data.nftContract), curProperty.data.rent + curProperty.data.securityDeposit, propertyId);
+});
+
+if(btnProceedRental){
+  btnProceedRental.forEach((btn) => {
+    btn.addEventListener("click", async e => {
+      e.preventDefault();
+      const propertyId = btn.getAttribute("data-propertyid");
+      const curProperty = await getRentalProperty(propertyId);
+      console.log(curProperty);
+      console.log(curProperty.data._id);
+
+      await signRentalContract(BigInt(curProperty.data.nftContract), curProperty.data.rent + curProperty.data.securityDeposit, propertyId);
+    });
+  });
+}
+
+if(btnPayRent){
+  btnPayRent.forEach((btn) => {
+    btn.addEventListener("click", async e => {
+      e.preventDefault();
+      const propertyId = btn.getAttribute("data-propertyid");
+      const rent = btn.getAttribute("data-rent");
+      const tokenId = btn.getAttribute("data-tokenId");
+
+      await payRent(propertyId, rent, BigInt(tokenId));
+    });
+  });
+}
+
+if(btnEndContract){
+  btnEndContract.forEach((btn) => {
+    btn.addEventListener("click", async e => {
+      e.preventDefault();
+      const propertyId = btn.getAttribute("data-propertyid");
+      const tokenId = btn.getAttribute("data-tokenId");
+
+      await endRentalContract(propertyId, BigInt(tokenId));
+    });
+  });
+}
+
+if(btnRenewContract){
+  btnRenewContract.forEach((btn) => {
+    btn.addEventListener("click", async e => {
+      e.preventDefault();
+      const propertyId = btn.getAttribute("data-propertyid");
+      const tokenId = btn.getAttribute("data-tokenId");
+
+      await renewRentalContract(propertyId, BigInt(tokenId));
+    });
+  });
+}
+
 
 
 

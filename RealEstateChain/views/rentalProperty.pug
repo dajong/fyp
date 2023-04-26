@@ -103,21 +103,21 @@ block content
             a.btn-small.span-all-rows(href=`/property/rent/edit/${property.slug}`)
               | Edit
 
-
-    section.section-cta
-      h2.heading-secondary.ma-bt-lg Applicants
-      table.table.table-responsive
-            thead
-                tr
-                    th(scope='col') User Email
-                    th(scope='col') Name
-                    th(scope='col') Approve
-            tbody
-                each user in usersApplied
-                    tr
-                        th(scope='row')
-                          = user.email 
-                        td 
-                          = user.name 
-                        td 
-                          button.btn-xsmall.btn--green#approve-rental-btn(data-userid=`${user._id}`,data-slug=`${property.slug}`) Approve 
+    if(!property.userApproved)
+      section.section-cta
+        h2.heading-secondary.ma-bt-lg Applicants
+        table.table.table-responsive
+              thead
+                  tr
+                      th(scope='col') User Email
+                      th(scope='col') Name
+                      th(scope='col') Approve
+              tbody
+                  each user in usersApplied
+                      tr
+                          th(scope='row')
+                            = user.email 
+                          td 
+                            = user.name 
+                          td 
+                            button.btn-xsmall.btn--green.approve-rental-btn(data-userid=`${user._id}`,data-slug=`${property.slug}`) Approve 

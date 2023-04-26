@@ -41269,7 +41269,7 @@ exports.updateRentalProperty = updateRentalProperty;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateProperty = exports.soldProperty = exports.placeBid = exports.getProperty = exports.createProperty = exports.addView = void 0;
+exports.updateProperty = exports.placeBid = exports.getProperty = exports.addView = void 0;
 var _axios = _interopRequireDefault(require("axios"));
 var _catchAsync = _interopRequireDefault(require("../../utils/catchAsync"));
 var _alerts = require("./alerts");
@@ -41278,68 +41278,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator.return && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, catch: function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; } /* eslint-disable */
-var createProperty = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, imageCover, description, biddingPrice) {
+var updateProperty = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, description, biddingPrice, slug, propertyId) {
     var res;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.prev = 0;
           _context.next = 3;
-          return (0, _axios.default)({
-            method: 'POST',
-            url: 'http://localhost:3000/api/v1/properties',
-            data: {
-              address: address,
-              city: city,
-              listingNum: listingNum,
-              propertyStyle: propertyStyle,
-              garageType: garageType,
-              garageSize: garageSize,
-              berRating: berRating,
-              squareFeet: squareFeet,
-              lotSize: lotSize,
-              numBedroom: numBedroom,
-              numBathroom: numBathroom,
-              imageCover: imageCover,
-              description: description,
-              biddingPrice: biddingPrice
-            }
-          });
-        case 3:
-          res = _context.sent;
-          if (res.data.status === 'success') {
-            (0, _alerts.showAlert)('success', 'Property created successfully!');
-            // window.setTimeout(() => {
-            //   location.assign('/');
-            // }, 1500);
-          }
-          _context.next = 11;
-          break;
-        case 7:
-          _context.prev = 7;
-          _context.t0 = _context["catch"](0);
-          (0, _alerts.showAlert)('error', _context.t0.response.data.message);
-          console.log(_context.t0);
-        case 11:
-        case "end":
-          return _context.stop();
-      }
-    }, _callee, null, [[0, 7]]);
-  }));
-  return function createProperty(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9, _x10, _x11, _x12, _x13, _x14) {
-    return _ref.apply(this, arguments);
-  };
-}();
-exports.createProperty = createProperty;
-var updateProperty = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, description, biddingPrice, slug, propertyId) {
-    var res;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) switch (_context2.prev = _context2.next) {
-        case 0:
-          _context2.prev = 0;
-          _context2.next = 3;
           return (0, _axios.default)({
             method: 'PATCH',
             url: 'http://localhost:3000/api/v1/properties/' + propertyId,
@@ -41360,33 +41306,70 @@ var updateProperty = /*#__PURE__*/function () {
             }
           });
         case 3:
-          res = _context2.sent;
+          res = _context.sent;
           if (res.data.status === 'success') {
             (0, _alerts.showAlert)('success', 'Property updated successfully!');
             window.setTimeout(function () {
               location.assign('/property/' + slug);
             }, 1500);
           }
-          _context2.next = 11;
+          _context.next = 11;
           break;
         case 7:
-          _context2.prev = 7;
-          _context2.t0 = _context2["catch"](0);
-          (0, _alerts.showAlert)('error', _context2.t0);
-          console.log(_context2.t0);
+          _context.prev = 7;
+          _context.t0 = _context["catch"](0);
+          (0, _alerts.showAlert)('error', _context.t0);
+          console.log(_context.t0);
         case 11:
         case "end":
-          return _context2.stop();
+          return _context.stop();
       }
-    }, _callee2, null, [[0, 7]]);
+    }, _callee, null, [[0, 7]]);
   }));
-  return function updateProperty(_x15, _x16, _x17, _x18, _x19, _x20, _x21, _x22, _x23, _x24, _x25, _x26, _x27, _x28, _x29) {
-    return _ref2.apply(this, arguments);
+  return function updateProperty(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9, _x10, _x11, _x12, _x13, _x14, _x15) {
+    return _ref.apply(this, arguments);
   };
 }();
 exports.updateProperty = updateProperty;
 var getProperty = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(propertyId) {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(propertyId) {
+    var res;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.prev = 0;
+          _context2.next = 3;
+          return (0, _axios.default)({
+            method: 'GET',
+            url: "http://localhost:3000/api/v1/properties/".concat(propertyId)
+          });
+        case 3:
+          res = _context2.sent;
+          if (!(res.data.status === 'success')) {
+            _context2.next = 6;
+            break;
+          }
+          return _context2.abrupt("return", res.data.data);
+        case 6:
+          _context2.next = 11;
+          break;
+        case 8:
+          _context2.prev = 8;
+          _context2.t0 = _context2["catch"](0);
+          (0, _alerts.showAlert)('error', _context2.t0.response.data.message);
+        case 11:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2, null, [[0, 8]]);
+  }));
+  return function getProperty(_x16) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+exports.getProperty = getProperty;
+var placeBid = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(propertyAddress, newBidPrice, curBidder) {
     var res;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
@@ -41394,36 +41377,42 @@ var getProperty = /*#__PURE__*/function () {
           _context3.prev = 0;
           _context3.next = 3;
           return (0, _axios.default)({
-            method: 'GET',
-            url: "http://localhost:3000/api/v1/properties/".concat(propertyId)
+            method: "POST",
+            url: "http://localhost:3000/api/v1/properties/placeBid",
+            data: {
+              address: propertyAddress,
+              biddingPrice: newBidPrice,
+              bidder: curBidder
+            }
           });
         case 3:
           res = _context3.sent;
-          if (!(res.data.status === 'success')) {
-            _context3.next = 6;
-            break;
+          if (res.data.status === "success") {
+            (0, _alerts.showAlert)("success", "New bid is placed");
+            setTimeout(function () {
+              document.location.reload();
+            }, 1500);
           }
-          return _context3.abrupt("return", res.data.data);
-        case 6:
           _context3.next = 11;
           break;
-        case 8:
-          _context3.prev = 8;
+        case 7:
+          _context3.prev = 7;
           _context3.t0 = _context3["catch"](0);
-          (0, _alerts.showAlert)('error', _context3.t0.response.data.message);
+          console.log(_context3.t0);
+          (0, _alerts.showAlert)("error", _context3.t0);
         case 11:
         case "end":
           return _context3.stop();
       }
-    }, _callee3, null, [[0, 8]]);
+    }, _callee3, null, [[0, 7]]);
   }));
-  return function getProperty(_x30) {
+  return function (_x17, _x18, _x19) {
     return _ref3.apply(this, arguments);
   };
-}();
-exports.getProperty = getProperty;
-var soldProperty = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(propertyAddress, slug) {
+}());
+exports.placeBid = placeBid;
+var addView = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(propertyAddress) {
     var res;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
@@ -41432,19 +41421,15 @@ var soldProperty = (0, _catchAsync.default)( /*#__PURE__*/function () {
           _context4.next = 3;
           return (0, _axios.default)({
             method: "POST",
-            url: "http://localhost:3000/api/v1/properties/soldProperty",
+            url: "http://localhost:3000/api/v1/properties/addView",
             data: {
-              address: propertyAddress,
-              slug: slug
+              address: propertyAddress
             }
           });
         case 3:
           res = _context4.sent;
           if (res.data.status === "success") {
-            (0, _alerts.showAlert)("success", "Property Sold!");
-            window.setTimeout(function () {
-              location.assign('/');
-            }, 1500);
+            console.log("user viewed!");
           }
           _context4.next = 10;
           break;
@@ -41458,88 +41443,8 @@ var soldProperty = (0, _catchAsync.default)( /*#__PURE__*/function () {
       }
     }, _callee4, null, [[0, 7]]);
   }));
-  return function (_x31, _x32) {
+  return function (_x20) {
     return _ref4.apply(this, arguments);
-  };
-}());
-exports.soldProperty = soldProperty;
-var placeBid = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(propertyAddress, newBidPrice, curBidder) {
-    var res;
-    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-      while (1) switch (_context5.prev = _context5.next) {
-        case 0:
-          _context5.prev = 0;
-          _context5.next = 3;
-          return (0, _axios.default)({
-            method: "POST",
-            url: "http://localhost:3000/api/v1/properties/placeBid",
-            data: {
-              address: propertyAddress,
-              biddingPrice: newBidPrice,
-              bidder: curBidder
-            }
-          });
-        case 3:
-          res = _context5.sent;
-          if (res.data.status === "success") {
-            (0, _alerts.showAlert)("success", "New bid is placed");
-            setTimeout(function () {
-              document.location.reload();
-            }, 1500);
-          }
-          _context5.next = 11;
-          break;
-        case 7:
-          _context5.prev = 7;
-          _context5.t0 = _context5["catch"](0);
-          console.log(_context5.t0);
-          (0, _alerts.showAlert)("error", _context5.t0);
-        case 11:
-        case "end":
-          return _context5.stop();
-      }
-    }, _callee5, null, [[0, 7]]);
-  }));
-  return function (_x33, _x34, _x35) {
-    return _ref5.apply(this, arguments);
-  };
-}());
-exports.placeBid = placeBid;
-var addView = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(propertyAddress) {
-    var res;
-    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-      while (1) switch (_context6.prev = _context6.next) {
-        case 0:
-          _context6.prev = 0;
-          _context6.next = 3;
-          return (0, _axios.default)({
-            method: "POST",
-            url: "http://localhost:3000/api/v1/properties/addView",
-            data: {
-              address: propertyAddress
-            }
-          });
-        case 3:
-          res = _context6.sent;
-          if (res.data.status === "success") {
-            console.log("user viewed!");
-          }
-          _context6.next = 10;
-          break;
-        case 7:
-          _context6.prev = 7;
-          _context6.t0 = _context6["catch"](0);
-          (0, _alerts.showAlert)("error", _context6.t0);
-        case 10:
-        case "end":
-          return _context6.stop();
-      }
-    }, _callee6, null, [[0, 7]]);
-  }));
-  return function (_x36) {
-    return _ref6.apply(this, arguments);
   };
 }());
 exports.addView = addView;
@@ -41844,13 +41749,54 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var fetchContract = function fetchContract(signerOrProvider) {
   return new _ethers.ethers.Contract(_constants.MarketAddress, _constants.MarketAddressABI, signerOrProvider);
 };
-var createProperty = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, imageCover, description, biddingPrice) {
-    var formData, res;
+var soldProperty = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(propertyAddress, slug, propertyId) {
+    var res;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.prev = 0;
+          _context.next = 3;
+          return (0, _axios.default)({
+            method: "POST",
+            url: "http://localhost:3000/api/v1/properties/soldProperty",
+            data: {
+              address: propertyAddress,
+              slug: slug,
+              propertyId: propertyId
+            }
+          });
+        case 3:
+          res = _context.sent;
+          if (res.data.status === "success") {
+            (0, _alerts.showAlert)("success", "Property Sold!");
+            window.setTimeout(function () {
+              location.assign('/myProperty');
+            }, 1500);
+          }
+          _context.next = 10;
+          break;
+        case 7:
+          _context.prev = 7;
+          _context.t0 = _context["catch"](0);
+          (0, _alerts.showAlert)("error", _context.t0);
+        case 10:
+        case "end":
+          return _context.stop();
+      }
+    }, _callee, null, [[0, 7]]);
+  }));
+  return function soldProperty(_x, _x2, _x3) {
+    return _ref.apply(this, arguments);
+  };
+}();
+var createProperty = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, imageCover, description, biddingPrice) {
+    var formData, res;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.prev = 0;
           formData = new FormData();
           formData.append('address', address);
           formData.append('city', city);
@@ -41866,7 +41812,7 @@ var createProperty = /*#__PURE__*/function () {
           formData.append('imageCover', imageCover);
           formData.append('description', description);
           formData.append('biddingPrice', biddingPrice);
-          _context.next = 18;
+          _context2.next = 18;
           return (0, _axios.default)({
             method: 'POST',
             url: 'http://localhost:3000/api/v1/properties',
@@ -41876,98 +41822,98 @@ var createProperty = /*#__PURE__*/function () {
             }
           });
         case 18:
-          res = _context.sent;
+          res = _context2.sent;
           if (res.data.status === 'success') {
             (0, _alerts.showAlert)('success', 'Property created successfully!');
             // window.setTimeout(() => {
             //   location.assign('/');
             // }, 1500);
           }
-          _context.next = 26;
+          _context2.next = 26;
           break;
         case 22:
-          _context.prev = 22;
-          _context.t0 = _context["catch"](0);
-          (0, _alerts.showAlert)('error', _context.t0.response.data.message);
-          console.log(_context.t0);
+          _context2.prev = 22;
+          _context2.t0 = _context2["catch"](0);
+          (0, _alerts.showAlert)('error', _context2.t0.response.data.message);
+          console.log(_context2.t0);
         case 26:
-        case "end":
-          return _context.stop();
-      }
-    }, _callee, null, [[0, 22]]);
-  }));
-  return function createProperty(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9, _x10, _x11, _x12, _x13, _x14) {
-    return _ref.apply(this, arguments);
-  };
-}();
-var fetchNFT = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(propertyAddress) {
-    var provider, contract, data, item;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) switch (_context2.prev = _context2.next) {
-        case 0:
-          provider = new _ethers.ethers.providers.JsonRpcProvider();
-          contract = fetchContract(provider);
-          _context2.next = 4;
-          return contract.fetchNFTByPropertyAddress(propertyAddress);
-        case 4:
-          data = _context2.sent;
-          item = data.tokenId.toString();
-          return _context2.abrupt("return", item);
-        case 7:
         case "end":
           return _context2.stop();
       }
-    }, _callee2);
+    }, _callee2, null, [[0, 22]]);
   }));
-  return function fetchNFT(_x15) {
+  return function createProperty(_x4, _x5, _x6, _x7, _x8, _x9, _x10, _x11, _x12, _x13, _x14, _x15, _x16, _x17) {
     return _ref2.apply(this, arguments);
   };
 }();
-
-// Used to check if user has the NFTs
-var fetchUserNFTs = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-    var provider, contract, accounts, data;
+var fetchNFT = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(propertyAddress) {
+    var provider, contract, data, item;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
           provider = new _ethers.ethers.providers.JsonRpcProvider();
           contract = fetchContract(provider);
           _context3.next = 4;
-          return window.ethereum.request({
-            method: "eth_accounts"
-          });
+          return contract.fetchNFTByPropertyAddress(propertyAddress);
         case 4:
-          accounts = _context3.sent;
-          console.log(accounts[0]);
-          _context3.next = 8;
-          return contract.fetchMyNFTs(accounts[0]);
-        case 8:
           data = _context3.sent;
-          console.log(data);
-        case 10:
+          item = data.tokenId.toString();
+          return _context3.abrupt("return", item);
+        case 7:
         case "end":
           return _context3.stop();
       }
     }, _callee3);
   }));
-  return function fetchUserNFTs() {
+  return function fetchNFT(_x18) {
     return _ref3.apply(this, arguments);
   };
 }();
-var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(propertyAddress) {
-    var contract, res;
+
+// Used to check if user has the NFTs
+var fetchUserNFTs = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+    var provider, contract, accounts, data;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
         case 0:
-          _context4.next = 2;
+          provider = new _ethers.ethers.providers.JsonRpcProvider();
+          contract = fetchContract(provider);
+          _context4.next = 4;
+          return window.ethereum.request({
+            method: "eth_accounts"
+          });
+        case 4:
+          accounts = _context4.sent;
+          console.log(accounts[0]);
+          _context4.next = 8;
+          return contract.fetchMyNFTs(accounts[0]);
+        case 8:
+          data = _context4.sent;
+          console.log(data);
+        case 10:
+        case "end":
+          return _context4.stop();
+      }
+    }, _callee4);
+  }));
+  return function fetchUserNFTs() {
+    return _ref4.apply(this, arguments);
+  };
+}();
+var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(propertyAddress) {
+    var contract, res;
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
+        case 0:
+          _context5.next = 2;
           return fetchNFT(propertyAddress);
         case 2:
-          contract = _context4.sent;
-          _context4.prev = 3;
-          _context4.next = 6;
+          contract = _context5.sent;
+          _context5.prev = 3;
+          _context5.next = 6;
           return (0, _axios.default)({
             method: "POST",
             url: "http://localhost:3000/api/v1/properties/addContract",
@@ -41977,111 +41923,78 @@ var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
             }
           });
         case 6:
-          res = _context4.sent;
+          res = _context5.sent;
           if (res.data.status === "success") {
             (0, _alerts.showAlert)("success", "Contract added successfully!");
           }
-          _context4.next = 13;
+          _context5.next = 13;
           break;
         case 10:
-          _context4.prev = 10;
-          _context4.t0 = _context4["catch"](3);
-          (0, _alerts.showAlert)("error", _context4.t0);
+          _context5.prev = 10;
+          _context5.t0 = _context5["catch"](3);
+          (0, _alerts.showAlert)("error", _context5.t0);
         case 13:
         case "end":
-          return _context4.stop();
+          return _context5.stop();
       }
-    }, _callee4, null, [[3, 10]]);
+    }, _callee5, null, [[3, 10]]);
   }));
-  return function (_x16) {
-    return _ref4.apply(this, arguments);
+  return function (_x19) {
+    return _ref5.apply(this, arguments);
   };
 }());
 
 // eslint-disable-next-line import/prefer-default-export
 exports.addContract = addContract;
 var createTokenNFT = /*#__PURE__*/function () {
-  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, imageCover, description, biddingPrice) {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, imageCover, description, biddingPrice) {
     var web3modal, connection, provider, signer, bidPrice, contract, url, transaction;
-    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-      while (1) switch (_context5.prev = _context5.next) {
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
         case 0:
           web3modal = new _web3modal.default();
-          _context5.next = 3;
+          _context6.next = 3;
           return web3modal.connect();
         case 3:
-          connection = _context5.sent;
+          connection = _context6.sent;
           provider = new _ethers.ethers.providers.Web3Provider(connection);
           signer = provider.getSigner();
           bidPrice = _ethers.ethers.utils.parseUnits(biddingPrice.toString(), "ether");
           contract = fetchContract(signer);
-          _context5.next = 10;
+          _context6.next = 10;
           return (0, _ipfsUtils.uploadToIPFS)(imageCover);
         case 10:
-          url = _context5.sent;
-          _context5.next = 13;
+          url = _context6.sent;
+          _context6.next = 13;
           return contract.createTokenNFT(url, address, bidPrice);
         case 13:
-          transaction = _context5.sent;
-          _context5.next = 16;
+          transaction = _context6.sent;
+          _context6.next = 16;
           return transaction.wait();
         case 16:
-          _context5.next = 18;
+          _context6.next = 18;
           return createProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, imageCover, description, biddingPrice);
         case 18:
-          _context5.next = 20;
+          _context6.next = 20;
           return addContract(address);
         case 20:
-        case "end":
-          return _context5.stop();
-      }
-    }, _callee5);
-  }));
-  return function createTokenNFT(_x17, _x18, _x19, _x20, _x21, _x22, _x23, _x24, _x25, _x26, _x27, _x28, _x29, _x30) {
-    return _ref5.apply(this, arguments);
-  };
-}();
-exports.createTokenNFT = createTokenNFT;
-var contractPlaceBid = /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(tokenId, biddingPrice) {
-    var web3Modal, connection, provider, signer, contract, price, transaction;
-    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-      while (1) switch (_context6.prev = _context6.next) {
-        case 0:
-          console.log("running place bid nft..");
-          web3Modal = new _web3modal.default();
-          _context6.next = 4;
-          return web3Modal.connect();
-        case 4:
-          connection = _context6.sent;
-          provider = new _ethers.ethers.providers.Web3Provider(connection);
-          signer = provider.getSigner();
-          contract = new _ethers.ethers.Contract(_constants.MarketAddress, _constants.MarketAddressABI, signer);
-          price = _ethers.ethers.utils.parseUnits(biddingPrice.toString(), 'ether');
-          _context6.next = 11;
-          return contract.updateBidPrice(tokenId, price);
-        case 11:
-          transaction = _context6.sent;
-          _context6.next = 14;
-          return transaction.wait();
-        case 14:
         case "end":
           return _context6.stop();
       }
     }, _callee6);
   }));
-  return function contractPlaceBid(_x31, _x32) {
+  return function createTokenNFT(_x20, _x21, _x22, _x23, _x24, _x25, _x26, _x27, _x28, _x29, _x30, _x31, _x32, _x33) {
     return _ref6.apply(this, arguments);
   };
 }();
-exports.contractPlaceBid = contractPlaceBid;
-var buyNft = /*#__PURE__*/function () {
-  var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(tokenId, tokenPrice, isBid) {
+exports.createTokenNFT = createTokenNFT;
+var contractPlaceBid = /*#__PURE__*/function () {
+  var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(tokenId, biddingPrice) {
     var web3Modal, connection, provider, signer, contract, price, transaction;
     return _regeneratorRuntime().wrap(function _callee7$(_context7) {
       while (1) switch (_context7.prev = _context7.next) {
         case 0:
-          console.log("running buy nft..");
+          console.log("running place bid nft..");
           web3Modal = new _web3modal.default();
           _context7.next = 4;
           return web3Modal.connect();
@@ -42090,48 +42003,31 @@ var buyNft = /*#__PURE__*/function () {
           provider = new _ethers.ethers.providers.Web3Provider(connection);
           signer = provider.getSigner();
           contract = new _ethers.ethers.Contract(_constants.MarketAddress, _constants.MarketAddressABI, signer);
-          price = _ethers.ethers.utils.parseUnits(tokenPrice.toString(), 'ether');
-          if (!(isBid == true)) {
-            _context7.next = 16;
-            break;
-          }
-          console.log('isBid is run..');
-          _context7.next = 13;
-          return contract.buyBidProperty(tokenId, {
-            value: price
-          });
-        case 13:
+          price = _ethers.ethers.utils.parseUnits(biddingPrice.toString(), 'ether');
+          _context7.next = 11;
+          return contract.updateBidPrice(tokenId, price);
+        case 11:
           transaction = _context7.sent;
-          _context7.next = 19;
-          break;
-        case 16:
-          _context7.next = 18;
-          return contract.createMarketSale(tokenId, {
-            value: price
-          });
-        case 18:
-          transaction = _context7.sent;
-        case 19:
-          _context7.next = 21;
+          _context7.next = 14;
           return transaction.wait();
-        case 21:
+        case 14:
         case "end":
           return _context7.stop();
       }
     }, _callee7);
   }));
-  return function buyNft(_x33, _x34, _x35) {
+  return function contractPlaceBid(_x34, _x35) {
     return _ref7.apply(this, arguments);
   };
 }();
-exports.buyNft = buyNft;
-var depositPayment = /*#__PURE__*/function () {
-  var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(tokenId, tokenPrice) {
+exports.contractPlaceBid = contractPlaceBid;
+var buyNft = /*#__PURE__*/function () {
+  var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(tokenId, tokenPrice, address, slug, propertyId) {
     var web3Modal, connection, provider, signer, contract, price, transaction;
     return _regeneratorRuntime().wrap(function _callee8$(_context8) {
       while (1) switch (_context8.prev = _context8.next) {
         case 0:
-          console.log("running deposit nft..");
+          console.log("running buy nft..");
           web3Modal = new _web3modal.default();
           _context8.next = 4;
           return web3Modal.connect();
@@ -42142,7 +42038,7 @@ var depositPayment = /*#__PURE__*/function () {
           contract = new _ethers.ethers.Contract(_constants.MarketAddress, _constants.MarketAddressABI, signer);
           price = _ethers.ethers.utils.parseUnits(tokenPrice.toString(), 'ether');
           _context8.next = 11;
-          return contract.placeDeposit(tokenId, {
+          return contract.buyBidProperty(tokenId, {
             value: price
           });
         case 11:
@@ -42150,13 +42046,54 @@ var depositPayment = /*#__PURE__*/function () {
           _context8.next = 14;
           return transaction.wait();
         case 14:
+          _context8.next = 16;
+          return soldProperty(address, slug, propertyId);
+        case 16:
         case "end":
           return _context8.stop();
       }
     }, _callee8);
   }));
-  return function depositPayment(_x36, _x37) {
+  return function buyNft(_x36, _x37, _x38, _x39, _x40) {
     return _ref8.apply(this, arguments);
+  };
+}();
+exports.buyNft = buyNft;
+var depositPayment = /*#__PURE__*/function () {
+  var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(tokenId, tokenPrice, propertyAddress, slug, propertyId) {
+    var web3Modal, connection, provider, signer, contract, price, transaction;
+    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+      while (1) switch (_context9.prev = _context9.next) {
+        case 0:
+          console.log("running deposit nft..");
+          web3Modal = new _web3modal.default();
+          _context9.next = 4;
+          return web3Modal.connect();
+        case 4:
+          connection = _context9.sent;
+          provider = new _ethers.ethers.providers.Web3Provider(connection);
+          signer = provider.getSigner();
+          contract = new _ethers.ethers.Contract(_constants.MarketAddress, _constants.MarketAddressABI, signer);
+          price = _ethers.ethers.utils.parseUnits(tokenPrice.toString(), 'ether');
+          _context9.next = 11;
+          return contract.placeDeposit(tokenId, {
+            value: price
+          });
+        case 11:
+          transaction = _context9.sent;
+          _context9.next = 14;
+          return transaction.wait();
+        case 14:
+          _context9.next = 16;
+          return soldProperty(propertyAddress, slug, propertyId);
+        case 16:
+        case "end":
+          return _context9.stop();
+      }
+    }, _callee9);
+  }));
+  return function depositPayment(_x41, _x42, _x43, _x44, _x45) {
+    return _ref9.apply(this, arguments);
   };
 }();
 exports.depositPayment = depositPayment;
@@ -42651,25 +42588,25 @@ if (userPasswordForm) userPasswordForm.addEventListener('submit', /*#__PURE__*/f
     return _ref5.apply(this, arguments);
   };
 }());
-if (buyBtn) buyBtn.addEventListener('click', /*#__PURE__*/function () {
+if (biddingForm) biddingForm.addEventListener('submit', /*#__PURE__*/function () {
   var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(e) {
-    var propertyId, curProperty;
+    var biddingPrice, curPropertyAddress, curUser, tokenId;
     return _regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
-          console.log("button_click");
-          e.target.textContent = 'Processing...';
-          propertyId = e.target.dataset.propertyId;
-          _context6.next = 5;
-          return (0, _property.getProperty)(propertyId);
-        case 5:
-          curProperty = _context6.sent;
-          console.log(curProperty);
-          _context6.next = 9;
-          return (0, _web3ModalFactory.buyNft)(BigInt(curProperty.data.nftContract), curProperty.data.price, false);
-        case 9:
-          _context6.next = 11;
-          return (0, _property.soldProperty)(curProperty.data.address);
+          e.preventDefault();
+          console.log("Bidding form is running..");
+          biddingPrice = document.getElementById('biddingAmount').value;
+          curPropertyAddress = document.getElementById('curPropertyAddress').value;
+          curUser = document.getElementById('curUser').value; // Can't allow admin to return deposit to customer automatically, will comment out for now.
+          tokenId = BigInt(document.getElementById('curTokenId').value); // await contractPlaceBid(tokenId, biddingPrice);
+          _context6.next = 8;
+          return (0, _property.placeBid)(curPropertyAddress, biddingPrice, curUser);
+        case 8:
+          _context6.next = 10;
+          return (0, _updateSettings.userPlaceBid)(curPropertyAddress, curUser);
+        case 10:
+          document.getElementById('biddingAmount').textContent = '';
         case 11:
         case "end":
           return _context6.stop();
@@ -42680,26 +42617,18 @@ if (buyBtn) buyBtn.addEventListener('click', /*#__PURE__*/function () {
     return _ref6.apply(this, arguments);
   };
 }());
-if (biddingForm) biddingForm.addEventListener('submit', /*#__PURE__*/function () {
+if (removeBiddingBtn) removeBiddingBtn.addEventListener('click', /*#__PURE__*/function () {
   var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(e) {
-    var biddingPrice, curPropertyAddress, curUser, tokenId;
+    var address;
     return _regeneratorRuntime().wrap(function _callee7$(_context7) {
       while (1) switch (_context7.prev = _context7.next) {
         case 0:
-          e.preventDefault();
-          console.log("Bidding form is running..");
-          biddingPrice = document.getElementById('biddingAmount').value;
-          curPropertyAddress = document.getElementById('curPropertyAddress').value;
-          curUser = document.getElementById('curUser').value; // Can't allow admin to return deposit to customer automatically, will comment out for now.
-          tokenId = BigInt(document.getElementById('curTokenId').value); // await contractPlaceBid(tokenId, biddingPrice);
-          _context7.next = 8;
-          return (0, _property.placeBid)(curPropertyAddress, biddingPrice, curUser);
-        case 8:
-          _context7.next = 10;
-          return (0, _updateSettings.userPlaceBid)(curPropertyAddress, curUser);
-        case 10:
-          document.getElementById('biddingAmount').textContent = '';
-        case 11:
+          console.log("Button clicked!");
+          address = e.target.value;
+          console.log(address);
+          _context7.next = 5;
+          return (0, _updateSettings.removeBidding)(address);
+        case 5:
         case "end":
           return _context7.stop();
       }
@@ -42709,18 +42638,26 @@ if (biddingForm) biddingForm.addEventListener('submit', /*#__PURE__*/function ()
     return _ref7.apply(this, arguments);
   };
 }());
-if (removeBiddingBtn) removeBiddingBtn.addEventListener('click', /*#__PURE__*/function () {
+if (walletButton) walletButton.addEventListener('click', function (e) {
+  console.log("Button clicked!");
+  checkIfWalletIsConnect(e);
+});
+if (buyBiddingBtn) buyBiddingBtn.addEventListener('click', /*#__PURE__*/function () {
   var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(e) {
-    var address;
+    var propertyId, curProperty;
     return _regeneratorRuntime().wrap(function _callee8$(_context8) {
       while (1) switch (_context8.prev = _context8.next) {
         case 0:
-          console.log("Button clicked!");
-          address = e.target.value;
-          console.log(address);
-          _context8.next = 5;
-          return (0, _updateSettings.removeBidding)(address);
-        case 5:
+          e.target.textContent = 'Processing...';
+          propertyId = e.target.dataset.propertyId;
+          _context8.next = 4;
+          return (0, _property.getProperty)(propertyId);
+        case 4:
+          curProperty = _context8.sent;
+          console.log(curProperty);
+          _context8.next = 8;
+          return (0, _web3ModalFactory.buyNft)(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, curProperty.data.address, curProperty.data.slug, curProperty.data._id);
+        case 8:
         case "end":
           return _context8.stop();
       }
@@ -42730,11 +42667,7 @@ if (removeBiddingBtn) removeBiddingBtn.addEventListener('click', /*#__PURE__*/fu
     return _ref8.apply(this, arguments);
   };
 }());
-if (walletButton) walletButton.addEventListener('click', function (e) {
-  console.log("Button clicked!");
-  checkIfWalletIsConnect(e);
-});
-if (buyBiddingBtn) buyBiddingBtn.addEventListener('click', /*#__PURE__*/function () {
+if (depositBiddingBtn) depositBiddingBtn.addEventListener('click', /*#__PURE__*/function () {
   var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(e) {
     var propertyId, curProperty;
     return _regeneratorRuntime().wrap(function _callee9$(_context9) {
@@ -42747,16 +42680,9 @@ if (buyBiddingBtn) buyBiddingBtn.addEventListener('click', /*#__PURE__*/function
         case 4:
           curProperty = _context9.sent;
           console.log(curProperty);
-          // await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
           _context9.next = 8;
-          return (0, _web3ModalFactory.buyNft)(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
+          return (0, _web3ModalFactory.depositPayment)(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice / 100 * 10, curProperty.data.address, curProperty.data.slug, curProperty.data._id);
         case 8:
-          _context9.next = 10;
-          return (0, _property.soldProperty)(curProperty.data.address);
-        case 10:
-          _context9.next = 12;
-          return (0, _updateSettings.removeBidding)(curProperty.data.address);
-        case 12:
         case "end":
           return _context9.stop();
       }
@@ -42766,28 +42692,21 @@ if (buyBiddingBtn) buyBiddingBtn.addEventListener('click', /*#__PURE__*/function
     return _ref9.apply(this, arguments);
   };
 }());
-if (depositBiddingBtn) depositBiddingBtn.addEventListener('click', /*#__PURE__*/function () {
+if (contactAdminForm) contactAdminForm.addEventListener('submit', /*#__PURE__*/function () {
   var _ref10 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10(e) {
-    var propertyId, curProperty;
+    var email, name, subject, message;
     return _regeneratorRuntime().wrap(function _callee10$(_context10) {
       while (1) switch (_context10.prev = _context10.next) {
         case 0:
-          e.target.textContent = 'Processing...';
-          propertyId = e.target.dataset.propertyId;
-          _context10.next = 4;
-          return (0, _property.getProperty)(propertyId);
-        case 4:
-          curProperty = _context10.sent;
-          console.log(curProperty);
+          e.preventDefault();
+          console.log("Sending queries  ..");
+          email = document.getElementById('email').value;
+          name = document.getElementById('name').value;
+          subject = document.getElementById('subject').value;
+          message = document.getElementById('message').value;
           _context10.next = 8;
-          return (0, _web3ModalFactory.depositPayment)(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice / 100 * 10);
+          return (0, _query.sendQuery)(email, name, subject, message);
         case 8:
-          _context10.next = 10;
-          return (0, _property.soldProperty)(curProperty.data.address);
-        case 10:
-          _context10.next = 12;
-          return (0, _updateSettings.removeBidding)(curProperty.data.address);
-        case 12:
         case "end":
           return _context10.stop();
       }
@@ -42797,21 +42716,19 @@ if (depositBiddingBtn) depositBiddingBtn.addEventListener('click', /*#__PURE__*/
     return _ref10.apply(this, arguments);
   };
 }());
-if (contactAdminForm) contactAdminForm.addEventListener('submit', /*#__PURE__*/function () {
+if (replyQueryForm) replyQueryForm.addEventListener('submit', /*#__PURE__*/function () {
   var _ref11 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee11(e) {
-    var email, name, subject, message;
+    var replyMessage, queryId;
     return _regeneratorRuntime().wrap(function _callee11$(_context11) {
       while (1) switch (_context11.prev = _context11.next) {
         case 0:
           e.preventDefault();
-          console.log("Sending queries  ..");
-          email = document.getElementById('email').value;
-          name = document.getElementById('name').value;
-          subject = document.getElementById('subject').value;
-          message = document.getElementById('message').value;
-          _context11.next = 8;
-          return (0, _query.sendQuery)(email, name, subject, message);
-        case 8:
+          console.log("Sending replies  ..");
+          replyMessage = document.getElementById('replyMessage').value;
+          queryId = document.getElementById('queryId').value;
+          _context11.next = 6;
+          return (0, _query.replyQuery)(replyMessage, queryId);
+        case 6:
         case "end":
           return _context11.stop();
       }
@@ -42821,19 +42738,20 @@ if (contactAdminForm) contactAdminForm.addEventListener('submit', /*#__PURE__*/f
     return _ref11.apply(this, arguments);
   };
 }());
-if (replyQueryForm) replyQueryForm.addEventListener('submit', /*#__PURE__*/function () {
+if (resetPasswordForm) resetPasswordForm.addEventListener('submit', /*#__PURE__*/function () {
   var _ref12 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee12(e) {
-    var replyMessage, queryId;
+    var password, passwordConfirmation, resetToken;
     return _regeneratorRuntime().wrap(function _callee12$(_context12) {
       while (1) switch (_context12.prev = _context12.next) {
         case 0:
           e.preventDefault();
-          console.log("Sending replies  ..");
-          replyMessage = document.getElementById('replyMessage').value;
-          queryId = document.getElementById('queryId').value;
-          _context12.next = 6;
-          return (0, _query.replyQuery)(replyMessage, queryId);
-        case 6:
+          console.log("resetting password  ..");
+          password = document.getElementById('password').value;
+          passwordConfirmation = document.getElementById('passwordConfirmation').value;
+          resetToken = document.getElementById('resetToken').value;
+          _context12.next = 7;
+          return (0, _updateSettings.resetPassword)(password, passwordConfirmation, resetToken);
+        case 7:
         case "end":
           return _context12.stop();
       }
@@ -42843,20 +42761,18 @@ if (replyQueryForm) replyQueryForm.addEventListener('submit', /*#__PURE__*/funct
     return _ref12.apply(this, arguments);
   };
 }());
-if (resetPasswordForm) resetPasswordForm.addEventListener('submit', /*#__PURE__*/function () {
+if (addToFavouriteBtn) addToFavouriteBtn.addEventListener('click', /*#__PURE__*/function () {
   var _ref13 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee13(e) {
-    var password, passwordConfirmation, resetToken;
+    var slug;
     return _regeneratorRuntime().wrap(function _callee13$(_context13) {
       while (1) switch (_context13.prev = _context13.next) {
         case 0:
-          e.preventDefault();
-          console.log("resetting password  ..");
-          password = document.getElementById('password').value;
-          passwordConfirmation = document.getElementById('passwordConfirmation').value;
-          resetToken = document.getElementById('resetToken').value;
-          _context13.next = 7;
-          return (0, _updateSettings.resetPassword)(password, passwordConfirmation, resetToken);
-        case 7:
+          console.log("Adding property to favorite");
+          slug = addToFavouriteBtn.dataset.slug;
+          console.log(slug);
+          _context13.next = 5;
+          return (0, _updateSettings.addToFavourite)(slug);
+        case 5:
         case "end":
           return _context13.stop();
       }
@@ -42866,18 +42782,17 @@ if (resetPasswordForm) resetPasswordForm.addEventListener('submit', /*#__PURE__*
     return _ref13.apply(this, arguments);
   };
 }());
-if (addToFavouriteBtn) addToFavouriteBtn.addEventListener('click', /*#__PURE__*/function () {
+if (removeFromFavouriteBtn) removeFromFavouriteBtn.addEventListener('click', /*#__PURE__*/function () {
   var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(e) {
     var slug;
     return _regeneratorRuntime().wrap(function _callee14$(_context14) {
       while (1) switch (_context14.prev = _context14.next) {
         case 0:
-          console.log("Adding property to favorite");
-          slug = addToFavouriteBtn.dataset.slug;
-          console.log(slug);
-          _context14.next = 5;
-          return (0, _updateSettings.addToFavourite)(slug);
-        case 5:
+          console.log("Removing property from favorite");
+          slug = removeFromFavouriteBtn.dataset.slug;
+          _context14.next = 4;
+          return (0, _updateSettings.removeFromFavourite)(slug);
+        case 4:
         case "end":
           return _context14.stop();
       }
@@ -42887,17 +42802,15 @@ if (addToFavouriteBtn) addToFavouriteBtn.addEventListener('click', /*#__PURE__*/
     return _ref14.apply(this, arguments);
   };
 }());
-if (removeFromFavouriteBtn) removeFromFavouriteBtn.addEventListener('click', /*#__PURE__*/function () {
+if (testBtn) testBtn.addEventListener('click', /*#__PURE__*/function () {
   var _ref15 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee15(e) {
-    var slug;
     return _regeneratorRuntime().wrap(function _callee15$(_context15) {
       while (1) switch (_context15.prev = _context15.next) {
         case 0:
-          console.log("Removing property from favorite");
-          slug = removeFromFavouriteBtn.dataset.slug;
-          _context15.next = 4;
-          return (0, _updateSettings.removeFromFavourite)(slug);
-        case 4:
+          console.log("test run");
+          _context15.next = 3;
+          return (0, _web3ModalFactory.fetchMyNFTs)();
+        case 3:
         case "end":
           return _context15.stop();
       }
@@ -42907,15 +42820,23 @@ if (removeFromFavouriteBtn) removeFromFavouriteBtn.addEventListener('click', /*#
     return _ref15.apply(this, arguments);
   };
 }());
-if (testBtn) testBtn.addEventListener('click', /*#__PURE__*/function () {
+if (propertyLink) propertyLink.addEventListener('click', /*#__PURE__*/function () {
   var _ref16 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee16(e) {
+    var accounts, userAddress;
     return _regeneratorRuntime().wrap(function _callee16$(_context16) {
       while (1) switch (_context16.prev = _context16.next) {
         case 0:
-          console.log("test run");
-          _context16.next = 3;
-          return (0, _web3ModalFactory.fetchMyNFTs)();
-        case 3:
+          console.log("link clicked");
+          e.preventDefault();
+          _context16.next = 4;
+          return window.ethereum.request({
+            method: "eth_accounts"
+          });
+        case 4:
+          accounts = _context16.sent;
+          userAddress = accounts[0];
+          window.location.href = "/myProperty";
+        case 7:
         case "end":
           return _context16.stop();
       }
@@ -42923,32 +42844,6 @@ if (testBtn) testBtn.addEventListener('click', /*#__PURE__*/function () {
   }));
   return function (_x16) {
     return _ref16.apply(this, arguments);
-  };
-}());
-if (propertyLink) propertyLink.addEventListener('click', /*#__PURE__*/function () {
-  var _ref17 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee17(e) {
-    var accounts, userAddress;
-    return _regeneratorRuntime().wrap(function _callee17$(_context17) {
-      while (1) switch (_context17.prev = _context17.next) {
-        case 0:
-          console.log("link clicked");
-          e.preventDefault();
-          _context17.next = 4;
-          return window.ethereum.request({
-            method: "eth_accounts"
-          });
-        case 4:
-          accounts = _context17.sent;
-          userAddress = accounts[0];
-          window.location.href = "/myProperty";
-        case 7:
-        case "end":
-          return _context17.stop();
-      }
-    }, _callee17);
-  }));
-  return function (_x17) {
-    return _ref17.apply(this, arguments);
   };
 }());
 var sections = document.querySelectorAll('.SectionPicker__Section');
@@ -42965,13 +42860,33 @@ var rentTab = document.getElementById("rentTab");
 var rentInput = document.getElementById("rent");
 if (buyTab) {
   buyTab.addEventListener('click', /*#__PURE__*/function () {
-    var _ref18 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee18(e) {
-      return _regeneratorRuntime().wrap(function _callee18$(_context18) {
-        while (1) switch (_context18.prev = _context18.next) {
+    var _ref17 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee17(e) {
+      return _regeneratorRuntime().wrap(function _callee17$(_context17) {
+        while (1) switch (_context17.prev = _context17.next) {
           case 0:
             buyTab.classList.add("selected");
             rentTab.classList.remove("selected");
             rentInput.value = "false";
+          case 3:
+          case "end":
+            return _context17.stop();
+        }
+      }, _callee17);
+    }));
+    return function (_x17) {
+      return _ref17.apply(this, arguments);
+    };
+  }());
+}
+if (rentTab) {
+  rentTab.addEventListener('click', /*#__PURE__*/function () {
+    var _ref18 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee18(e) {
+      return _regeneratorRuntime().wrap(function _callee18$(_context18) {
+        while (1) switch (_context18.prev = _context18.next) {
+          case 0:
+            buyTab.classList.remove("selected");
+            rentTab.classList.add("selected");
+            rentInput.value = "true";
           case 3:
           case "end":
             return _context18.stop();
@@ -42983,15 +42898,16 @@ if (buyTab) {
     };
   }());
 }
-if (rentTab) {
-  rentTab.addEventListener('click', /*#__PURE__*/function () {
+if (btnApplyRental) {
+  btnApplyRental.addEventListener('click', /*#__PURE__*/function () {
     var _ref19 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee19(e) {
+      var slug;
       return _regeneratorRuntime().wrap(function _callee19$(_context19) {
         while (1) switch (_context19.prev = _context19.next) {
           case 0:
-            buyTab.classList.remove("selected");
-            rentTab.classList.add("selected");
-            rentInput.value = "true";
+            slug = btnApplyRental.dataset.slug;
+            _context19.next = 3;
+            return (0, _rentalProperty.applyRental)(slug);
           case 3:
           case "end":
             return _context19.stop();
@@ -43003,40 +42919,44 @@ if (rentTab) {
     };
   }());
 }
-if (btnApplyRental) {
-  btnApplyRental.addEventListener('click', /*#__PURE__*/function () {
-    var _ref20 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee20(e) {
-      var slug;
-      return _regeneratorRuntime().wrap(function _callee20$(_context20) {
-        while (1) switch (_context20.prev = _context20.next) {
-          case 0:
-            slug = btnApplyRental.dataset.slug;
-            _context20.next = 3;
-            return (0, _rentalProperty.applyRental)(slug);
-          case 3:
-          case "end":
-            return _context20.stop();
-        }
-      }, _callee20);
-    }));
-    return function (_x20) {
-      return _ref20.apply(this, arguments);
-    };
-  }());
-}
 if (btnWithdrawRentalApplication) {
   btnWithdrawRentalApplication.forEach(function (btn) {
     btn.addEventListener("click", /*#__PURE__*/function () {
-      var _ref21 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee21(e) {
+      var _ref20 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee20(e) {
         var slug;
+        return _regeneratorRuntime().wrap(function _callee20$(_context20) {
+          while (1) switch (_context20.prev = _context20.next) {
+            case 0:
+              e.preventDefault();
+              slug = btn.getAttribute("data-slug");
+              _context20.next = 4;
+              return (0, _rentalProperty.withdrawRental)(slug);
+            case 4:
+            case "end":
+              return _context20.stop();
+          }
+        }, _callee20);
+      }));
+      return function (_x20) {
+        return _ref20.apply(this, arguments);
+      };
+    }());
+  });
+}
+if (btnApproveRentalApplication) {
+  btnApproveRentalApplication.forEach(function (btn) {
+    btn.addEventListener("click", /*#__PURE__*/function () {
+      var _ref21 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee21(e) {
+        var userId, propertySlug;
         return _regeneratorRuntime().wrap(function _callee21$(_context21) {
           while (1) switch (_context21.prev = _context21.next) {
             case 0:
               e.preventDefault();
-              slug = btn.getAttribute("data-slug");
-              _context21.next = 4;
-              return (0, _rentalProperty.withdrawRental)(slug);
-            case 4:
+              userId = btn.getAttribute("data-userid");
+              propertySlug = btn.getAttribute("data-slug");
+              _context21.next = 5;
+              return (0, _rentalProperty.approveRental)(propertySlug, userId);
+            case 5:
             case "end":
               return _context21.stop();
           }
@@ -43048,36 +42968,11 @@ if (btnWithdrawRentalApplication) {
     }());
   });
 }
-if (btnApproveRentalApplication) {
-  btnApproveRentalApplication.forEach(function (btn) {
-    btn.addEventListener("click", /*#__PURE__*/function () {
-      var _ref22 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee22(e) {
-        var userId, propertySlug;
-        return _regeneratorRuntime().wrap(function _callee22$(_context22) {
-          while (1) switch (_context22.prev = _context22.next) {
-            case 0:
-              e.preventDefault();
-              userId = btn.getAttribute("data-userid");
-              propertySlug = btn.getAttribute("data-slug");
-              _context22.next = 5;
-              return (0, _rentalProperty.approveRental)(propertySlug, userId);
-            case 5:
-            case "end":
-              return _context22.stop();
-          }
-        }, _callee22);
-      }));
-      return function (_x22) {
-        return _ref22.apply(this, arguments);
-      };
-    }());
-  });
-}
 if (updatePropertyForm) updatePropertyForm.addEventListener('submit', /*#__PURE__*/function () {
-  var _ref23 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee23(e) {
+  var _ref22 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee22(e) {
     var address, city, listingNum, propertyStyle, garageType, garageSize, numBedroom, numBathroom, biddingPrice, description, berRating, squareFeet, lotSize, slug, propertyId;
-    return _regeneratorRuntime().wrap(function _callee23$(_context23) {
-      while (1) switch (_context23.prev = _context23.next) {
+    return _regeneratorRuntime().wrap(function _callee22$(_context22) {
+      while (1) switch (_context22.prev = _context22.next) {
         case 0:
           e.preventDefault();
           console.log("updating property..");
@@ -43096,24 +42991,24 @@ if (updatePropertyForm) updatePropertyForm.addEventListener('submit', /*#__PURE_
           lotSize = document.getElementById('lotSize').value;
           slug = document.getElementById('slug').value;
           propertyId = document.getElementById('propertyId').value;
-          _context23.next = 19;
+          _context22.next = 19;
           return (0, _property.updateProperty)(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, description, biddingPrice, slug, propertyId);
         case 19:
         case "end":
-          return _context23.stop();
+          return _context22.stop();
       }
-    }, _callee23);
+    }, _callee22);
   }));
-  return function (_x23) {
-    return _ref23.apply(this, arguments);
+  return function (_x22) {
+    return _ref22.apply(this, arguments);
   };
 }());
 if (updateRentalPropertyForm) {
   updateRentalPropertyForm.addEventListener('submit', /*#__PURE__*/function () {
-    var _ref24 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee24(e) {
+    var _ref23 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee23(e) {
       var address, city, listingNum, propertyStyle, garageType, garageSize, numBedroom, numBathroom, rent, securityDeposit, description, berRating, squareFeet, lotSize, ownerEmail, slug, rentalPropertyId;
-      return _regeneratorRuntime().wrap(function _callee24$(_context24) {
-        while (1) switch (_context24.prev = _context24.next) {
+      return _regeneratorRuntime().wrap(function _callee23$(_context23) {
+        while (1) switch (_context23.prev = _context23.next) {
           case 0:
             e.preventDefault();
             console.log("updating rental property...");
@@ -43135,38 +43030,64 @@ if (updateRentalPropertyForm) {
             slug = document.getElementById('slug').value;
             rentalPropertyId = document.getElementById('rentalPropertyId').value;
             console.log(rentalPropertyId);
-            _context24.next = 22;
+            _context23.next = 22;
             return (0, _rentalProperty.updateRentalProperty)(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId);
           case 22:
           case "end":
-            return _context24.stop();
+            return _context23.stop();
         }
-      }, _callee24);
+      }, _callee23);
     }));
-    return function (_x24) {
-      return _ref24.apply(this, arguments);
+    return function (_x23) {
+      return _ref23.apply(this, arguments);
     };
   }());
 }
 if (btnProceedRental) {
   btnProceedRental.forEach(function (btn) {
     btn.addEventListener("click", /*#__PURE__*/function () {
-      var _ref25 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee25(e) {
+      var _ref24 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee24(e) {
         var propertyId, curProperty;
+        return _regeneratorRuntime().wrap(function _callee24$(_context24) {
+          while (1) switch (_context24.prev = _context24.next) {
+            case 0:
+              e.preventDefault();
+              propertyId = btn.getAttribute("data-propertyid");
+              _context24.next = 4;
+              return (0, _rentalProperty.getRentalProperty)(propertyId);
+            case 4:
+              curProperty = _context24.sent;
+              console.log(curProperty);
+              console.log(curProperty.data._id);
+              _context24.next = 9;
+              return (0, _rentalProperty.signRentalContract)(BigInt(curProperty.data.nftContract), curProperty.data.rent + curProperty.data.securityDeposit, propertyId);
+            case 9:
+            case "end":
+              return _context24.stop();
+          }
+        }, _callee24);
+      }));
+      return function (_x24) {
+        return _ref24.apply(this, arguments);
+      };
+    }());
+  });
+}
+if (btnPayRent) {
+  btnPayRent.forEach(function (btn) {
+    btn.addEventListener("click", /*#__PURE__*/function () {
+      var _ref25 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee25(e) {
+        var propertyId, rent, tokenId;
         return _regeneratorRuntime().wrap(function _callee25$(_context25) {
           while (1) switch (_context25.prev = _context25.next) {
             case 0:
               e.preventDefault();
               propertyId = btn.getAttribute("data-propertyid");
-              _context25.next = 4;
-              return (0, _rentalProperty.getRentalProperty)(propertyId);
-            case 4:
-              curProperty = _context25.sent;
-              console.log(curProperty);
-              console.log(curProperty.data._id);
-              _context25.next = 9;
-              return (0, _rentalProperty.signRentalContract)(BigInt(curProperty.data.nftContract), curProperty.data.rent + curProperty.data.securityDeposit, propertyId);
-            case 9:
+              rent = btn.getAttribute("data-rent");
+              tokenId = btn.getAttribute("data-tokenId");
+              _context25.next = 6;
+              return (0, _rentalProperty.payRent)(propertyId, rent, BigInt(tokenId));
+            case 6:
             case "end":
               return _context25.stop();
           }
@@ -43178,21 +43099,20 @@ if (btnProceedRental) {
     }());
   });
 }
-if (btnPayRent) {
-  btnPayRent.forEach(function (btn) {
+if (btnEndContract) {
+  btnEndContract.forEach(function (btn) {
     btn.addEventListener("click", /*#__PURE__*/function () {
       var _ref26 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee26(e) {
-        var propertyId, rent, tokenId;
+        var propertyId, tokenId;
         return _regeneratorRuntime().wrap(function _callee26$(_context26) {
           while (1) switch (_context26.prev = _context26.next) {
             case 0:
               e.preventDefault();
               propertyId = btn.getAttribute("data-propertyid");
-              rent = btn.getAttribute("data-rent");
               tokenId = btn.getAttribute("data-tokenId");
-              _context26.next = 6;
-              return (0, _rentalProperty.payRent)(propertyId, rent, BigInt(tokenId));
-            case 6:
+              _context26.next = 5;
+              return (0, _rentalProperty.endRentalContract)(propertyId, BigInt(tokenId));
+            case 5:
             case "end":
               return _context26.stop();
           }
@@ -43204,8 +43124,8 @@ if (btnPayRent) {
     }());
   });
 }
-if (btnEndContract) {
-  btnEndContract.forEach(function (btn) {
+if (btnRenewContract) {
+  btnRenewContract.forEach(function (btn) {
     btn.addEventListener("click", /*#__PURE__*/function () {
       var _ref27 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee27(e) {
         var propertyId, tokenId;
@@ -43216,7 +43136,7 @@ if (btnEndContract) {
               propertyId = btn.getAttribute("data-propertyid");
               tokenId = btn.getAttribute("data-tokenId");
               _context27.next = 5;
-              return (0, _rentalProperty.endRentalContract)(propertyId, BigInt(tokenId));
+              return (0, _rentalProperty.renewRentalContract)(propertyId, BigInt(tokenId));
             case 5:
             case "end":
               return _context27.stop();
@@ -43225,31 +43145,6 @@ if (btnEndContract) {
       }));
       return function (_x27) {
         return _ref27.apply(this, arguments);
-      };
-    }());
-  });
-}
-if (btnRenewContract) {
-  btnRenewContract.forEach(function (btn) {
-    btn.addEventListener("click", /*#__PURE__*/function () {
-      var _ref28 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee28(e) {
-        var propertyId, tokenId;
-        return _regeneratorRuntime().wrap(function _callee28$(_context28) {
-          while (1) switch (_context28.prev = _context28.next) {
-            case 0:
-              e.preventDefault();
-              propertyId = btn.getAttribute("data-propertyid");
-              tokenId = btn.getAttribute("data-tokenId");
-              _context28.next = 5;
-              return (0, _rentalProperty.renewRentalContract)(propertyId, BigInt(tokenId));
-            case 5:
-            case "end":
-              return _context28.stop();
-          }
-        }, _callee28);
-      }));
-      return function (_x28) {
-        return _ref28.apply(this, arguments);
       };
     }());
   });

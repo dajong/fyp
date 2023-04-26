@@ -11,6 +11,29 @@ import { uploadToIPFS } from './ipfsUtils';
 const fetchContract = signerOrProvider =>
   new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
 
+const soldProperty = async (propertyAddress, slug, propertyId) =>{
+    try {
+      const res = await axios({
+        method: "POST",
+        url: "http://localhost:3000/api/v1/properties/soldProperty",
+        data: {
+          address: propertyAddress,
+          slug: slug,
+          propertyId: propertyId
+        }
+      });
+  
+      if (res.data.status === "success") {
+        showAlert("success", "Property Sold!");
+        window.setTimeout(() => {
+          location.assign('/myProperty');
+        }, 1500);
+      }
+    } catch (err) {
+      showAlert("error", err);
+    }
+};
+
 const createProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, imageCover, description, biddingPrice) => {
     try {
       
@@ -123,7 +146,7 @@ export const contractPlaceBid = async (tokenId, biddingPrice) => {
   await transaction.wait();
 };
 
-export const buyNft = async (tokenId, tokenPrice, isBid) => {
+export const buyNft = async (tokenId, tokenPrice, address, slug, propertyId) => {
   console.log("running buy nft..");
   const web3Modal = new Web3Modal();
   const connection = await web3Modal.connect();
@@ -133,17 +156,12 @@ export const buyNft = async (tokenId, tokenPrice, isBid) => {
 
   const price = ethers.utils.parseUnits(tokenPrice.toString(), 'ether');
   let transaction;
-  if(isBid == true){
-    console.log('isBid is run..')
-    transaction = await contract.buyBidProperty(tokenId, { value: price });
-  }else{
-    transaction = await contract.createMarketSale(tokenId, { value: price });
-  }
-   
+  transaction = await contract.buyBidProperty(tokenId, { value: price });
   await transaction.wait();
+  await soldProperty(address, slug, propertyId);
 };
 
-export const depositPayment = async (tokenId, tokenPrice) => {
+export const depositPayment = async (tokenId, tokenPrice, propertyAddress, slug, propertyId) => {
   console.log("running deposit nft..");
   const web3Modal = new Web3Modal();
   const connection = await web3Modal.connect();
@@ -153,6 +171,7 @@ export const depositPayment = async (tokenId, tokenPrice) => {
 
   const price = ethers.utils.parseUnits(tokenPrice.toString(), 'ether');
   const transaction = await contract.placeDeposit(tokenId, { value: price });
-   
+
   await transaction.wait();
+  await soldProperty(propertyAddress, slug, propertyId);
 };

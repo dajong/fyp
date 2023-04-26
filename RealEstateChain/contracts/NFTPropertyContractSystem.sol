@@ -26,7 +26,6 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       address payable owner;
       string propertyAddress;
       uint256 bidPrice;
-      // uint256 price;
       uint256 paidAmount;
       address payable currentBidder;
       bool sold;
@@ -109,22 +108,6 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
         false
       );
     }
-
-    /* Creates the sale of a marketplace item */
-    /* Transfers ownership of the item, as well as funds between parties */
-    // function createMarketSale(
-    //   uint256 tokenId
-    //   ) public payable {
-    //   uint price = idToMarketItem[tokenId].price;
-    //   require(msg.value == price, "Please pay the full amount in order to complete the transaction!");
-    //   idToMarketItem[tokenId].owner = payable(msg.sender);
-    //   idToMarketItem[tokenId].sold = true;
-    //   idToMarketItem[tokenId].seller = payable(address(0));
-    //   _itemsSold.increment();
-    //   _transfer(address(this), msg.sender, tokenId);
-
-    //   payable(owner).transfer(msg.value);
-    // }
 
     function buyBidProperty(
       uint256 tokenId

@@ -187,17 +187,6 @@ if (userPasswordForm)
     document.getElementById('password-confirm').value = '';
   });
 
-  if(buyBtn)
-  buyBtn.addEventListener('click',async e => {
-    console.log("button_click")
-    e.target.textContent = 'Processing...';
-    const { propertyId } = e.target.dataset;
-    const curProperty = await getProperty(propertyId);
-    console.log(curProperty);
-    await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.price, false);
-    await soldProperty(curProperty.data.address);
-  });
-
   if(biddingForm)
     biddingForm.addEventListener('submit', async e => {
     e.preventDefault();
@@ -235,10 +224,7 @@ if (userPasswordForm)
     const { propertyId } = e.target.dataset;
     const curProperty = await getProperty(propertyId);
     console.log(curProperty);
-    // await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
-    await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
-    await soldProperty(curProperty.data.address);
-    await removeBidding(curProperty.data.address);
+    await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, curProperty.data.address, curProperty.data.slug, curProperty.data._id);
   });
 
   if(depositBiddingBtn)
@@ -247,9 +233,7 @@ if (userPasswordForm)
     const { propertyId } = e.target.dataset;
     const curProperty = await getProperty(propertyId);
     console.log(curProperty);
-    await depositPayment(BigInt(curProperty.data.nftContract), (curProperty.data.biddingPrice / 100 * 10));
-    await soldProperty(curProperty.data.address);
-    await removeBidding(curProperty.data.address);
+    await depositPayment(BigInt(curProperty.data.nftContract), (curProperty.data.biddingPrice / 100 * 10), curProperty.data.address, curProperty.data.slug, curProperty.data._id);
   });
 
   if(contactAdminForm)

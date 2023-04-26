@@ -41,8 +41,9 @@ block content
                             td You won the bid!
                         
                         else if (property.currentHighestBidder === user.id)
-                            td Higest bidder
-
+                            td Highest bidder
+                        else if (property.propertySold === true)
+                            td The property is sold out
                         else 
                             td Not Highest Bidder
                         td

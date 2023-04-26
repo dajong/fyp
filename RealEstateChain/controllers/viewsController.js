@@ -49,20 +49,21 @@ exports.getOverview = catchAsync(async (req, res, next) => {
     if (city === "") {
       properties = await Property.find()
         .where("propertySold")
-        .equals(false);
-      // .where("price")
-      // .gte(mMinprice)
-      // .lte(mMaxPrice);
-      // .sort({ propertyViews: -1 });
+        .equals(false)
+        .where("biddingPrice")
+        .gte(mMinprice)
+        .lte(mMaxPrice)
+        .sort({ propertyViews: -1 });
     } else {
       properties = await Property.find()
         .where("propertySold")
         .equals(false)
         .where("city")
         .equals(city)
-        .where("price")
+        .where("biddingPrice")
         .gte(mMinprice)
-        .lte(mMaxPrice);
+        .lte(mMaxPrice)
+        .sort({ propertyViews: -1 });
     }
   } else if (rent === "true") {
     if (city === "") {
@@ -71,8 +72,8 @@ exports.getOverview = catchAsync(async (req, res, next) => {
         .equals(false)
         .where("rent")
         .gte(mMinprice)
-        .lte(mMaxPrice);
-      // .sort({ propertyViews: -1 });
+        .lte(mMaxPrice)
+        .sort({ propertyViews: -1 });
     } else {
       properties = await RentalProperty.find()
         .where("rented")
@@ -81,7 +82,8 @@ exports.getOverview = catchAsync(async (req, res, next) => {
         .equals(city)
         .where("rent")
         .gte(mMinprice)
-        .lte(mMaxPrice);
+        .lte(mMaxPrice)
+        .sort({ propertyViews: -1 });
     }
   }
   console.log(properties);

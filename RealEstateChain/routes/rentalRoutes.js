@@ -1,5 +1,6 @@
 const express = require("express");
 const rentalController = require("../controllers/rentalController");
+const propertyController = require("../controllers/propertyController");
 const authController = require("../controllers/authController");
 
 const router = express.Router();
@@ -7,6 +8,8 @@ const router = express.Router();
 router.post(
   "/createRentalProperty",
   authController.protect,
+  propertyController.uploadImageCover,
+  propertyController.resizeImageCover,
   rentalController.createRentalProperty
 );
 

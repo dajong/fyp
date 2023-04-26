@@ -61,7 +61,7 @@ exports.createRentalProperty = catchAsync(async (req, res, next) => {
     numBedroom,
     numBathroom,
     rent,
-    // imageCover,
+    imageCover,
     description,
     securityDeposit
   } = req.body;
@@ -82,7 +82,7 @@ exports.createRentalProperty = catchAsync(async (req, res, next) => {
     rent: rent,
     securityDeposit: securityDeposit,
     description: description,
-    imageCover: "imageCover",
+    imageCover: imageCover,
     rented: false,
     propertyViews: 0
   });

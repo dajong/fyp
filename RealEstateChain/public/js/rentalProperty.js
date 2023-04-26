@@ -6,6 +6,7 @@ import { showAlert } from './alerts';
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 import { RentalAddress, RentalAddressABI } from "../../context/constants";
+import { uploadToIPFS } from './ipfsUtils';
 
 const fetchContract = signerOrProvider =>
   new ethers.Contract(RentalAddress, RentalAddressABI, signerOrProvider);
@@ -35,42 +36,46 @@ export const getRentalProperty = async (propertyId) => {
 }
 };
 
-export const createRentalProperty = async (address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, rent, imageCover, description, securityDeposit) => {
-    try {
-      const res = await axios({
-        method: 'POST',
-        url: 'http://localhost:3000/api/v1/rentals/createRentalProperty',
-        data: {
-          address,
-          ownerEmail,
-          city,
-          listingNum,
-          propertyStyle,
-          garageType,
-          garageSize,
-          berRating,
-          squareFeet,
-          lotSize,
-          numBedroom,
-          numBathroom,
-          rent,
-          imageCover,
-          description,
-          securityDeposit
-        }
-      });
-  
-      if (res.data.status === 'success') {
-        showAlert('success', 'Rental Property created successfully!');
-        // window.setTimeout(() => {
-        //     location.assign('/');
-        //   }, 1500);
-      }
-    } catch (err) {
-      showAlert('error', err.response.data.message);
-      console.log(err);
+export const createRentalProperty = async (address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit) => {
+  try {
+    const formData = new FormData();
+    formData.append('address', address);
+    formData.append('ownerEmail', ownerEmail);
+    formData.append('city', city);
+    formData.append('listingNum', listingNum);
+    formData.append('propertyStyle', propertyStyle);
+    formData.append('garageType', garageType);
+    formData.append('garageSize', garageSize);
+    formData.append('berRating', berRating);
+    formData.append('squareFeet', squareFeet);
+    formData.append('lotSize', lotSize);
+    formData.append('numBedroom', numBedroom);
+    formData.append('numBathroom', numBathroom);
+    formData.append('rent', rent);
+    formData.append('imageCover', imageCover);
+    formData.append('description', description);
+    formData.append('securityDeposit', securityDeposit);
+
+    const res = await axios({
+      method: 'POST',
+      url: 'http://localhost:3000/api/v1/rentals/createRentalProperty',
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'Rental Property created successfully!');
+      // window.setTimeout(() => {
+      //     location.assign('/');
+      //   }, 1500);
     }
-  };
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+    console.log(err);
+  }
+};
 
 export const applyRental = catchAsync(async (slug) => {
   try {
@@ -263,12 +268,11 @@ export const createRentalTokenNFT = catchAsync(async (rentPrice, propertyAddress
     const price = ethers.utils.parseUnits(rentPrice, "ether");
     const deposit = ethers.utils.parseUnits(securityDeposit, "ether");
     const contract = fetchContract(signer);
-    const url =
-      "https://gateway.pinata.cloud/ipfs/QmXA7GCd4pWNKXkQ5FGrMMnzMHsRAAzex2WXtWFVdu32ji";
+    const url = await uploadToIPFS(imageCover);
   
     const transaction = await contract.addProperty(url, price, deposit, propertyAddress);
     await transaction.wait();
-    await addContract(propertyAddress, transaction);
+    await addContract(propertyAddress);
   });
 
   export const signRentalContract = async (tokenId, tokenPrice, propertyId) => {

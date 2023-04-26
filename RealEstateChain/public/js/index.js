@@ -132,7 +132,7 @@ if (loginForm)
     const lotSize = document.getElementById('lotSize').value;
 
     await createRentalProperty(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, rent, imageCover, description, securityDeposit);
-    await createRentalTokenNFT(rent, address, securityDeposit);
+    await createRentalTokenNFT(rent, address, securityDeposit, imageCover);
   });
 
 if (registrationForm)

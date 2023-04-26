@@ -4,7 +4,7 @@ import { login, logout } from './login';
 import { register, addNewAdmin } from './registration';
 import { updateSettings, forgetPassword, userPlaceBid, removeBidding, resetPassword, addToFavourite, removeFromFavourite } from './updateSettings';
 import { createRentalTokenNFT, createRentalProperty, applyRental, withdrawRental, approveRental, updateRentalProperty,getRentalProperty, signRentalContract, payRent, endRentalContract, renewRentalContract } from './rentalProperty';
-import { createProperty, getProperty, soldProperty, placeBid, updateProperty } from './property';
+import { getProperty, soldProperty, placeBid, updateProperty } from './property';
 import { createTokenNFT, buyNft, depositPayment, fetchMyNFTs } from './web3ModalFactory';
 import { sendQuery,replyQuery } from './query';
 // DOM ELEMENTS
@@ -76,7 +76,7 @@ if (loginForm)
   });
 
   if(createPropertyForm)
-    createPropertyForm.addEventListener('submit', e => {
+    createPropertyForm.addEventListener('submit', async e => {
     e.preventDefault();
     console.log("Creating property..")
 
@@ -96,10 +96,7 @@ if (loginForm)
     const squareFeet = document.getElementById('squareFeet').value;
     const lotSize = document.getElementById('lotSize').value;
 
-    console.log(imageCover);
-    createProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, price, imageCover, description, biddingPrice);
-    // createTokenNFT(price, address, biddingPrice);
-    createTokenNFT(address, biddingPrice);
+    await createTokenNFT(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, imageCover, description, biddingPrice);
 
     document.getElementById('address').value = "";
     document.getElementById('listingNum').value = "";
@@ -430,16 +427,6 @@ if (updateRentalPropertyForm) {
     await updateRentalProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId);
   });
 }
-
-if(btnProceedRental)
-btnProceedRental.addEventListener('click',async e => {
-  const propertyId = btn.getAttribute("data-propertyid");
-  const curProperty = await getRentalProperty(propertyId);
-  console.log(curProperty);
-  console.log(curProperty.data._id);
-
-  await signRentalContract(BigInt(curProperty.data.nftContract), curProperty.data.rent + curProperty.data.securityDeposit, propertyId);
-});
 
 if(btnProceedRental){
   btnProceedRental.forEach((btn) => {

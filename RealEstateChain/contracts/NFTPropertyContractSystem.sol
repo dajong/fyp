@@ -67,16 +67,6 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
     }
 
     /* Mints a token and lists it in the marketplace */
-    // function createTokenNFT(string memory tokenURI, uint256 price, string memory propertyAddress, uint256 bidPrice) public payable returns (uint) {
-    //   _tokenIds.increment();
-    //   uint256 newTokenId = _tokenIds.current();
-
-    //   _mint(msg.sender, newTokenId);
-    //   _setTokenURI(newTokenId, tokenURI);
-    //   createMarketItem(newTokenId, price, propertyAddress, bidPrice);
-    //   return newTokenId;
-    // }
-
     function createTokenNFT(string memory tokenURI, string memory propertyAddress, uint256 bidPrice) public payable returns (uint) {
       _tokenIds.increment();
       uint256 newTokenId = _tokenIds.current();
@@ -89,7 +79,6 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
 
     function createMarketItem(
       uint256 tokenId,
-      // uint256 price,
       string memory propertyAddress,
       uint256 bidPrice
     ) private {

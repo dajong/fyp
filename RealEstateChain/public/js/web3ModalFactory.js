@@ -10,20 +10,67 @@ import { showAlert } from "./alerts";
 const fetchContract = signerOrProvider =>
   new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
 
+const ipfsClient = require('ipfs-http-client');
+
+const infuraIpfsConfig = {
+  host: 'ipfs.infura.io',
+  port: 5001,
+  protocol: 'https',
+};
+
+const ipfs = ipfsClient.create(infuraIpfsConfig);
+
+const uploadToIPFS = async (buffer) => {
+  try {
+    const result = await ipfs.add(buffer);
+    return result.cid.toString();
+  } catch (error) {
+    console.error('Error uploading to IPFS:', error);
+    throw error;
+  }
+};
+
+const createProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, imageCover, description, biddingPrice) => {
+    try {
+      const res = await axios({
+        method: 'POST',
+        url: 'http://localhost:3000/api/v1/properties',
+        data: {
+          address,
+          city,
+          listingNum,
+          propertyStyle,
+          garageType,
+          garageSize,
+          berRating,
+          squareFeet,
+          lotSize,
+          numBedroom,
+          numBathroom,
+          imageCover,
+          description,
+          biddingPrice
+        }
+      });
+  
+      if (res.data.status === 'success') {
+        showAlert('success', 'Property created successfully!');
+        // window.setTimeout(() => {
+        //   location.assign('/');
+        // }, 1500);
+      }
+    } catch (err) {
+      showAlert('error', err.response.data.message);
+      console.log(err);
+    }
+};
+
 const fetchNFT = async (propertyAddress) => {
     const provider = new ethers.providers.JsonRpcProvider();
     const contract = fetchContract(provider);
 
     const data = await contract.fetchNFTByPropertyAddress(propertyAddress);
-    // let contractID;
-    // const items = await Promise.all(data.map(async ({ tokenId, seller, owner, propertyAddress, price: unformattedPrice }) => {
-    //   const tokenURI = await contract.tokenURI(tokenId);
-    //   contractID = tokenId.toString();
-    //   console.log(tokenId);
-    // }));
-    console.log(data);
     const item = data.tokenId.toString();
-    console.log(item);
     return item;
   };
 
@@ -61,36 +108,23 @@ export const addContract = catchAsync(async (propertyAddress) =>{
 });
 
 // eslint-disable-next-line import/prefer-default-export
-export const createTokenNFT = catchAsync(async (propertyAddress, biddingPrice) => {
+export const createTokenNFT = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, imageCover, description, biddingPrice) => {
   // using hardcoded value for now..
   const web3modal = new Web3Modal();
   const connection = await web3modal.connect();
   const provider = new ethers.providers.Web3Provider(connection);
   const signer = provider.getSigner();
   // const price = ethers.utils.parseUnits(formInputPrice, "ether");
-  const bidPrice = ethers.utils.parseUnits(biddingPrice, "ether");
+  const bidPrice = ethers.utils.parseUnits(biddingPrice.toString(), "ether");
   const contract = fetchContract(signer);
   const url =
     "https://gateway.pinata.cloud/ipfs/QmXA7GCd4pWNKXkQ5FGrMMnzMHsRAAzex2WXtWFVdu32ji";
 
-  // const transaction = await contract.createTokenNFT(url, price, propertyAddress, bidPrice);
-  const transaction = await contract.createTokenNFT(url, propertyAddress, bidPrice);
+  const transaction = await contract.createTokenNFT(url, address, bidPrice);
   await transaction.wait();
-  await addContract(propertyAddress);
-});
-
-// export const createPropertyNFT = catchAsync(async (formInputPrice, propertyAddress, url) => {
-//   const web3modal = new Web3Modal();
-//   const connection = await web3modal.connect();
-//   const provider = new ethers.providers.Web3Provider(connection);
-//   const signer = provider.getSigner();
-//   const price = ethers.utils.parseUnits(formInputPrice, "ether");
-//   const contract = fetchContract(signer);
-
-//   const transaction = await contract.createTokenNFT(url, price, propertyAddress);
-//   await transaction.wait();
-//   await addContract(propertyAddress);
-// });
+  await createProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, imageCover, description, biddingPrice);
+  await addContract(address);
+};
 
 export const contractPlaceBid = async (tokenId, biddingPrice) => {
   console.log("running place bid nft..");

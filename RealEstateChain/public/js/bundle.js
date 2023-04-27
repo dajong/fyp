@@ -40855,7 +40855,7 @@ module.exports = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.withdrawRental = exports.updateRentalProperty = exports.signRentalContract = exports.renewRentalContract = exports.payRent = exports.getRentalProperty = exports.endRentalContract = exports.createRentalTokenNFT = exports.createRentalProperty = exports.approveRental = exports.applyRental = void 0;
+exports.withdrawRental = exports.updateRentalProperty = exports.signRentalContract = exports.renewRentalContract = exports.payRent = exports.getRentalProperty = exports.endRentalContract = exports.createRentalTokenNFT = exports.approveRental = exports.applyRental = void 0;
 var _axios = _interopRequireDefault(require("axios"));
 var _catchAsync = _interopRequireDefault(require("../../utils/catchAsync"));
 var _alerts = require("./alerts");
@@ -40991,7 +40991,6 @@ var createRentalProperty = /*#__PURE__*/function () {
     return _ref3.apply(this, arguments);
   };
 }();
-exports.createRentalProperty = createRentalProperty;
 var applyRental = (0, _catchAsync.default)( /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(slug) {
     var res;
@@ -41374,8 +41373,8 @@ var renewRentalContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
 
 // eslint-disable-next-line import/prefer-def\ault-export
 exports.renewRentalContract = renewRentalContract;
-var createRentalTokenNFT = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(rentPrice, propertyAddress, securityDeposit) {
+var createRentalTokenNFT = /*#__PURE__*/function () {
+  var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit) {
     var web3modal, connection, provider, signer, price, deposit, contract, url, transaction;
     return _regeneratorRuntime().wrap(function _callee14$(_context14) {
       while (1) switch (_context14.prev = _context14.next) {
@@ -41388,7 +41387,7 @@ var createRentalTokenNFT = (0, _catchAsync.default)( /*#__PURE__*/function () {
           connection = _context14.sent;
           provider = new _ethers.ethers.providers.Web3Provider(connection);
           signer = provider.getSigner();
-          price = _ethers.ethers.utils.parseUnits(rentPrice, "ether");
+          price = _ethers.ethers.utils.parseUnits(rent, "ether");
           deposit = _ethers.ethers.utils.parseUnits(securityDeposit, "ether");
           contract = fetchContract(signer);
           _context14.next = 11;
@@ -41396,24 +41395,27 @@ var createRentalTokenNFT = (0, _catchAsync.default)( /*#__PURE__*/function () {
         case 11:
           url = _context14.sent;
           _context14.next = 14;
-          return contract.addProperty(url, price, deposit, propertyAddress);
+          return contract.addProperty(url, price, deposit, address);
         case 14:
           transaction = _context14.sent;
           _context14.next = 17;
           return transaction.wait();
         case 17:
           _context14.next = 19;
-          return addContract(propertyAddress);
+          return createRentalProperty(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit);
         case 19:
+          _context14.next = 21;
+          return addContract(address);
+        case 21:
         case "end":
           return _context14.stop();
       }
     }, _callee14);
   }));
-  return function (_x34, _x35, _x36) {
+  return function createRentalTokenNFT(_x34, _x35, _x36, _x37, _x38, _x39, _x40, _x41, _x42, _x43, _x44, _x45, _x46, _x47, _x48, _x49) {
     return _ref14.apply(this, arguments);
   };
-}());
+}();
 exports.createRentalTokenNFT = createRentalTokenNFT;
 var signRentalContract = /*#__PURE__*/function () {
   var _ref15 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee15(tokenId, tokenPrice, propertyId) {
@@ -41448,7 +41450,7 @@ var signRentalContract = /*#__PURE__*/function () {
       }
     }, _callee15);
   }));
-  return function signRentalContract(_x37, _x38, _x39) {
+  return function signRentalContract(_x50, _x51, _x52) {
     return _ref15.apply(this, arguments);
   };
 }();
@@ -41490,7 +41492,7 @@ var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
       }
     }, _callee16, null, [[3, 10]]);
   }));
-  return function (_x40, _x41) {
+  return function (_x53, _x54) {
     return _ref16.apply(this, arguments);
   };
 }());
@@ -41544,7 +41546,7 @@ var updateRentalProperty = /*#__PURE__*/function () {
       }
     }, _callee17, null, [[0, 7]]);
   }));
-  return function updateRentalProperty(_x42, _x43, _x44, _x45, _x46, _x47, _x48, _x49, _x50, _x51, _x52, _x53, _x54, _x55, _x56, _x57, _x58) {
+  return function updateRentalProperty(_x55, _x56, _x57, _x58, _x59, _x60, _x61, _x62, _x63, _x64, _x65, _x66, _x67, _x68, _x69, _x70, _x71) {
     return _ref17.apply(this, arguments);
   };
 }();
@@ -42524,11 +42526,8 @@ if (createRentalPropertyForm) createRentalPropertyForm.addEventListener('submit'
           squareFeet = document.getElementById('squareFeet').value;
           lotSize = document.getElementById('lotSize').value;
           _context4.next = 20;
-          return (0, _rentalProperty.createRentalProperty)(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit);
+          return (0, _rentalProperty.createRentalTokenNFT)(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit);
         case 20:
-          _context4.next = 22;
-          return (0, _rentalProperty.createRentalTokenNFT)(rent, address, securityDeposit, imageCover);
-        case 22:
         case "end":
           return _context4.stop();
       }

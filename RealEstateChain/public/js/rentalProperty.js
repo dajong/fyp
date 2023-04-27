@@ -36,7 +36,7 @@ export const getRentalProperty = async (propertyId) => {
 }
 };
 
-export const createRentalProperty = async (address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit) => {
+const createRentalProperty = async (address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit) => {
   try {
     const formData = new FormData();
     formData.append('address', address);
@@ -259,21 +259,22 @@ export const renewRentalContract = catchAsync(async (propertyId, tokenId) => {
 });
 
   // eslint-disable-next-line import/prefer-def\ault-export
-export const createRentalTokenNFT = catchAsync(async (rentPrice, propertyAddress, securityDeposit) => {
+export const createRentalTokenNFT = async (address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit) => {
     // using hardcoded value for now..
     const web3modal = new Web3Modal();
     const connection = await web3modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
-    const price = ethers.utils.parseUnits(rentPrice, "ether");
+    const price = ethers.utils.parseUnits(rent, "ether");
     const deposit = ethers.utils.parseUnits(securityDeposit, "ether");
     const contract = fetchContract(signer);
     const url = await uploadToIPFS(imageCover);
   
-    const transaction = await contract.addProperty(url, price, deposit, propertyAddress);
+    const transaction = await contract.addProperty(url, price, deposit, address);
     await transaction.wait();
-    await addContract(propertyAddress);
-  });
+    await createRentalProperty(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit);
+    await addContract(address);
+  };
 
   export const signRentalContract = async (tokenId, tokenPrice, propertyId) => {
     console.log("running rental contract");

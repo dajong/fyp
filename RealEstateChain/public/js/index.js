@@ -3,8 +3,8 @@ import '@babel/polyfill';
 import { login, logout } from './login';
 import { register, addNewAdmin } from './registration';
 import { updateSettings, forgetPassword, userPlaceBid, removeBidding, resetPassword, addToFavourite, removeFromFavourite } from './updateSettings';
-import { createRentalTokenNFT, createRentalProperty, applyRental, withdrawRental, approveRental, updateRentalProperty,getRentalProperty, signRentalContract, payRent, endRentalContract, renewRentalContract } from './rentalProperty';
-import { getProperty, soldProperty, placeBid, updateProperty } from './property';
+import { createRentalTokenNFT, applyRental, withdrawRental, approveRental, updateRentalProperty,getRentalProperty, signRentalContract, payRent, endRentalContract, renewRentalContract } from './rentalProperty';
+import { getProperty, placeBid, updateProperty } from './property';
 import { createTokenNFT, buyNft, depositPayment, fetchMyNFTs } from './web3ModalFactory';
 import { sendQuery,replyQuery } from './query';
 // DOM ELEMENTS
@@ -17,7 +17,6 @@ const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const buyBiddingBtn = document.getElementById('buy-bid-property');
 const depositBiddingBtn = document.getElementById('deposit-bid-property');
-const buyBtn = document.getElementById('buy-property');
 const removeBiddingBtn = document.getElementById('remove-bidding-btn');
 const createPropertyForm = document.querySelector(".form--createProperty");
 const forgetPasswordForm = document.querySelector(".form--forgetPassword");
@@ -26,7 +25,7 @@ const contactAdminForm = document.querySelector(".form--contactAdmin");
 const replyQueryForm = document.querySelector(".form--replyQuery");
 const resetPasswordForm = document.querySelector(".form--resetPassword");
 const addToFavouriteBtn = document.getElementById("add-to-favourite");
-const removeFromFavouriteBtn = document.getElementById("remove-from-favourite");
+const removeFromFavouriteBtn = document.querySelectorAll(".remove-from-favourite");
 const testBtn = document.getElementById("btn--test");
 const propertyLink = document.getElementById("my-property-link");
 const createRentalPropertyForm = document.querySelector(".form--createRentalProperty");
@@ -278,12 +277,16 @@ if(addToFavouriteBtn)
     await addToFavourite(slug);
   });
 
-  if(removeFromFavouriteBtn)
-  removeFromFavouriteBtn.addEventListener('click', async e => {
-    console.log("Removing property from favorite");
-    const slug = removeFromFavouriteBtn.dataset.slug;
-    await removeFromFavourite(slug);
-  });
+  if(removeFromFavouriteBtn){
+    removeFromFavouriteBtn.forEach((btn) => {
+      btn.addEventListener("click", async e => {
+        console.log("Removing property from favorite");
+        e.preventDefault();
+        const slug = btn.getAttribute("data-slug");
+        await removeFromFavourite(slug);
+      });
+    });
+  }
 
 if(testBtn)
   testBtn.addEventListener('click', async e => {

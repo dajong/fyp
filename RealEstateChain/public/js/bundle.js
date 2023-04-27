@@ -42358,7 +42358,6 @@ var userDataForm = document.querySelector('.form-user-data');
 var userPasswordForm = document.querySelector('.form-user-password');
 var buyBiddingBtn = document.getElementById('buy-bid-property');
 var depositBiddingBtn = document.getElementById('deposit-bid-property');
-var buyBtn = document.getElementById('buy-property');
 var removeBiddingBtn = document.getElementById('remove-bidding-btn');
 var createPropertyForm = document.querySelector(".form--createProperty");
 var forgetPasswordForm = document.querySelector(".form--forgetPassword");
@@ -42367,7 +42366,7 @@ var contactAdminForm = document.querySelector(".form--contactAdmin");
 var replyQueryForm = document.querySelector(".form--replyQuery");
 var resetPasswordForm = document.querySelector(".form--resetPassword");
 var addToFavouriteBtn = document.getElementById("add-to-favourite");
-var removeFromFavouriteBtn = document.getElementById("remove-from-favourite");
+var removeFromFavouriteBtn = document.querySelectorAll(".remove-from-favourite");
 var testBtn = document.getElementById("btn--test");
 var propertyLink = document.getElementById("my-property-link");
 var createRentalPropertyForm = document.querySelector(".form--createRentalProperty");
@@ -42788,26 +42787,31 @@ if (addToFavouriteBtn) addToFavouriteBtn.addEventListener('click', /*#__PURE__*/
     return _ref13.apply(this, arguments);
   };
 }());
-if (removeFromFavouriteBtn) removeFromFavouriteBtn.addEventListener('click', /*#__PURE__*/function () {
-  var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(e) {
-    var slug;
-    return _regeneratorRuntime().wrap(function _callee14$(_context14) {
-      while (1) switch (_context14.prev = _context14.next) {
-        case 0:
-          console.log("Removing property from favorite");
-          slug = removeFromFavouriteBtn.dataset.slug;
-          _context14.next = 4;
-          return (0, _updateSettings.removeFromFavourite)(slug);
-        case 4:
-        case "end":
-          return _context14.stop();
-      }
-    }, _callee14);
-  }));
-  return function (_x14) {
-    return _ref14.apply(this, arguments);
-  };
-}());
+if (removeFromFavouriteBtn) {
+  removeFromFavouriteBtn.forEach(function (btn) {
+    btn.addEventListener("click", /*#__PURE__*/function () {
+      var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(e) {
+        var slug;
+        return _regeneratorRuntime().wrap(function _callee14$(_context14) {
+          while (1) switch (_context14.prev = _context14.next) {
+            case 0:
+              console.log("Removing property from favorite");
+              e.preventDefault();
+              slug = btn.getAttribute("data-slug");
+              _context14.next = 5;
+              return (0, _updateSettings.removeFromFavourite)(slug);
+            case 5:
+            case "end":
+              return _context14.stop();
+          }
+        }, _callee14);
+      }));
+      return function (_x14) {
+        return _ref14.apply(this, arguments);
+      };
+    }());
+  });
+}
 if (testBtn) testBtn.addEventListener('click', /*#__PURE__*/function () {
   var _ref15 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee15(e) {
     return _regeneratorRuntime().wrap(function _callee15$(_context15) {

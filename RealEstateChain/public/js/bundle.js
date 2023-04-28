@@ -12421,7 +12421,7 @@ var resetPassword = /*#__PURE__*/function () {
             window.setTimeout(function () {
               location.assign('/');
             }, 1500);
-            (0, _alerts.showAlert)("Password has been reset!");
+            (0, _alerts.showAlert)("success", "Password has been reset!");
           }
           _context7.next = 10;
           break;

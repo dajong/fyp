@@ -1,9 +1,15 @@
 # Real estate web application leveraging blockchain technology
 
 ## Introduction
-This is a final year project for Technological University of Shannon. RealEstateChain is a web application that allows users to buy, sell, and manage real estate properties using blockchain technology. The application ensures transparency, security, and efficiency in real estate transactions by leveraging the power of decentralized ledger technology.
+This is a final year project for Technological University of Shannon. RealEstateChain is a web application that allows users to buy, rent, and manage real estate properties using blockchain technology. The application ensures transparency, security, and efficiency in real estate transactions by leveraging the power of decentralized ledger technology.
 
-This README provides an overview of the project, instructions on how to set up and use the application, and information about contributing to the project.
+This README provides an overview of the project, instructions on how to set up and use the application.
+
+## Main Technology Stack
+
+- Frontend: PUG, CSS, JavaScript
+- Backend: Node.js, Express
+- Database: MongoDB, Mongoose, Infura IPFS
 
 ## Prerequisites
 Before you can run the RealEstateChain application, ensure you have the following installed on your system:

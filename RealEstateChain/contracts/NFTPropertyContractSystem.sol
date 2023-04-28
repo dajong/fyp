@@ -89,7 +89,6 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
         payable(address(this)),
         propertyAddress,
         bidPrice,
-        // price,
         0,
         payable(address(this)),
         false
@@ -102,7 +101,6 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
         address(this),
         propertyAddress,
         bidPrice,
-        // price,
         0,
         payable(address(this)),
         false

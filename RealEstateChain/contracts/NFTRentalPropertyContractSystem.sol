@@ -65,8 +65,6 @@ contract NFTRentalPropertyContractSystem is ERC721URIStorage, Ownable {
         // Update rent and security deposit
         properties[propertyId].rent = newRent;
         properties[propertyId].securityDeposit = newSecurityDeposit;
-
-        // Update other fields as needed
     }
 
     function rentProperty(uint256 propertyId) public payable {

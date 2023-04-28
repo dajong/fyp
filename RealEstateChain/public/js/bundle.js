@@ -41455,18 +41455,53 @@ var signRentalContract = /*#__PURE__*/function () {
   };
 }();
 exports.signRentalContract = signRentalContract;
-var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref16 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee16(propertyAddress, tx) {
-    var contract, res;
+var updateRentalProperty = /*#__PURE__*/function () {
+  var _ref16 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee16(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId, tokenId) {
+    var web3Modal, connection, provider, signer, contract, transaction;
     return _regeneratorRuntime().wrap(function _callee16$(_context16) {
       while (1) switch (_context16.prev = _context16.next) {
         case 0:
-          _context16.next = 2;
+          console.log("updating rental property");
+          web3Modal = new _web3modal.default();
+          _context16.next = 4;
+          return web3Modal.connect();
+        case 4:
+          connection = _context16.sent;
+          provider = new _ethers.ethers.providers.Web3Provider(connection);
+          signer = provider.getSigner();
+          contract = new _ethers.ethers.Contract(_constants.RentalAddress, _constants.RentalAddressABI, signer);
+          _context16.next = 10;
+          return contract.updateRentalProperty(tokenId, rent, securityDeposit);
+        case 10:
+          transaction = _context16.sent;
+          _context16.next = 13;
+          return transaction.wait();
+        case 13:
+          _context16.next = 15;
+          return updateRentalPropertyMongo(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId);
+        case 15:
+        case "end":
+          return _context16.stop();
+      }
+    }, _callee16);
+  }));
+  return function updateRentalProperty(_x53, _x54, _x55, _x56, _x57, _x58, _x59, _x60, _x61, _x62, _x63, _x64, _x65, _x66, _x67, _x68, _x69, _x70) {
+    return _ref16.apply(this, arguments);
+  };
+}();
+exports.updateRentalProperty = updateRentalProperty;
+var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref17 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee17(propertyAddress, tx) {
+    var contract, res;
+    return _regeneratorRuntime().wrap(function _callee17$(_context17) {
+      while (1) switch (_context17.prev = _context17.next) {
+        case 0:
+          _context17.next = 2;
           return fetchNFT(propertyAddress);
         case 2:
-          contract = _context16.sent;
-          _context16.prev = 3;
-          _context16.next = 6;
+          contract = _context17.sent;
+          _context17.prev = 3;
+          _context17.next = 6;
           return (0, _axios.default)({
             method: "POST",
             url: "http://localhost:3000/api/v1/rentals/addContract",
@@ -41476,34 +41511,34 @@ var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
             }
           });
         case 6:
-          res = _context16.sent;
+          res = _context17.sent;
           if (res.data.status === "success") {
             (0, _alerts.showAlert)("success", "Contract added successfully!");
           }
-          _context16.next = 13;
+          _context17.next = 13;
           break;
         case 10:
-          _context16.prev = 10;
-          _context16.t0 = _context16["catch"](3);
-          (0, _alerts.showAlert)("error", _context16.t0);
+          _context17.prev = 10;
+          _context17.t0 = _context17["catch"](3);
+          (0, _alerts.showAlert)("error", _context17.t0);
         case 13:
         case "end":
-          return _context16.stop();
+          return _context17.stop();
       }
-    }, _callee16, null, [[3, 10]]);
+    }, _callee17, null, [[3, 10]]);
   }));
-  return function (_x53, _x54) {
-    return _ref16.apply(this, arguments);
+  return function (_x71, _x72) {
+    return _ref17.apply(this, arguments);
   };
 }());
-var updateRentalProperty = /*#__PURE__*/function () {
-  var _ref17 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee17(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId) {
+var updateRentalPropertyMongo = /*#__PURE__*/function () {
+  var _ref18 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee18(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId) {
     var res;
-    return _regeneratorRuntime().wrap(function _callee17$(_context17) {
-      while (1) switch (_context17.prev = _context17.next) {
+    return _regeneratorRuntime().wrap(function _callee18$(_context18) {
+      while (1) switch (_context18.prev = _context18.next) {
         case 0:
-          _context17.prev = 0;
-          _context17.next = 3;
+          _context18.prev = 0;
+          _context18.next = 3;
           return (0, _axios.default)({
             method: 'PATCH',
             url: 'http://localhost:3000/api/v1/rentals/updateRentalProperty/' + rentalPropertyId,
@@ -41526,31 +41561,30 @@ var updateRentalProperty = /*#__PURE__*/function () {
             }
           });
         case 3:
-          res = _context17.sent;
+          res = _context18.sent;
           if (res.data.status === 'success') {
             (0, _alerts.showAlert)('success', 'Rental property updated successfully!');
             window.setTimeout(function () {
               location.assign('/property/rent/' + slug);
             }, 1500);
           }
-          _context17.next = 11;
+          _context18.next = 11;
           break;
         case 7:
-          _context17.prev = 7;
-          _context17.t0 = _context17["catch"](0);
-          (0, _alerts.showAlert)('error', _context17.t0);
-          console.log(_context17.t0);
+          _context18.prev = 7;
+          _context18.t0 = _context18["catch"](0);
+          (0, _alerts.showAlert)('error', _context18.t0);
+          console.log(_context18.t0);
         case 11:
         case "end":
-          return _context17.stop();
+          return _context18.stop();
       }
-    }, _callee17, null, [[0, 7]]);
+    }, _callee18, null, [[0, 7]]);
   }));
-  return function updateRentalProperty(_x55, _x56, _x57, _x58, _x59, _x60, _x61, _x62, _x63, _x64, _x65, _x66, _x67, _x68, _x69, _x70, _x71) {
-    return _ref17.apply(this, arguments);
+  return function updateRentalPropertyMongo(_x73, _x74, _x75, _x76, _x77, _x78, _x79, _x80, _x81, _x82, _x83, _x84, _x85, _x86, _x87, _x88, _x89) {
+    return _ref18.apply(this, arguments);
   };
 }();
-exports.updateRentalProperty = updateRentalProperty;
 },{"axios":"../../node_modules/axios/index.js","../../utils/catchAsync":"../../utils/catchAsync.js","./alerts":"alerts.js","web3modal":"../../node_modules/web3modal/dist/index.js","ethers":"../../node_modules/ethers/lib.esm/index.js","../../context/constants":"../../context/constants.js","./ipfsUtils":"ipfsUtils.js"}],"property.js":[function(require,module,exports) {
 "use strict";
 
@@ -43016,7 +43050,7 @@ if (updatePropertyForm) updatePropertyForm.addEventListener('submit', /*#__PURE_
 if (updateRentalPropertyForm) {
   updateRentalPropertyForm.addEventListener('submit', /*#__PURE__*/function () {
     var _ref23 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee23(e) {
-      var address, city, listingNum, propertyStyle, garageType, garageSize, numBedroom, numBathroom, rent, securityDeposit, description, berRating, squareFeet, lotSize, ownerEmail, slug, rentalPropertyId;
+      var address, city, listingNum, propertyStyle, garageType, garageSize, numBedroom, numBathroom, rent, securityDeposit, description, berRating, squareFeet, lotSize, ownerEmail, tokenId, slug, rentalPropertyId;
       return _regeneratorRuntime().wrap(function _callee23$(_context23) {
         while (1) switch (_context23.prev = _context23.next) {
           case 0:
@@ -43036,13 +43070,14 @@ if (updateRentalPropertyForm) {
             berRating = document.getElementById('berRating').value;
             squareFeet = document.getElementById('squareFeet').value;
             lotSize = document.getElementById('lotSize').value;
-            ownerEmail = document.getElementById('ownerEmail').value; //const archive = document.getElementById('archive').checked;
+            ownerEmail = document.getElementById('ownerEmail').value;
+            tokenId = document.getElementById('tokenId').value;
             slug = document.getElementById('slug').value;
             rentalPropertyId = document.getElementById('rentalPropertyId').value;
             console.log(rentalPropertyId);
-            _context23.next = 22;
-            return (0, _rentalProperty.updateRentalProperty)(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId);
-          case 22:
+            _context23.next = 23;
+            return (0, _rentalProperty.updateRentalProperty)(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId, tokenId);
+          case 23:
           case "end":
             return _context23.stop();
         }

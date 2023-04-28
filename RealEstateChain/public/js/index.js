@@ -404,11 +404,11 @@ if (updateRentalPropertyForm) {
     const squareFeet = document.getElementById('squareFeet').value;
     const lotSize = document.getElementById('lotSize').value;
     const ownerEmail = document.getElementById('ownerEmail').value;
-    //const archive = document.getElementById('archive').checked;
+    const tokenId = document.getElementById('tokenId').value;
     const slug = document.getElementById('slug').value;
     const rentalPropertyId = document.getElementById('rentalPropertyId').value;
     console.log(rentalPropertyId)
-    await updateRentalProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId);
+    await updateRentalProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId, tokenId);
   });
 }
 

@@ -6,6 +6,7 @@ const RentalProperty = require("./../models/rentalPropertyModel");
 const catchAsync = require("./../utils/catchAsync");
 const factory = require("./handlerFactory");
 const AppError = require("./../utils/appError");
+const EmailWithContent = require("./../utils/emailWithContent");
 
 exports.updateRentalProperty = factory.updateOne(RentalProperty);
 exports.getProperty = factory.getOne(RentalProperty);
@@ -152,13 +153,9 @@ exports.withdrawSecurityDeposit = catchAsync(async (req, res, next) => {
     return next(new AppError("Property is still rented", 400));
   }
 
-  //const deposit = property.securityDeposit;
-
   await RentalProperty.findByIdAndUpdate(propertyId, {
     securityDeposit: 0
   });
-
-  // Here, you would need to implement the logic for transferring the security deposit to the owner's account.
 
   res.status(200).json({
     status: "success",
@@ -264,13 +261,13 @@ exports.removeRentalApplication = catchAsync(async (req, res, next) => {
 exports.approveRental = async (req, res, next) => {
   try {
     const { slug, userId } = req.body;
+    const user = await User.findById(userId);
 
     // Update the rental property
     const property = await RentalProperty.findOneAndUpdate(
       { slug },
       {
         rented: true,
-        // renter: userId,
         userApproved: userId,
         $pull: { userApplied: userId }
       },
@@ -280,13 +277,18 @@ exports.approveRental = async (req, res, next) => {
     if (!property) {
       return next(new AppError("No property found with that slug", 404));
     }
+    const url = `http://localhost:3000/rentalApplications`;
+    await new EmailWithContent(
+      user.name,
+      user.email,
+      url
+    ).sendRentalApprovedNotification();
 
     // Send success response
     res.status(200).json({
       status: "success",
       data: {
         property
-        // user
       }
     });
   } catch (error) {

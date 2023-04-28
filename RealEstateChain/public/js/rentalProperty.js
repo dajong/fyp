@@ -291,6 +291,18 @@ export const createRentalTokenNFT = async (address, ownerEmail, city, listingNum
     await rentProperty(propertyId);
   };
 
+  export const updateRentalProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId, tokenId) => {
+    console.log("updating rental property");
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(RentalAddress, RentalAddressABI, signer);
+    const transaction = await contract.updateRentalProperty(tokenId, rent, securityDeposit);
+    await transaction.wait();
+    await updateRentalPropertyMongo(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId);
+  };
+
 const addContract = catchAsync(async (propertyAddress, tx) =>{
     const contract = await fetchNFT(propertyAddress);
     try {
@@ -311,9 +323,7 @@ const addContract = catchAsync(async (propertyAddress, tx) =>{
     }
 });
 
-
-
-export const updateRentalProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId) => {
+const updateRentalPropertyMongo = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId) => {
   try {
     const res = await axios({
       method: 'PATCH',

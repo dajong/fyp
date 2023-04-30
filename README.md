@@ -90,6 +90,12 @@ npm test
 
 - Remember to manually switch accounts in MetaMask when you're acting as different users since there is currently no way for the application to disconnect your wallet.
 
+## Main Features
+If you need more information, you can refer to the report. This is just a description of the flow for main features `buy property` and `rent property`..
+
+### Buy property
+- The admin has to create a property in the create property page. 
+
 ## Author
 
 - Name: Daniel Jong

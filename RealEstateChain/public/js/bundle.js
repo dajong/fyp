@@ -12421,7 +12421,7 @@ var resetPassword = /*#__PURE__*/function () {
             window.setTimeout(function () {
               location.assign('/');
             }, 1500);
-            (0, _alerts.showAlert)("Password has been reset!");
+            (0, _alerts.showAlert)("success", "Password has been reset!");
           }
           _context7.next = 10;
           break;
@@ -40570,19 +40570,299 @@ module.exports = {
   RentalAddress: RentalAddress,
   RentalAddressABI: RentalAddressABI
 };
-},{"./NFTPropertyContractSystem":"../../context/NFTPropertyContractSystem.json","./NFTRentalPropertyContractSystem":"../../context/NFTRentalPropertyContractSystem.json"}],"rentalProperty.js":[function(require,module,exports) {
+},{"./NFTPropertyContractSystem":"../../context/NFTPropertyContractSystem.json","./NFTRentalPropertyContractSystem":"../../context/NFTRentalPropertyContractSystem.json"}],"ipfsUtils.js":[function(require,module,exports) {
+var define;
+var Buffer = require("buffer").Buffer;
+"use strict";
+
+require("core-js/modules/es6.array.copy-within.js");
+require("core-js/modules/es6.array.fill.js");
+require("core-js/modules/es6.array.filter.js");
+require("core-js/modules/es6.array.find.js");
+require("core-js/modules/es6.array.find-index.js");
+require("core-js/modules/es7.array.flat-map.js");
+require("core-js/modules/es6.array.from.js");
+require("core-js/modules/es7.array.includes.js");
+require("core-js/modules/es6.array.iterator.js");
+require("core-js/modules/es6.array.map.js");
+require("core-js/modules/es6.array.of.js");
+require("core-js/modules/es6.array.slice.js");
+require("core-js/modules/es6.array.species.js");
+require("core-js/modules/es6.date.to-primitive.js");
+require("core-js/modules/es6.function.has-instance.js");
+require("core-js/modules/es6.function.name.js");
+require("core-js/modules/es6.map.js");
+require("core-js/modules/es6.math.acosh.js");
+require("core-js/modules/es6.math.asinh.js");
+require("core-js/modules/es6.math.atanh.js");
+require("core-js/modules/es6.math.cbrt.js");
+require("core-js/modules/es6.math.clz32.js");
+require("core-js/modules/es6.math.cosh.js");
+require("core-js/modules/es6.math.expm1.js");
+require("core-js/modules/es6.math.fround.js");
+require("core-js/modules/es6.math.hypot.js");
+require("core-js/modules/es6.math.imul.js");
+require("core-js/modules/es6.math.log1p.js");
+require("core-js/modules/es6.math.log10.js");
+require("core-js/modules/es6.math.log2.js");
+require("core-js/modules/es6.math.sign.js");
+require("core-js/modules/es6.math.sinh.js");
+require("core-js/modules/es6.math.tanh.js");
+require("core-js/modules/es6.math.trunc.js");
+require("core-js/modules/es6.number.constructor.js");
+require("core-js/modules/es6.number.epsilon.js");
+require("core-js/modules/es6.number.is-finite.js");
+require("core-js/modules/es6.number.is-integer.js");
+require("core-js/modules/es6.number.is-nan.js");
+require("core-js/modules/es6.number.is-safe-integer.js");
+require("core-js/modules/es6.number.max-safe-integer.js");
+require("core-js/modules/es6.number.min-safe-integer.js");
+require("core-js/modules/es6.number.parse-float.js");
+require("core-js/modules/es6.number.parse-int.js");
+require("core-js/modules/es6.object.assign.js");
+require("core-js/modules/es7.object.define-getter.js");
+require("core-js/modules/es7.object.define-setter.js");
+require("core-js/modules/es7.object.entries.js");
+require("core-js/modules/es6.object.freeze.js");
+require("core-js/modules/es6.object.get-own-property-descriptor.js");
+require("core-js/modules/es7.object.get-own-property-descriptors.js");
+require("core-js/modules/es6.object.get-own-property-names.js");
+require("core-js/modules/es6.object.get-prototype-of.js");
+require("core-js/modules/es7.object.lookup-getter.js");
+require("core-js/modules/es7.object.lookup-setter.js");
+require("core-js/modules/es6.object.prevent-extensions.js");
+require("core-js/modules/es6.object.to-string.js");
+require("core-js/modules/es6.object.is.js");
+require("core-js/modules/es6.object.is-frozen.js");
+require("core-js/modules/es6.object.is-sealed.js");
+require("core-js/modules/es6.object.is-extensible.js");
+require("core-js/modules/es6.object.keys.js");
+require("core-js/modules/es6.object.seal.js");
+require("core-js/modules/es7.object.values.js");
+require("core-js/modules/es6.promise.js");
+require("core-js/modules/es7.promise.finally.js");
+require("core-js/modules/es6.reflect.apply.js");
+require("core-js/modules/es6.reflect.construct.js");
+require("core-js/modules/es6.reflect.define-property.js");
+require("core-js/modules/es6.reflect.delete-property.js");
+require("core-js/modules/es6.reflect.get.js");
+require("core-js/modules/es6.reflect.get-own-property-descriptor.js");
+require("core-js/modules/es6.reflect.get-prototype-of.js");
+require("core-js/modules/es6.reflect.has.js");
+require("core-js/modules/es6.reflect.is-extensible.js");
+require("core-js/modules/es6.reflect.own-keys.js");
+require("core-js/modules/es6.reflect.prevent-extensions.js");
+require("core-js/modules/es6.reflect.set.js");
+require("core-js/modules/es6.reflect.set-prototype-of.js");
+require("core-js/modules/es6.regexp.constructor.js");
+require("core-js/modules/es6.regexp.flags.js");
+require("core-js/modules/es6.regexp.match.js");
+require("core-js/modules/es6.regexp.replace.js");
+require("core-js/modules/es6.regexp.split.js");
+require("core-js/modules/es6.regexp.search.js");
+require("core-js/modules/es6.regexp.to-string.js");
+require("core-js/modules/es6.set.js");
+require("core-js/modules/es6.symbol.js");
+require("core-js/modules/es7.symbol.async-iterator.js");
+require("core-js/modules/es6.string.anchor.js");
+require("core-js/modules/es6.string.big.js");
+require("core-js/modules/es6.string.blink.js");
+require("core-js/modules/es6.string.bold.js");
+require("core-js/modules/es6.string.code-point-at.js");
+require("core-js/modules/es6.string.ends-with.js");
+require("core-js/modules/es6.string.fixed.js");
+require("core-js/modules/es6.string.fontcolor.js");
+require("core-js/modules/es6.string.fontsize.js");
+require("core-js/modules/es6.string.from-code-point.js");
+require("core-js/modules/es6.string.includes.js");
+require("core-js/modules/es6.string.italics.js");
+require("core-js/modules/es6.string.iterator.js");
+require("core-js/modules/es6.string.link.js");
+require("core-js/modules/es7.string.pad-start.js");
+require("core-js/modules/es7.string.pad-end.js");
+require("core-js/modules/es6.string.raw.js");
+require("core-js/modules/es6.string.repeat.js");
+require("core-js/modules/es6.string.small.js");
+require("core-js/modules/es6.string.starts-with.js");
+require("core-js/modules/es6.string.strike.js");
+require("core-js/modules/es6.string.sub.js");
+require("core-js/modules/es6.string.sup.js");
+require("core-js/modules/es7.string.trim-left.js");
+require("core-js/modules/es7.string.trim-right.js");
+require("core-js/modules/es6.typed.array-buffer.js");
+require("core-js/modules/es6.typed.int8-array.js");
+require("core-js/modules/es6.typed.uint8-array.js");
+require("core-js/modules/es6.typed.uint8-clamped-array.js");
+require("core-js/modules/es6.typed.int16-array.js");
+require("core-js/modules/es6.typed.uint16-array.js");
+require("core-js/modules/es6.typed.int32-array.js");
+require("core-js/modules/es6.typed.uint32-array.js");
+require("core-js/modules/es6.typed.float32-array.js");
+require("core-js/modules/es6.typed.float64-array.js");
+require("core-js/modules/es6.weak-map.js");
+require("core-js/modules/es6.weak-set.js");
+require("core-js/modules/web.timers.js");
+require("core-js/modules/web.immediate.js");
+require("core-js/modules/web.dom.iterable.js");
+require("regenerator-runtime/runtime.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator.return && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, catch: function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; } /* eslint-disable */
+var IPFSGateways = {
+  InfuraGateway: "https://ipfs.io/ipfs/",
+  YourDedicatedGateway: "https://ipfs.io/ipfs/"
+};
+var projectId = "2OxtMfiBYI2AApoq94qCWMp7DUh";
+var projectSecret = "96d1a6ca1f2aaa80d91e1e228c9db32c";
+function ReplacePublicGatewayWithYourGateway(jsonOrUrl) {
+  return jsonOrUrl.replaceAll(IPFSGateways.InfuraGateway, IPFSGateways.YourDedicatedGateway);
+}
+function isIpfsData(toBeDetermined) {
+  if (toBeDetermined.Hash) {
+    return true;
+  }
+  return false;
+}
+function callIpfsCommand(_x, _x2) {
+  return _callIpfsCommand.apply(this, arguments);
+}
+function _callIpfsCommand() {
+  _callIpfsCommand = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(args, data) {
+    var auth, formData, options, res, text, json;
+    return _regeneratorRuntime().wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
+        case 0:
+          auth = "Basic ".concat(Buffer.from("".concat(projectId, ":").concat(projectSecret)).toString("base64"));
+          formData = new FormData();
+          if (data.name) {
+            formData.append("file", data, data.name);
+          } else {
+            formData.append("file", data);
+          }
+          options = {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              Authorization: auth
+            },
+            mode: "cors",
+            body: formData
+          };
+          _context.next = 6;
+          return fetch("https://ipfs.infura.io:5001/api/v0/".concat(args), options);
+        case 6:
+          res = _context.sent;
+          _context.next = 9;
+          return res.text();
+        case 9:
+          text = _context.sent;
+          try {
+            json = JSON.parse(text);
+          } catch (err) {
+            console.error(err);
+          }
+          if (!isIpfsData(json)) {
+            _context.next = 13;
+            break;
+          }
+          return _context.abrupt("return", json);
+        case 13:
+          if (!json.Message) {
+            _context.next = 17;
+            break;
+          }
+          throw new Error(json.Message);
+        case 17:
+          throw new Error("error parsing result ".concat(text));
+        case 18:
+        case "end":
+          return _context.stop();
+      }
+    }, _callee);
+  }));
+  return _callIpfsCommand.apply(this, arguments);
+}
+function uploadToIPFS(_x3) {
+  return _uploadToIPFS.apply(this, arguments);
+}
+function _uploadToIPFS() {
+  _uploadToIPFS = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(data) {
+    var result, url;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.next = 2;
+          return callIpfsCommand("add", data);
+        case 2:
+          result = _context2.sent;
+          url = IPFSGateways.YourDedicatedGateway + result.Hash;
+          return _context2.abrupt("return", url);
+        case 5:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2);
+  }));
+  return _uploadToIPFS.apply(this, arguments);
+}
+function downloadFromIPFS(_x4) {
+  return _downloadFromIPFS.apply(this, arguments);
+}
+function _downloadFromIPFS() {
+  _downloadFromIPFS = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(ipfsUri) {
+    var res, receivedObject, text, textButWithYourGateway;
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          ipfsUri = ReplacePublicGatewayWithYourGateway(ipfsUri);
+          _context3.next = 3;
+          return fetch(ipfsUri);
+        case 3:
+          res = _context3.sent;
+          _context3.prev = 4;
+          _context3.next = 7;
+          return res.text();
+        case 7:
+          text = _context3.sent;
+          textButWithYourGateway = ReplacePublicGatewayWithYourGateway(text);
+          receivedObject = JSON.parse(textButWithYourGateway);
+          _context3.next = 15;
+          break;
+        case 12:
+          _context3.prev = 12;
+          _context3.t0 = _context3["catch"](4);
+          throw new Error("could not parse json, got text instead: ".concat(JSON.stringify(_context3.t0), " parsed text:").concat(text, "  "));
+        case 15:
+          return _context3.abrupt("return", receivedObject);
+        case 16:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3, null, [[4, 12]]);
+  }));
+  return _downloadFromIPFS.apply(this, arguments);
+}
+module.exports = {
+  IPFSGateways: IPFSGateways,
+  ReplacePublicGatewayWithYourGateway: ReplacePublicGatewayWithYourGateway,
+  downloadFromIPFS: downloadFromIPFS,
+  uploadToIPFS: uploadToIPFS
+};
+},{"core-js/modules/es6.array.copy-within.js":"../../node_modules/core-js/modules/es6.array.copy-within.js","core-js/modules/es6.array.fill.js":"../../node_modules/core-js/modules/es6.array.fill.js","core-js/modules/es6.array.filter.js":"../../node_modules/core-js/modules/es6.array.filter.js","core-js/modules/es6.array.find.js":"../../node_modules/core-js/modules/es6.array.find.js","core-js/modules/es6.array.find-index.js":"../../node_modules/core-js/modules/es6.array.find-index.js","core-js/modules/es7.array.flat-map.js":"../../node_modules/core-js/modules/es7.array.flat-map.js","core-js/modules/es6.array.from.js":"../../node_modules/core-js/modules/es6.array.from.js","core-js/modules/es7.array.includes.js":"../../node_modules/core-js/modules/es7.array.includes.js","core-js/modules/es6.array.iterator.js":"../../node_modules/core-js/modules/es6.array.iterator.js","core-js/modules/es6.array.map.js":"../../node_modules/core-js/modules/es6.array.map.js","core-js/modules/es6.array.of.js":"../../node_modules/core-js/modules/es6.array.of.js","core-js/modules/es6.array.slice.js":"../../node_modules/core-js/modules/es6.array.slice.js","core-js/modules/es6.array.species.js":"../../node_modules/core-js/modules/es6.array.species.js","core-js/modules/es6.date.to-primitive.js":"../../node_modules/core-js/modules/es6.date.to-primitive.js","core-js/modules/es6.function.has-instance.js":"../../node_modules/core-js/modules/es6.function.has-instance.js","core-js/modules/es6.function.name.js":"../../node_modules/core-js/modules/es6.function.name.js","core-js/modules/es6.map.js":"../../node_modules/core-js/modules/es6.map.js","core-js/modules/es6.math.acosh.js":"../../node_modules/core-js/modules/es6.math.acosh.js","core-js/modules/es6.math.asinh.js":"../../node_modules/core-js/modules/es6.math.asinh.js","core-js/modules/es6.math.atanh.js":"../../node_modules/core-js/modules/es6.math.atanh.js","core-js/modules/es6.math.cbrt.js":"../../node_modules/core-js/modules/es6.math.cbrt.js","core-js/modules/es6.math.clz32.js":"../../node_modules/core-js/modules/es6.math.clz32.js","core-js/modules/es6.math.cosh.js":"../../node_modules/core-js/modules/es6.math.cosh.js","core-js/modules/es6.math.expm1.js":"../../node_modules/core-js/modules/es6.math.expm1.js","core-js/modules/es6.math.fround.js":"../../node_modules/core-js/modules/es6.math.fround.js","core-js/modules/es6.math.hypot.js":"../../node_modules/core-js/modules/es6.math.hypot.js","core-js/modules/es6.math.imul.js":"../../node_modules/core-js/modules/es6.math.imul.js","core-js/modules/es6.math.log1p.js":"../../node_modules/core-js/modules/es6.math.log1p.js","core-js/modules/es6.math.log10.js":"../../node_modules/core-js/modules/es6.math.log10.js","core-js/modules/es6.math.log2.js":"../../node_modules/core-js/modules/es6.math.log2.js","core-js/modules/es6.math.sign.js":"../../node_modules/core-js/modules/es6.math.sign.js","core-js/modules/es6.math.sinh.js":"../../node_modules/core-js/modules/es6.math.sinh.js","core-js/modules/es6.math.tanh.js":"../../node_modules/core-js/modules/es6.math.tanh.js","core-js/modules/es6.math.trunc.js":"../../node_modules/core-js/modules/es6.math.trunc.js","core-js/modules/es6.number.constructor.js":"../../node_modules/core-js/modules/es6.number.constructor.js","core-js/modules/es6.number.epsilon.js":"../../node_modules/core-js/modules/es6.number.epsilon.js","core-js/modules/es6.number.is-finite.js":"../../node_modules/core-js/modules/es6.number.is-finite.js","core-js/modules/es6.number.is-integer.js":"../../node_modules/core-js/modules/es6.number.is-integer.js","core-js/modules/es6.number.is-nan.js":"../../node_modules/core-js/modules/es6.number.is-nan.js","core-js/modules/es6.number.is-safe-integer.js":"../../node_modules/core-js/modules/es6.number.is-safe-integer.js","core-js/modules/es6.number.max-safe-integer.js":"../../node_modules/core-js/modules/es6.number.max-safe-integer.js","core-js/modules/es6.number.min-safe-integer.js":"../../node_modules/core-js/modules/es6.number.min-safe-integer.js","core-js/modules/es6.number.parse-float.js":"../../node_modules/core-js/modules/es6.number.parse-float.js","core-js/modules/es6.number.parse-int.js":"../../node_modules/core-js/modules/es6.number.parse-int.js","core-js/modules/es6.object.assign.js":"../../node_modules/core-js/modules/es6.object.assign.js","core-js/modules/es7.object.define-getter.js":"../../node_modules/core-js/modules/es7.object.define-getter.js","core-js/modules/es7.object.define-setter.js":"../../node_modules/core-js/modules/es7.object.define-setter.js","core-js/modules/es7.object.entries.js":"../../node_modules/core-js/modules/es7.object.entries.js","core-js/modules/es6.object.freeze.js":"../../node_modules/core-js/modules/es6.object.freeze.js","core-js/modules/es6.object.get-own-property-descriptor.js":"../../node_modules/core-js/modules/es6.object.get-own-property-descriptor.js","core-js/modules/es7.object.get-own-property-descriptors.js":"../../node_modules/core-js/modules/es7.object.get-own-property-descriptors.js","core-js/modules/es6.object.get-own-property-names.js":"../../node_modules/core-js/modules/es6.object.get-own-property-names.js","core-js/modules/es6.object.get-prototype-of.js":"../../node_modules/core-js/modules/es6.object.get-prototype-of.js","core-js/modules/es7.object.lookup-getter.js":"../../node_modules/core-js/modules/es7.object.lookup-getter.js","core-js/modules/es7.object.lookup-setter.js":"../../node_modules/core-js/modules/es7.object.lookup-setter.js","core-js/modules/es6.object.prevent-extensions.js":"../../node_modules/core-js/modules/es6.object.prevent-extensions.js","core-js/modules/es6.object.to-string.js":"../../node_modules/core-js/modules/es6.object.to-string.js","core-js/modules/es6.object.is.js":"../../node_modules/core-js/modules/es6.object.is.js","core-js/modules/es6.object.is-frozen.js":"../../node_modules/core-js/modules/es6.object.is-frozen.js","core-js/modules/es6.object.is-sealed.js":"../../node_modules/core-js/modules/es6.object.is-sealed.js","core-js/modules/es6.object.is-extensible.js":"../../node_modules/core-js/modules/es6.object.is-extensible.js","core-js/modules/es6.object.keys.js":"../../node_modules/core-js/modules/es6.object.keys.js","core-js/modules/es6.object.seal.js":"../../node_modules/core-js/modules/es6.object.seal.js","core-js/modules/es7.object.values.js":"../../node_modules/core-js/modules/es7.object.values.js","core-js/modules/es6.promise.js":"../../node_modules/core-js/modules/es6.promise.js","core-js/modules/es7.promise.finally.js":"../../node_modules/core-js/modules/es7.promise.finally.js","core-js/modules/es6.reflect.apply.js":"../../node_modules/core-js/modules/es6.reflect.apply.js","core-js/modules/es6.reflect.construct.js":"../../node_modules/core-js/modules/es6.reflect.construct.js","core-js/modules/es6.reflect.define-property.js":"../../node_modules/core-js/modules/es6.reflect.define-property.js","core-js/modules/es6.reflect.delete-property.js":"../../node_modules/core-js/modules/es6.reflect.delete-property.js","core-js/modules/es6.reflect.get.js":"../../node_modules/core-js/modules/es6.reflect.get.js","core-js/modules/es6.reflect.get-own-property-descriptor.js":"../../node_modules/core-js/modules/es6.reflect.get-own-property-descriptor.js","core-js/modules/es6.reflect.get-prototype-of.js":"../../node_modules/core-js/modules/es6.reflect.get-prototype-of.js","core-js/modules/es6.reflect.has.js":"../../node_modules/core-js/modules/es6.reflect.has.js","core-js/modules/es6.reflect.is-extensible.js":"../../node_modules/core-js/modules/es6.reflect.is-extensible.js","core-js/modules/es6.reflect.own-keys.js":"../../node_modules/core-js/modules/es6.reflect.own-keys.js","core-js/modules/es6.reflect.prevent-extensions.js":"../../node_modules/core-js/modules/es6.reflect.prevent-extensions.js","core-js/modules/es6.reflect.set.js":"../../node_modules/core-js/modules/es6.reflect.set.js","core-js/modules/es6.reflect.set-prototype-of.js":"../../node_modules/core-js/modules/es6.reflect.set-prototype-of.js","core-js/modules/es6.regexp.constructor.js":"../../node_modules/core-js/modules/es6.regexp.constructor.js","core-js/modules/es6.regexp.flags.js":"../../node_modules/core-js/modules/es6.regexp.flags.js","core-js/modules/es6.regexp.match.js":"../../node_modules/core-js/modules/es6.regexp.match.js","core-js/modules/es6.regexp.replace.js":"../../node_modules/core-js/modules/es6.regexp.replace.js","core-js/modules/es6.regexp.split.js":"../../node_modules/core-js/modules/es6.regexp.split.js","core-js/modules/es6.regexp.search.js":"../../node_modules/core-js/modules/es6.regexp.search.js","core-js/modules/es6.regexp.to-string.js":"../../node_modules/core-js/modules/es6.regexp.to-string.js","core-js/modules/es6.set.js":"../../node_modules/core-js/modules/es6.set.js","core-js/modules/es6.symbol.js":"../../node_modules/core-js/modules/es6.symbol.js","core-js/modules/es7.symbol.async-iterator.js":"../../node_modules/core-js/modules/es7.symbol.async-iterator.js","core-js/modules/es6.string.anchor.js":"../../node_modules/core-js/modules/es6.string.anchor.js","core-js/modules/es6.string.big.js":"../../node_modules/core-js/modules/es6.string.big.js","core-js/modules/es6.string.blink.js":"../../node_modules/core-js/modules/es6.string.blink.js","core-js/modules/es6.string.bold.js":"../../node_modules/core-js/modules/es6.string.bold.js","core-js/modules/es6.string.code-point-at.js":"../../node_modules/core-js/modules/es6.string.code-point-at.js","core-js/modules/es6.string.ends-with.js":"../../node_modules/core-js/modules/es6.string.ends-with.js","core-js/modules/es6.string.fixed.js":"../../node_modules/core-js/modules/es6.string.fixed.js","core-js/modules/es6.string.fontcolor.js":"../../node_modules/core-js/modules/es6.string.fontcolor.js","core-js/modules/es6.string.fontsize.js":"../../node_modules/core-js/modules/es6.string.fontsize.js","core-js/modules/es6.string.from-code-point.js":"../../node_modules/core-js/modules/es6.string.from-code-point.js","core-js/modules/es6.string.includes.js":"../../node_modules/core-js/modules/es6.string.includes.js","core-js/modules/es6.string.italics.js":"../../node_modules/core-js/modules/es6.string.italics.js","core-js/modules/es6.string.iterator.js":"../../node_modules/core-js/modules/es6.string.iterator.js","core-js/modules/es6.string.link.js":"../../node_modules/core-js/modules/es6.string.link.js","core-js/modules/es7.string.pad-start.js":"../../node_modules/core-js/modules/es7.string.pad-start.js","core-js/modules/es7.string.pad-end.js":"../../node_modules/core-js/modules/es7.string.pad-end.js","core-js/modules/es6.string.raw.js":"../../node_modules/core-js/modules/es6.string.raw.js","core-js/modules/es6.string.repeat.js":"../../node_modules/core-js/modules/es6.string.repeat.js","core-js/modules/es6.string.small.js":"../../node_modules/core-js/modules/es6.string.small.js","core-js/modules/es6.string.starts-with.js":"../../node_modules/core-js/modules/es6.string.starts-with.js","core-js/modules/es6.string.strike.js":"../../node_modules/core-js/modules/es6.string.strike.js","core-js/modules/es6.string.sub.js":"../../node_modules/core-js/modules/es6.string.sub.js","core-js/modules/es6.string.sup.js":"../../node_modules/core-js/modules/es6.string.sup.js","core-js/modules/es7.string.trim-left.js":"../../node_modules/core-js/modules/es7.string.trim-left.js","core-js/modules/es7.string.trim-right.js":"../../node_modules/core-js/modules/es7.string.trim-right.js","core-js/modules/es6.typed.array-buffer.js":"../../node_modules/core-js/modules/es6.typed.array-buffer.js","core-js/modules/es6.typed.int8-array.js":"../../node_modules/core-js/modules/es6.typed.int8-array.js","core-js/modules/es6.typed.uint8-array.js":"../../node_modules/core-js/modules/es6.typed.uint8-array.js","core-js/modules/es6.typed.uint8-clamped-array.js":"../../node_modules/core-js/modules/es6.typed.uint8-clamped-array.js","core-js/modules/es6.typed.int16-array.js":"../../node_modules/core-js/modules/es6.typed.int16-array.js","core-js/modules/es6.typed.uint16-array.js":"../../node_modules/core-js/modules/es6.typed.uint16-array.js","core-js/modules/es6.typed.int32-array.js":"../../node_modules/core-js/modules/es6.typed.int32-array.js","core-js/modules/es6.typed.uint32-array.js":"../../node_modules/core-js/modules/es6.typed.uint32-array.js","core-js/modules/es6.typed.float32-array.js":"../../node_modules/core-js/modules/es6.typed.float32-array.js","core-js/modules/es6.typed.float64-array.js":"../../node_modules/core-js/modules/es6.typed.float64-array.js","core-js/modules/es6.weak-map.js":"../../node_modules/core-js/modules/es6.weak-map.js","core-js/modules/es6.weak-set.js":"../../node_modules/core-js/modules/es6.weak-set.js","core-js/modules/web.timers.js":"../../node_modules/core-js/modules/web.timers.js","core-js/modules/web.immediate.js":"../../node_modules/core-js/modules/web.immediate.js","core-js/modules/web.dom.iterable.js":"../../node_modules/core-js/modules/web.dom.iterable.js","regenerator-runtime/runtime.js":"../../node_modules/regenerator-runtime/runtime.js","buffer":"../../node_modules/node-libs-browser/node_modules/buffer/index.js"}],"rentalProperty.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.withdrawRental = exports.updateRentalProperty = exports.signRentalContract = exports.renewRentalContract = exports.payRent = exports.getRentalProperty = exports.endRentalContract = exports.createRentalTokenNFT = exports.createRentalProperty = exports.approveRental = exports.applyRental = void 0;
+exports.withdrawRental = exports.updateRentalProperty = exports.signRentalContract = exports.renewRentalContract = exports.payRent = exports.getRentalProperty = exports.endRentalContract = exports.createRentalTokenNFT = exports.approveRental = exports.applyRental = void 0;
 var _axios = _interopRequireDefault(require("axios"));
 var _catchAsync = _interopRequireDefault(require("../../utils/catchAsync"));
 var _alerts = require("./alerts");
 var _web3modal = _interopRequireDefault(require("web3modal"));
 var _ethers = require("ethers");
 var _constants = require("../../context/constants");
+var _ipfsUtils = require("./ipfsUtils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator.return && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, catch: function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
@@ -40655,35 +40935,38 @@ var getRentalProperty = /*#__PURE__*/function () {
 exports.getRentalProperty = getRentalProperty;
 var createRentalProperty = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit) {
-    var res;
+    var formData, res;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
           _context3.prev = 0;
-          _context3.next = 3;
+          formData = new FormData();
+          formData.append('address', address);
+          formData.append('ownerEmail', ownerEmail);
+          formData.append('city', city);
+          formData.append('listingNum', listingNum);
+          formData.append('propertyStyle', propertyStyle);
+          formData.append('garageType', garageType);
+          formData.append('garageSize', garageSize);
+          formData.append('berRating', berRating);
+          formData.append('squareFeet', squareFeet);
+          formData.append('lotSize', lotSize);
+          formData.append('numBedroom', numBedroom);
+          formData.append('numBathroom', numBathroom);
+          formData.append('rent', rent);
+          formData.append('imageCover', imageCover);
+          formData.append('description', description);
+          formData.append('securityDeposit', securityDeposit);
+          _context3.next = 20;
           return (0, _axios.default)({
             method: 'POST',
             url: 'http://localhost:3000/api/v1/rentals/createRentalProperty',
-            data: {
-              address: address,
-              ownerEmail: ownerEmail,
-              city: city,
-              listingNum: listingNum,
-              propertyStyle: propertyStyle,
-              garageType: garageType,
-              garageSize: garageSize,
-              berRating: berRating,
-              squareFeet: squareFeet,
-              lotSize: lotSize,
-              numBedroom: numBedroom,
-              numBathroom: numBathroom,
-              rent: rent,
-              imageCover: imageCover,
-              description: description,
-              securityDeposit: securityDeposit
+            data: formData,
+            headers: {
+              'Content-Type': 'multipart/form-data'
             }
           });
-        case 3:
+        case 20:
           res = _context3.sent;
           if (res.data.status === 'success') {
             (0, _alerts.showAlert)('success', 'Rental Property created successfully!');
@@ -40691,24 +40974,23 @@ var createRentalProperty = /*#__PURE__*/function () {
             //     location.assign('/');
             //   }, 1500);
           }
-          _context3.next = 11;
+          _context3.next = 28;
           break;
-        case 7:
-          _context3.prev = 7;
+        case 24:
+          _context3.prev = 24;
           _context3.t0 = _context3["catch"](0);
           (0, _alerts.showAlert)('error', _context3.t0.response.data.message);
           console.log(_context3.t0);
-        case 11:
+        case 28:
         case "end":
           return _context3.stop();
       }
-    }, _callee3, null, [[0, 7]]);
+    }, _callee3, null, [[0, 24]]);
   }));
   return function createRentalProperty(_x3, _x4, _x5, _x6, _x7, _x8, _x9, _x10, _x11, _x12, _x13, _x14, _x15, _x16, _x17, _x18) {
     return _ref3.apply(this, arguments);
   };
 }();
-exports.createRentalProperty = createRentalProperty;
 var applyRental = (0, _catchAsync.default)( /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(slug) {
     var res;
@@ -41091,8 +41373,8 @@ var renewRentalContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
 
 // eslint-disable-next-line import/prefer-def\ault-export
 exports.renewRentalContract = renewRentalContract;
-var createRentalTokenNFT = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(rentPrice, propertyAddress, securityDeposit) {
+var createRentalTokenNFT = /*#__PURE__*/function () {
+  var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit) {
     var web3modal, connection, provider, signer, price, deposit, contract, url, transaction;
     return _regeneratorRuntime().wrap(function _callee14$(_context14) {
       while (1) switch (_context14.prev = _context14.next) {
@@ -41105,29 +41387,35 @@ var createRentalTokenNFT = (0, _catchAsync.default)( /*#__PURE__*/function () {
           connection = _context14.sent;
           provider = new _ethers.ethers.providers.Web3Provider(connection);
           signer = provider.getSigner();
-          price = _ethers.ethers.utils.parseUnits(rentPrice, "ether");
+          price = _ethers.ethers.utils.parseUnits(rent, "ether");
           deposit = _ethers.ethers.utils.parseUnits(securityDeposit, "ether");
           contract = fetchContract(signer);
-          url = "https://gateway.pinata.cloud/ipfs/QmXA7GCd4pWNKXkQ5FGrMMnzMHsRAAzex2WXtWFVdu32ji";
-          _context14.next = 12;
-          return contract.addProperty(url, price, deposit, propertyAddress);
-        case 12:
+          _context14.next = 11;
+          return (0, _ipfsUtils.uploadToIPFS)(imageCover);
+        case 11:
+          url = _context14.sent;
+          _context14.next = 14;
+          return contract.addProperty(url, price, deposit, address);
+        case 14:
           transaction = _context14.sent;
-          _context14.next = 15;
-          return transaction.wait();
-        case 15:
           _context14.next = 17;
-          return addContract(propertyAddress, transaction);
+          return transaction.wait();
         case 17:
+          _context14.next = 19;
+          return createRentalProperty(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit);
+        case 19:
+          _context14.next = 21;
+          return addContract(address);
+        case 21:
         case "end":
           return _context14.stop();
       }
     }, _callee14);
   }));
-  return function (_x34, _x35, _x36) {
+  return function createRentalTokenNFT(_x34, _x35, _x36, _x37, _x38, _x39, _x40, _x41, _x42, _x43, _x44, _x45, _x46, _x47, _x48, _x49) {
     return _ref14.apply(this, arguments);
   };
-}());
+}();
 exports.createRentalTokenNFT = createRentalTokenNFT;
 var signRentalContract = /*#__PURE__*/function () {
   var _ref15 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee15(tokenId, tokenPrice, propertyId) {
@@ -41162,23 +41450,58 @@ var signRentalContract = /*#__PURE__*/function () {
       }
     }, _callee15);
   }));
-  return function signRentalContract(_x37, _x38, _x39) {
+  return function signRentalContract(_x50, _x51, _x52) {
     return _ref15.apply(this, arguments);
   };
 }();
 exports.signRentalContract = signRentalContract;
-var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref16 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee16(propertyAddress, tx) {
-    var contract, res;
+var updateRentalProperty = /*#__PURE__*/function () {
+  var _ref16 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee16(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId, tokenId) {
+    var web3Modal, connection, provider, signer, contract, transaction;
     return _regeneratorRuntime().wrap(function _callee16$(_context16) {
       while (1) switch (_context16.prev = _context16.next) {
         case 0:
-          _context16.next = 2;
+          console.log("updating rental property");
+          web3Modal = new _web3modal.default();
+          _context16.next = 4;
+          return web3Modal.connect();
+        case 4:
+          connection = _context16.sent;
+          provider = new _ethers.ethers.providers.Web3Provider(connection);
+          signer = provider.getSigner();
+          contract = new _ethers.ethers.Contract(_constants.RentalAddress, _constants.RentalAddressABI, signer);
+          _context16.next = 10;
+          return contract.updateRentalProperty(tokenId, rent, securityDeposit);
+        case 10:
+          transaction = _context16.sent;
+          _context16.next = 13;
+          return transaction.wait();
+        case 13:
+          _context16.next = 15;
+          return updateRentalPropertyMongo(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId);
+        case 15:
+        case "end":
+          return _context16.stop();
+      }
+    }, _callee16);
+  }));
+  return function updateRentalProperty(_x53, _x54, _x55, _x56, _x57, _x58, _x59, _x60, _x61, _x62, _x63, _x64, _x65, _x66, _x67, _x68, _x69, _x70) {
+    return _ref16.apply(this, arguments);
+  };
+}();
+exports.updateRentalProperty = updateRentalProperty;
+var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref17 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee17(propertyAddress, tx) {
+    var contract, res;
+    return _regeneratorRuntime().wrap(function _callee17$(_context17) {
+      while (1) switch (_context17.prev = _context17.next) {
+        case 0:
+          _context17.next = 2;
           return fetchNFT(propertyAddress);
         case 2:
-          contract = _context16.sent;
-          _context16.prev = 3;
-          _context16.next = 6;
+          contract = _context17.sent;
+          _context17.prev = 3;
+          _context17.next = 6;
           return (0, _axios.default)({
             method: "POST",
             url: "http://localhost:3000/api/v1/rentals/addContract",
@@ -41188,34 +41511,34 @@ var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
             }
           });
         case 6:
-          res = _context16.sent;
+          res = _context17.sent;
           if (res.data.status === "success") {
             (0, _alerts.showAlert)("success", "Contract added successfully!");
           }
-          _context16.next = 13;
+          _context17.next = 13;
           break;
         case 10:
-          _context16.prev = 10;
-          _context16.t0 = _context16["catch"](3);
-          (0, _alerts.showAlert)("error", _context16.t0);
+          _context17.prev = 10;
+          _context17.t0 = _context17["catch"](3);
+          (0, _alerts.showAlert)("error", _context17.t0);
         case 13:
         case "end":
-          return _context16.stop();
+          return _context17.stop();
       }
-    }, _callee16, null, [[3, 10]]);
+    }, _callee17, null, [[3, 10]]);
   }));
-  return function (_x40, _x41) {
-    return _ref16.apply(this, arguments);
+  return function (_x71, _x72) {
+    return _ref17.apply(this, arguments);
   };
 }());
-var updateRentalProperty = /*#__PURE__*/function () {
-  var _ref17 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee17(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId) {
+var updateRentalPropertyMongo = /*#__PURE__*/function () {
+  var _ref18 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee18(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId) {
     var res;
-    return _regeneratorRuntime().wrap(function _callee17$(_context17) {
-      while (1) switch (_context17.prev = _context17.next) {
+    return _regeneratorRuntime().wrap(function _callee18$(_context18) {
+      while (1) switch (_context18.prev = _context18.next) {
         case 0:
-          _context17.prev = 0;
-          _context17.next = 3;
+          _context18.prev = 0;
+          _context18.next = 3;
           return (0, _axios.default)({
             method: 'PATCH',
             url: 'http://localhost:3000/api/v1/rentals/updateRentalProperty/' + rentalPropertyId,
@@ -41238,38 +41561,37 @@ var updateRentalProperty = /*#__PURE__*/function () {
             }
           });
         case 3:
-          res = _context17.sent;
+          res = _context18.sent;
           if (res.data.status === 'success') {
             (0, _alerts.showAlert)('success', 'Rental property updated successfully!');
             window.setTimeout(function () {
               location.assign('/property/rent/' + slug);
             }, 1500);
           }
-          _context17.next = 11;
+          _context18.next = 11;
           break;
         case 7:
-          _context17.prev = 7;
-          _context17.t0 = _context17["catch"](0);
-          (0, _alerts.showAlert)('error', _context17.t0);
-          console.log(_context17.t0);
+          _context18.prev = 7;
+          _context18.t0 = _context18["catch"](0);
+          (0, _alerts.showAlert)('error', _context18.t0);
+          console.log(_context18.t0);
         case 11:
         case "end":
-          return _context17.stop();
+          return _context18.stop();
       }
-    }, _callee17, null, [[0, 7]]);
+    }, _callee18, null, [[0, 7]]);
   }));
-  return function updateRentalProperty(_x42, _x43, _x44, _x45, _x46, _x47, _x48, _x49, _x50, _x51, _x52, _x53, _x54, _x55, _x56, _x57, _x58) {
-    return _ref17.apply(this, arguments);
+  return function updateRentalPropertyMongo(_x73, _x74, _x75, _x76, _x77, _x78, _x79, _x80, _x81, _x82, _x83, _x84, _x85, _x86, _x87, _x88, _x89) {
+    return _ref18.apply(this, arguments);
   };
 }();
-exports.updateRentalProperty = updateRentalProperty;
-},{"axios":"../../node_modules/axios/index.js","../../utils/catchAsync":"../../utils/catchAsync.js","./alerts":"alerts.js","web3modal":"../../node_modules/web3modal/dist/index.js","ethers":"../../node_modules/ethers/lib.esm/index.js","../../context/constants":"../../context/constants.js"}],"property.js":[function(require,module,exports) {
+},{"axios":"../../node_modules/axios/index.js","../../utils/catchAsync":"../../utils/catchAsync.js","./alerts":"alerts.js","web3modal":"../../node_modules/web3modal/dist/index.js","ethers":"../../node_modules/ethers/lib.esm/index.js","../../context/constants":"../../context/constants.js","./ipfsUtils":"ipfsUtils.js"}],"property.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateProperty = exports.soldProperty = exports.placeBid = exports.getProperty = exports.createProperty = exports.addView = void 0;
+exports.updateProperty = exports.placeBid = exports.getProperty = exports.addView = void 0;
 var _axios = _interopRequireDefault(require("axios"));
 var _catchAsync = _interopRequireDefault(require("../../utils/catchAsync"));
 var _alerts = require("./alerts");
@@ -41278,68 +41600,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator.return && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, catch: function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; } /* eslint-disable */
-var createProperty = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, imageCover, description, biddingPrice) {
+var updateProperty = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, description, biddingPrice, slug, propertyId) {
     var res;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.prev = 0;
           _context.next = 3;
-          return (0, _axios.default)({
-            method: 'POST',
-            url: 'http://localhost:3000/api/v1/properties',
-            data: {
-              address: address,
-              city: city,
-              listingNum: listingNum,
-              propertyStyle: propertyStyle,
-              garageType: garageType,
-              garageSize: garageSize,
-              berRating: berRating,
-              squareFeet: squareFeet,
-              lotSize: lotSize,
-              numBedroom: numBedroom,
-              numBathroom: numBathroom,
-              imageCover: imageCover,
-              description: description,
-              biddingPrice: biddingPrice
-            }
-          });
-        case 3:
-          res = _context.sent;
-          if (res.data.status === 'success') {
-            (0, _alerts.showAlert)('success', 'Property created successfully!');
-            // window.setTimeout(() => {
-            //   location.assign('/');
-            // }, 1500);
-          }
-          _context.next = 11;
-          break;
-        case 7:
-          _context.prev = 7;
-          _context.t0 = _context["catch"](0);
-          (0, _alerts.showAlert)('error', _context.t0.response.data.message);
-          console.log(_context.t0);
-        case 11:
-        case "end":
-          return _context.stop();
-      }
-    }, _callee, null, [[0, 7]]);
-  }));
-  return function createProperty(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9, _x10, _x11, _x12, _x13, _x14) {
-    return _ref.apply(this, arguments);
-  };
-}();
-exports.createProperty = createProperty;
-var updateProperty = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, description, biddingPrice, slug, propertyId) {
-    var res;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) switch (_context2.prev = _context2.next) {
-        case 0:
-          _context2.prev = 0;
-          _context2.next = 3;
           return (0, _axios.default)({
             method: 'PATCH',
             url: 'http://localhost:3000/api/v1/properties/' + propertyId,
@@ -41360,33 +41628,70 @@ var updateProperty = /*#__PURE__*/function () {
             }
           });
         case 3:
-          res = _context2.sent;
+          res = _context.sent;
           if (res.data.status === 'success') {
             (0, _alerts.showAlert)('success', 'Property updated successfully!');
             window.setTimeout(function () {
               location.assign('/property/' + slug);
             }, 1500);
           }
-          _context2.next = 11;
+          _context.next = 11;
           break;
         case 7:
-          _context2.prev = 7;
-          _context2.t0 = _context2["catch"](0);
-          (0, _alerts.showAlert)('error', _context2.t0);
-          console.log(_context2.t0);
+          _context.prev = 7;
+          _context.t0 = _context["catch"](0);
+          (0, _alerts.showAlert)('error', _context.t0);
+          console.log(_context.t0);
         case 11:
         case "end":
-          return _context2.stop();
+          return _context.stop();
       }
-    }, _callee2, null, [[0, 7]]);
+    }, _callee, null, [[0, 7]]);
   }));
-  return function updateProperty(_x15, _x16, _x17, _x18, _x19, _x20, _x21, _x22, _x23, _x24, _x25, _x26, _x27, _x28, _x29) {
-    return _ref2.apply(this, arguments);
+  return function updateProperty(_x, _x2, _x3, _x4, _x5, _x6, _x7, _x8, _x9, _x10, _x11, _x12, _x13, _x14, _x15) {
+    return _ref.apply(this, arguments);
   };
 }();
 exports.updateProperty = updateProperty;
 var getProperty = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(propertyId) {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(propertyId) {
+    var res;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.prev = 0;
+          _context2.next = 3;
+          return (0, _axios.default)({
+            method: 'GET',
+            url: "http://localhost:3000/api/v1/properties/".concat(propertyId)
+          });
+        case 3:
+          res = _context2.sent;
+          if (!(res.data.status === 'success')) {
+            _context2.next = 6;
+            break;
+          }
+          return _context2.abrupt("return", res.data.data);
+        case 6:
+          _context2.next = 11;
+          break;
+        case 8:
+          _context2.prev = 8;
+          _context2.t0 = _context2["catch"](0);
+          (0, _alerts.showAlert)('error', _context2.t0.response.data.message);
+        case 11:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2, null, [[0, 8]]);
+  }));
+  return function getProperty(_x16) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+exports.getProperty = getProperty;
+var placeBid = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(propertyAddress, newBidPrice, curBidder) {
     var res;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
@@ -41394,36 +41699,42 @@ var getProperty = /*#__PURE__*/function () {
           _context3.prev = 0;
           _context3.next = 3;
           return (0, _axios.default)({
-            method: 'GET',
-            url: "http://localhost:3000/api/v1/properties/".concat(propertyId)
+            method: "POST",
+            url: "http://localhost:3000/api/v1/properties/placeBid",
+            data: {
+              address: propertyAddress,
+              biddingPrice: newBidPrice,
+              bidder: curBidder
+            }
           });
         case 3:
           res = _context3.sent;
-          if (!(res.data.status === 'success')) {
-            _context3.next = 6;
-            break;
+          if (res.data.status === "success") {
+            (0, _alerts.showAlert)("success", "New bid is placed");
+            setTimeout(function () {
+              document.location.reload();
+            }, 1500);
           }
-          return _context3.abrupt("return", res.data.data);
-        case 6:
           _context3.next = 11;
           break;
-        case 8:
-          _context3.prev = 8;
+        case 7:
+          _context3.prev = 7;
           _context3.t0 = _context3["catch"](0);
-          (0, _alerts.showAlert)('error', _context3.t0.response.data.message);
+          console.log(_context3.t0);
+          (0, _alerts.showAlert)("error", _context3.t0);
         case 11:
         case "end":
           return _context3.stop();
       }
-    }, _callee3, null, [[0, 8]]);
+    }, _callee3, null, [[0, 7]]);
   }));
-  return function getProperty(_x30) {
+  return function (_x17, _x18, _x19) {
     return _ref3.apply(this, arguments);
   };
-}();
-exports.getProperty = getProperty;
-var soldProperty = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(propertyAddress, slug) {
+}());
+exports.placeBid = placeBid;
+var addView = (0, _catchAsync.default)( /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(propertyAddress) {
     var res;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) switch (_context4.prev = _context4.next) {
@@ -41432,19 +41743,15 @@ var soldProperty = (0, _catchAsync.default)( /*#__PURE__*/function () {
           _context4.next = 3;
           return (0, _axios.default)({
             method: "POST",
-            url: "http://localhost:3000/api/v1/properties/soldProperty",
+            url: "http://localhost:3000/api/v1/properties/addView",
             data: {
-              address: propertyAddress,
-              slug: slug
+              address: propertyAddress
             }
           });
         case 3:
           res = _context4.sent;
           if (res.data.status === "success") {
-            (0, _alerts.showAlert)("success", "Property Sold!");
-            window.setTimeout(function () {
-              location.assign('/');
-            }, 1500);
+            console.log("user viewed!");
           }
           _context4.next = 10;
           break;
@@ -41458,88 +41765,8 @@ var soldProperty = (0, _catchAsync.default)( /*#__PURE__*/function () {
       }
     }, _callee4, null, [[0, 7]]);
   }));
-  return function (_x31, _x32) {
+  return function (_x20) {
     return _ref4.apply(this, arguments);
-  };
-}());
-exports.soldProperty = soldProperty;
-var placeBid = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(propertyAddress, newBidPrice, curBidder) {
-    var res;
-    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-      while (1) switch (_context5.prev = _context5.next) {
-        case 0:
-          _context5.prev = 0;
-          _context5.next = 3;
-          return (0, _axios.default)({
-            method: "POST",
-            url: "http://localhost:3000/api/v1/properties/placeBid",
-            data: {
-              address: propertyAddress,
-              biddingPrice: newBidPrice,
-              bidder: curBidder
-            }
-          });
-        case 3:
-          res = _context5.sent;
-          if (res.data.status === "success") {
-            (0, _alerts.showAlert)("success", "New bid is placed");
-            setTimeout(function () {
-              document.location.reload();
-            }, 1500);
-          }
-          _context5.next = 11;
-          break;
-        case 7:
-          _context5.prev = 7;
-          _context5.t0 = _context5["catch"](0);
-          console.log(_context5.t0);
-          (0, _alerts.showAlert)("error", _context5.t0);
-        case 11:
-        case "end":
-          return _context5.stop();
-      }
-    }, _callee5, null, [[0, 7]]);
-  }));
-  return function (_x33, _x34, _x35) {
-    return _ref5.apply(this, arguments);
-  };
-}());
-exports.placeBid = placeBid;
-var addView = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(propertyAddress) {
-    var res;
-    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-      while (1) switch (_context6.prev = _context6.next) {
-        case 0:
-          _context6.prev = 0;
-          _context6.next = 3;
-          return (0, _axios.default)({
-            method: "POST",
-            url: "http://localhost:3000/api/v1/properties/addView",
-            data: {
-              address: propertyAddress
-            }
-          });
-        case 3:
-          res = _context6.sent;
-          if (res.data.status === "success") {
-            console.log("user viewed!");
-          }
-          _context6.next = 10;
-          break;
-        case 7:
-          _context6.prev = 7;
-          _context6.t0 = _context6["catch"](0);
-          (0, _alerts.showAlert)("error", _context6.t0);
-        case 10:
-        case "end":
-          return _context6.stop();
-      }
-    }, _callee6, null, [[0, 7]]);
-  }));
-  return function (_x36) {
-    return _ref6.apply(this, arguments);
   };
 }());
 exports.addView = addView;
@@ -41556,6 +41783,7 @@ var _catchAsync = _interopRequireDefault(require("../../utils/catchAsync"));
 var _constants = require("../../context/constants");
 var _axios = _interopRequireDefault(require("axios"));
 var _alerts = require("./alerts");
+var _ipfsUtils = require("./ipfsUtils");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator.return && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, catch: function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
@@ -41564,82 +41792,171 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 var fetchContract = function fetchContract(signerOrProvider) {
   return new _ethers.ethers.Contract(_constants.MarketAddress, _constants.MarketAddressABI, signerOrProvider);
 };
-var fetchNFT = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(propertyAddress) {
-    var provider, contract, data, item;
+var soldProperty = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(propertyAddress, slug, propertyId) {
+    var res;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
-          provider = new _ethers.ethers.providers.JsonRpcProvider();
-          contract = fetchContract(provider);
-          _context.next = 4;
-          return contract.fetchNFTByPropertyAddress(propertyAddress);
-        case 4:
-          data = _context.sent;
-          // let contractID;
-          // const items = await Promise.all(data.map(async ({ tokenId, seller, owner, propertyAddress, price: unformattedPrice }) => {
-          //   const tokenURI = await contract.tokenURI(tokenId);
-          //   contractID = tokenId.toString();
-          //   console.log(tokenId);
-          // }));
-          console.log(data);
-          item = data.tokenId.toString();
-          console.log(item);
-          return _context.abrupt("return", item);
-        case 9:
+          _context.prev = 0;
+          _context.next = 3;
+          return (0, _axios.default)({
+            method: "POST",
+            url: "http://localhost:3000/api/v1/properties/soldProperty",
+            data: {
+              address: propertyAddress,
+              slug: slug,
+              propertyId: propertyId
+            }
+          });
+        case 3:
+          res = _context.sent;
+          if (res.data.status === "success") {
+            (0, _alerts.showAlert)("success", "Property Sold!");
+            window.setTimeout(function () {
+              location.assign('/myProperty');
+            }, 1500);
+          }
+          _context.next = 10;
+          break;
+        case 7:
+          _context.prev = 7;
+          _context.t0 = _context["catch"](0);
+          (0, _alerts.showAlert)("error", _context.t0);
+        case 10:
         case "end":
           return _context.stop();
       }
-    }, _callee);
+    }, _callee, null, [[0, 7]]);
   }));
-  return function fetchNFT(_x) {
+  return function soldProperty(_x, _x2, _x3) {
     return _ref.apply(this, arguments);
+  };
+}();
+var createProperty = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, imageCover, description, biddingPrice) {
+    var formData, res;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.prev = 0;
+          formData = new FormData();
+          formData.append('address', address);
+          formData.append('city', city);
+          formData.append('listingNum', listingNum);
+          formData.append('propertyStyle', propertyStyle);
+          formData.append('garageType', garageType);
+          formData.append('garageSize', garageSize);
+          formData.append('berRating', berRating);
+          formData.append('squareFeet', squareFeet);
+          formData.append('lotSize', lotSize);
+          formData.append('numBedroom', numBedroom);
+          formData.append('numBathroom', numBathroom);
+          formData.append('imageCover', imageCover);
+          formData.append('description', description);
+          formData.append('biddingPrice', biddingPrice);
+          _context2.next = 18;
+          return (0, _axios.default)({
+            method: 'POST',
+            url: 'http://localhost:3000/api/v1/properties',
+            data: formData,
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+        case 18:
+          res = _context2.sent;
+          if (res.data.status === 'success') {
+            (0, _alerts.showAlert)('success', 'Property created successfully!');
+            // window.setTimeout(() => {
+            //   location.assign('/');
+            // }, 1500);
+          }
+          _context2.next = 26;
+          break;
+        case 22:
+          _context2.prev = 22;
+          _context2.t0 = _context2["catch"](0);
+          (0, _alerts.showAlert)('error', _context2.t0.response.data.message);
+          console.log(_context2.t0);
+        case 26:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2, null, [[0, 22]]);
+  }));
+  return function createProperty(_x4, _x5, _x6, _x7, _x8, _x9, _x10, _x11, _x12, _x13, _x14, _x15, _x16, _x17) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+var fetchNFT = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(propertyAddress) {
+    var provider, contract, data, item;
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          provider = new _ethers.ethers.providers.JsonRpcProvider();
+          contract = fetchContract(provider);
+          _context3.next = 4;
+          return contract.fetchNFTByPropertyAddress(propertyAddress);
+        case 4:
+          data = _context3.sent;
+          item = data.tokenId.toString();
+          return _context3.abrupt("return", item);
+        case 7:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3);
+  }));
+  return function fetchNFT(_x18) {
+    return _ref3.apply(this, arguments);
   };
 }();
 
 // Used to check if user has the NFTs
 var fetchUserNFTs = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
     var provider, contract, accounts, data;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) switch (_context2.prev = _context2.next) {
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
         case 0:
           provider = new _ethers.ethers.providers.JsonRpcProvider();
           contract = fetchContract(provider);
-          _context2.next = 4;
+          _context4.next = 4;
           return window.ethereum.request({
             method: "eth_accounts"
           });
         case 4:
-          accounts = _context2.sent;
+          accounts = _context4.sent;
           console.log(accounts[0]);
-          _context2.next = 8;
+          _context4.next = 8;
           return contract.fetchMyNFTs(accounts[0]);
         case 8:
-          data = _context2.sent;
+          data = _context4.sent;
           console.log(data);
         case 10:
         case "end":
-          return _context2.stop();
+          return _context4.stop();
       }
-    }, _callee2);
+    }, _callee4);
   }));
   return function fetchUserNFTs() {
-    return _ref2.apply(this, arguments);
+    return _ref4.apply(this, arguments);
   };
 }();
 var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(propertyAddress) {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(propertyAddress) {
     var contract, res;
-    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-      while (1) switch (_context3.prev = _context3.next) {
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
         case 0:
-          _context3.next = 2;
+          _context5.next = 2;
           return fetchNFT(propertyAddress);
         case 2:
-          contract = _context3.sent;
-          _context3.prev = 3;
-          _context3.next = 6;
+          contract = _context5.sent;
+          _context5.prev = 3;
+          _context5.next = 6;
           return (0, _axios.default)({
             method: "POST",
             url: "http://localhost:3000/api/v1/properties/addContract",
@@ -41649,169 +41966,78 @@ var addContract = (0, _catchAsync.default)( /*#__PURE__*/function () {
             }
           });
         case 6:
-          res = _context3.sent;
+          res = _context5.sent;
           if (res.data.status === "success") {
             (0, _alerts.showAlert)("success", "Contract added successfully!");
           }
-          _context3.next = 13;
+          _context5.next = 13;
           break;
         case 10:
-          _context3.prev = 10;
-          _context3.t0 = _context3["catch"](3);
-          (0, _alerts.showAlert)("error", _context3.t0);
+          _context5.prev = 10;
+          _context5.t0 = _context5["catch"](3);
+          (0, _alerts.showAlert)("error", _context5.t0);
         case 13:
         case "end":
-          return _context3.stop();
+          return _context5.stop();
       }
-    }, _callee3, null, [[3, 10]]);
+    }, _callee5, null, [[3, 10]]);
   }));
-  return function (_x2) {
-    return _ref3.apply(this, arguments);
+  return function (_x19) {
+    return _ref5.apply(this, arguments);
   };
 }());
 
 // eslint-disable-next-line import/prefer-default-export
 exports.addContract = addContract;
-var createTokenNFT = (0, _catchAsync.default)( /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(propertyAddress, biddingPrice) {
+var createTokenNFT = /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, imageCover, description, biddingPrice) {
     var web3modal, connection, provider, signer, bidPrice, contract, url, transaction;
-    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-      while (1) switch (_context4.prev = _context4.next) {
-        case 0:
-          // using hardcoded value for now..
-          web3modal = new _web3modal.default();
-          _context4.next = 3;
-          return web3modal.connect();
-        case 3:
-          connection = _context4.sent;
-          provider = new _ethers.ethers.providers.Web3Provider(connection);
-          signer = provider.getSigner(); // const price = ethers.utils.parseUnits(formInputPrice, "ether");
-          bidPrice = _ethers.ethers.utils.parseUnits(biddingPrice, "ether");
-          contract = fetchContract(signer);
-          url = "https://gateway.pinata.cloud/ipfs/QmXA7GCd4pWNKXkQ5FGrMMnzMHsRAAzex2WXtWFVdu32ji"; // const transaction = await contract.createTokenNFT(url, price, propertyAddress, bidPrice);
-          _context4.next = 11;
-          return contract.createTokenNFT(url, propertyAddress, bidPrice);
-        case 11:
-          transaction = _context4.sent;
-          _context4.next = 14;
-          return transaction.wait();
-        case 14:
-          _context4.next = 16;
-          return addContract(propertyAddress);
-        case 16:
-        case "end":
-          return _context4.stop();
-      }
-    }, _callee4);
-  }));
-  return function (_x3, _x4) {
-    return _ref4.apply(this, arguments);
-  };
-}());
-
-// export const createPropertyNFT = catchAsync(async (formInputPrice, propertyAddress, url) => {
-//   const web3modal = new Web3Modal();
-//   const connection = await web3modal.connect();
-//   const provider = new ethers.providers.Web3Provider(connection);
-//   const signer = provider.getSigner();
-//   const price = ethers.utils.parseUnits(formInputPrice, "ether");
-//   const contract = fetchContract(signer);
-
-//   const transaction = await contract.createTokenNFT(url, price, propertyAddress);
-//   await transaction.wait();
-//   await addContract(propertyAddress);
-// });
-exports.createTokenNFT = createTokenNFT;
-var contractPlaceBid = /*#__PURE__*/function () {
-  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(tokenId, biddingPrice) {
-    var web3Modal, connection, provider, signer, contract, price, transaction;
-    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-      while (1) switch (_context5.prev = _context5.next) {
-        case 0:
-          console.log("running place bid nft..");
-          web3Modal = new _web3modal.default();
-          _context5.next = 4;
-          return web3Modal.connect();
-        case 4:
-          connection = _context5.sent;
-          provider = new _ethers.ethers.providers.Web3Provider(connection);
-          signer = provider.getSigner();
-          contract = new _ethers.ethers.Contract(_constants.MarketAddress, _constants.MarketAddressABI, signer);
-          price = _ethers.ethers.utils.parseUnits(biddingPrice.toString(), 'ether');
-          _context5.next = 11;
-          return contract.updateBidPrice(tokenId, price);
-        case 11:
-          transaction = _context5.sent;
-          _context5.next = 14;
-          return transaction.wait();
-        case 14:
-        case "end":
-          return _context5.stop();
-      }
-    }, _callee5);
-  }));
-  return function contractPlaceBid(_x5, _x6) {
-    return _ref5.apply(this, arguments);
-  };
-}();
-exports.contractPlaceBid = contractPlaceBid;
-var buyNft = /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(tokenId, tokenPrice, isBid) {
-    var web3Modal, connection, provider, signer, contract, price, transaction;
     return _regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
-          console.log("running buy nft..");
-          web3Modal = new _web3modal.default();
-          _context6.next = 4;
-          return web3Modal.connect();
-        case 4:
+          web3modal = new _web3modal.default();
+          _context6.next = 3;
+          return web3modal.connect();
+        case 3:
           connection = _context6.sent;
           provider = new _ethers.ethers.providers.Web3Provider(connection);
           signer = provider.getSigner();
-          contract = new _ethers.ethers.Contract(_constants.MarketAddress, _constants.MarketAddressABI, signer);
-          price = _ethers.ethers.utils.parseUnits(tokenPrice.toString(), 'ether');
-          if (!(isBid == true)) {
-            _context6.next = 16;
-            break;
-          }
-          console.log('isBid is run..');
+          bidPrice = _ethers.ethers.utils.parseUnits(biddingPrice.toString(), "ether");
+          contract = fetchContract(signer);
+          _context6.next = 10;
+          return (0, _ipfsUtils.uploadToIPFS)(imageCover);
+        case 10:
+          url = _context6.sent;
           _context6.next = 13;
-          return contract.buyBidProperty(tokenId, {
-            value: price
-          });
+          return contract.createTokenNFT(url, address, bidPrice);
         case 13:
           transaction = _context6.sent;
-          _context6.next = 19;
-          break;
+          _context6.next = 16;
+          return transaction.wait();
         case 16:
           _context6.next = 18;
-          return contract.createMarketSale(tokenId, {
-            value: price
-          });
+          return createProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, imageCover, description, biddingPrice);
         case 18:
-          transaction = _context6.sent;
-        case 19:
-          _context6.next = 21;
-          return transaction.wait();
-        case 21:
+          _context6.next = 20;
+          return addContract(address);
+        case 20:
         case "end":
           return _context6.stop();
       }
     }, _callee6);
   }));
-  return function buyNft(_x7, _x8, _x9) {
+  return function createTokenNFT(_x20, _x21, _x22, _x23, _x24, _x25, _x26, _x27, _x28, _x29, _x30, _x31, _x32, _x33) {
     return _ref6.apply(this, arguments);
   };
 }();
-exports.buyNft = buyNft;
-var depositPayment = /*#__PURE__*/function () {
-  var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(tokenId, tokenPrice) {
+exports.createTokenNFT = createTokenNFT;
+var contractPlaceBid = /*#__PURE__*/function () {
+  var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(tokenId, biddingPrice) {
     var web3Modal, connection, provider, signer, contract, price, transaction;
     return _regeneratorRuntime().wrap(function _callee7$(_context7) {
       while (1) switch (_context7.prev = _context7.next) {
         case 0:
-          console.log("running deposit nft..");
+          console.log("running place bid nft..");
           web3Modal = new _web3modal.default();
           _context7.next = 4;
           return web3Modal.connect();
@@ -41820,11 +42046,9 @@ var depositPayment = /*#__PURE__*/function () {
           provider = new _ethers.ethers.providers.Web3Provider(connection);
           signer = provider.getSigner();
           contract = new _ethers.ethers.Contract(_constants.MarketAddress, _constants.MarketAddressABI, signer);
-          price = _ethers.ethers.utils.parseUnits(tokenPrice.toString(), 'ether');
+          price = _ethers.ethers.utils.parseUnits(biddingPrice.toString(), 'ether');
           _context7.next = 11;
-          return contract.placeDeposit(tokenId, {
-            value: price
-          });
+          return contract.updateBidPrice(tokenId, price);
         case 11:
           transaction = _context7.sent;
           _context7.next = 14;
@@ -41835,12 +42059,88 @@ var depositPayment = /*#__PURE__*/function () {
       }
     }, _callee7);
   }));
-  return function depositPayment(_x10, _x11) {
+  return function contractPlaceBid(_x34, _x35) {
     return _ref7.apply(this, arguments);
   };
 }();
+exports.contractPlaceBid = contractPlaceBid;
+var buyNft = /*#__PURE__*/function () {
+  var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(tokenId, tokenPrice, address, slug, propertyId) {
+    var web3Modal, connection, provider, signer, contract, price, transaction;
+    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+      while (1) switch (_context8.prev = _context8.next) {
+        case 0:
+          console.log("running buy nft..");
+          web3Modal = new _web3modal.default();
+          _context8.next = 4;
+          return web3Modal.connect();
+        case 4:
+          connection = _context8.sent;
+          provider = new _ethers.ethers.providers.Web3Provider(connection);
+          signer = provider.getSigner();
+          contract = new _ethers.ethers.Contract(_constants.MarketAddress, _constants.MarketAddressABI, signer);
+          price = _ethers.ethers.utils.parseUnits(tokenPrice.toString(), 'ether');
+          _context8.next = 11;
+          return contract.buyBidProperty(tokenId, {
+            value: price
+          });
+        case 11:
+          transaction = _context8.sent;
+          _context8.next = 14;
+          return transaction.wait();
+        case 14:
+          _context8.next = 16;
+          return soldProperty(address, slug, propertyId);
+        case 16:
+        case "end":
+          return _context8.stop();
+      }
+    }, _callee8);
+  }));
+  return function buyNft(_x36, _x37, _x38, _x39, _x40) {
+    return _ref8.apply(this, arguments);
+  };
+}();
+exports.buyNft = buyNft;
+var depositPayment = /*#__PURE__*/function () {
+  var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(tokenId, tokenPrice, propertyAddress, slug, propertyId) {
+    var web3Modal, connection, provider, signer, contract, price, transaction;
+    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+      while (1) switch (_context9.prev = _context9.next) {
+        case 0:
+          console.log("running deposit nft..");
+          web3Modal = new _web3modal.default();
+          _context9.next = 4;
+          return web3Modal.connect();
+        case 4:
+          connection = _context9.sent;
+          provider = new _ethers.ethers.providers.Web3Provider(connection);
+          signer = provider.getSigner();
+          contract = new _ethers.ethers.Contract(_constants.MarketAddress, _constants.MarketAddressABI, signer);
+          price = _ethers.ethers.utils.parseUnits(tokenPrice.toString(), 'ether');
+          _context9.next = 11;
+          return contract.placeDeposit(tokenId, {
+            value: price
+          });
+        case 11:
+          transaction = _context9.sent;
+          _context9.next = 14;
+          return transaction.wait();
+        case 14:
+          _context9.next = 16;
+          return soldProperty(propertyAddress, slug, propertyId);
+        case 16:
+        case "end":
+          return _context9.stop();
+      }
+    }, _callee9);
+  }));
+  return function depositPayment(_x41, _x42, _x43, _x44, _x45) {
+    return _ref9.apply(this, arguments);
+  };
+}();
 exports.depositPayment = depositPayment;
-},{"web3modal":"../../node_modules/web3modal/dist/index.js","ethers":"../../node_modules/ethers/lib.esm/index.js","../../utils/catchAsync":"../../utils/catchAsync.js","../../context/constants":"../../context/constants.js","axios":"../../node_modules/axios/index.js","./alerts":"alerts.js"}],"query.js":[function(require,module,exports) {
+},{"web3modal":"../../node_modules/web3modal/dist/index.js","ethers":"../../node_modules/ethers/lib.esm/index.js","../../utils/catchAsync":"../../utils/catchAsync.js","../../context/constants":"../../context/constants.js","axios":"../../node_modules/axios/index.js","./alerts":"alerts.js","./ipfsUtils":"ipfsUtils.js"}],"query.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42092,7 +42392,6 @@ var userDataForm = document.querySelector('.form-user-data');
 var userPasswordForm = document.querySelector('.form-user-password');
 var buyBiddingBtn = document.getElementById('buy-bid-property');
 var depositBiddingBtn = document.getElementById('deposit-bid-property');
-var buyBtn = document.getElementById('buy-property');
 var removeBiddingBtn = document.getElementById('remove-bidding-btn');
 var createPropertyForm = document.querySelector(".form--createProperty");
 var forgetPasswordForm = document.querySelector(".form--forgetPassword");
@@ -42101,7 +42400,7 @@ var contactAdminForm = document.querySelector(".form--contactAdmin");
 var replyQueryForm = document.querySelector(".form--replyQuery");
 var resetPasswordForm = document.querySelector(".form--resetPassword");
 var addToFavouriteBtn = document.getElementById("add-to-favourite");
-var removeFromFavouriteBtn = document.getElementById("remove-from-favourite");
+var removeFromFavouriteBtn = document.querySelectorAll(".remove-from-favourite");
 var testBtn = document.getElementById("btn--test");
 var propertyLink = document.getElementById("my-property-link");
 var createRentalPropertyForm = document.querySelector(".form--createRentalProperty");
@@ -42190,44 +42489,56 @@ if (loginForm) loginForm.addEventListener('submit', function (e) {
   var password = document.getElementById('password').value;
   (0, _login.login)(email, password);
 });
-if (createPropertyForm) createPropertyForm.addEventListener('submit', function (e) {
-  e.preventDefault();
-  console.log("Creating property..");
-  var address = document.getElementById('address').value;
-  var city = document.getElementById('city').value;
-  var listingNum = document.getElementById('listingNum').value;
-  var propertyStyle = document.getElementById('propertyStyle').value;
-  var garageType = document.getElementById('garageType').value;
-  var garageSize = document.getElementById('garageSize').value;
-  var numBedroom = document.getElementById('numBedroom').value;
-  var numBathroom = document.getElementById('numBathroom').value;
-  // const price = document.getElementById('price').value;
-  var imageCover = document.getElementById('imageCover').files[0];
-  var biddingPrice = document.getElementById('biddingPrice').value;
-  var description = document.getElementById('description').value;
-  var berRating = document.getElementById('berRating').value;
-  var squareFeet = document.getElementById('squareFeet').value;
-  var lotSize = document.getElementById('lotSize').value;
-  console.log(imageCover);
-  (0, _property.createProperty)(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, price, imageCover, description, biddingPrice);
-  // createTokenNFT(price, address, biddingPrice);
-  (0, _web3ModalFactory.createTokenNFT)(address, biddingPrice);
-  document.getElementById('address').value = "";
-  document.getElementById('listingNum').value = "";
-  document.getElementById('garageSize').value = "";
-  document.getElementById('numBedroom').value = "";
-  document.getElementById('numBathroom').value = "";
-  // document.getElementById('price').value = "";
-  document.getElementById('squareFeet').value = "";
-  document.getElementById('description').value = "";
-  document.getElementById('lotSize').value = "";
-  document.getElementById('biddingPrice').value = "";
-});
-if (createRentalPropertyForm) createRentalPropertyForm.addEventListener('submit', /*#__PURE__*/function () {
+if (createPropertyForm) createPropertyForm.addEventListener('submit', /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(e) {
-    var address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, numBedroom, numBathroom, rent, imageCover, securityDeposit, description, berRating, squareFeet, lotSize;
+    var address, city, listingNum, propertyStyle, garageType, garageSize, numBedroom, numBathroom, imageCover, biddingPrice, description, berRating, squareFeet, lotSize;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          e.preventDefault();
+          console.log("Creating property..");
+          address = document.getElementById('address').value;
+          city = document.getElementById('city').value;
+          listingNum = document.getElementById('listingNum').value;
+          propertyStyle = document.getElementById('propertyStyle').value;
+          garageType = document.getElementById('garageType').value;
+          garageSize = document.getElementById('garageSize').value;
+          numBedroom = document.getElementById('numBedroom').value;
+          numBathroom = document.getElementById('numBathroom').value;
+          imageCover = document.getElementById('imageCover').files[0];
+          biddingPrice = document.getElementById('biddingPrice').value;
+          description = document.getElementById('description').value;
+          berRating = document.getElementById('berRating').value;
+          squareFeet = document.getElementById('squareFeet').value;
+          lotSize = document.getElementById('lotSize').value;
+          _context3.next = 18;
+          return (0, _web3ModalFactory.createTokenNFT)(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, imageCover, description, biddingPrice);
+        case 18:
+          document.getElementById('address').value = "";
+          document.getElementById('listingNum').value = "";
+          document.getElementById('garageSize').value = "";
+          document.getElementById('numBedroom').value = "";
+          document.getElementById('numBathroom').value = "";
+          // document.getElementById('price').value = "";
+          document.getElementById('squareFeet').value = "";
+          document.getElementById('description').value = "";
+          document.getElementById('lotSize').value = "";
+          document.getElementById('biddingPrice').value = "";
+        case 27:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3);
+  }));
+  return function (_x3) {
+    return _ref3.apply(this, arguments);
+  };
+}());
+if (createRentalPropertyForm) createRentalPropertyForm.addEventListener('submit', /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(e) {
+    var address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, numBedroom, numBathroom, rent, imageCover, securityDeposit, description, berRating, squareFeet, lotSize;
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
         case 0:
           e.preventDefault();
           console.log("Creating rental property..");
@@ -42247,19 +42558,16 @@ if (createRentalPropertyForm) createRentalPropertyForm.addEventListener('submit'
           berRating = document.getElementById('berRating').value;
           squareFeet = document.getElementById('squareFeet').value;
           lotSize = document.getElementById('lotSize').value;
-          _context3.next = 20;
-          return (0, _rentalProperty.createRentalProperty)(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit);
+          _context4.next = 20;
+          return (0, _rentalProperty.createRentalTokenNFT)(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit);
         case 20:
-          _context3.next = 22;
-          return (0, _rentalProperty.createRentalTokenNFT)(rent, address, securityDeposit);
-        case 22:
         case "end":
-          return _context3.stop();
+          return _context4.stop();
       }
-    }, _callee3);
+    }, _callee4);
   }));
-  return function (_x3) {
-    return _ref3.apply(this, arguments);
+  return function (_x4) {
+    return _ref4.apply(this, arguments);
   };
 }());
 if (registrationForm) registrationForm.addEventListener('submit', function (e) {
@@ -42288,17 +42596,17 @@ if (userDataForm) userDataForm.addEventListener('submit', function (e) {
   (0, _updateSettings.updateSettings)(form, 'data');
 });
 if (userPasswordForm) userPasswordForm.addEventListener('submit', /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(e) {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(e) {
     var passwordCurrent, password, passwordConfirm;
-    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-      while (1) switch (_context4.prev = _context4.next) {
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
         case 0:
           e.preventDefault();
           document.querySelector('.btn--save-password').textContent = 'Updating...';
           passwordCurrent = document.getElementById('password-current').value;
           password = document.getElementById('password').value;
           passwordConfirm = document.getElementById('password-confirm').value;
-          _context4.next = 7;
+          _context5.next = 7;
           return (0, _updateSettings.updateSettings)({
             passwordCurrent: passwordCurrent,
             password: password,
@@ -42309,35 +42617,6 @@ if (userPasswordForm) userPasswordForm.addEventListener('submit', /*#__PURE__*/f
           document.getElementById('password-current').value = '';
           document.getElementById('password').value = '';
           document.getElementById('password-confirm').value = '';
-        case 11:
-        case "end":
-          return _context4.stop();
-      }
-    }, _callee4);
-  }));
-  return function (_x4) {
-    return _ref4.apply(this, arguments);
-  };
-}());
-if (buyBtn) buyBtn.addEventListener('click', /*#__PURE__*/function () {
-  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(e) {
-    var propertyId, curProperty;
-    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-      while (1) switch (_context5.prev = _context5.next) {
-        case 0:
-          console.log("button_click");
-          e.target.textContent = 'Processing...';
-          propertyId = e.target.dataset.propertyId;
-          _context5.next = 5;
-          return (0, _property.getProperty)(propertyId);
-        case 5:
-          curProperty = _context5.sent;
-          console.log(curProperty);
-          _context5.next = 9;
-          return (0, _web3ModalFactory.buyNft)(BigInt(curProperty.data.nftContract), curProperty.data.price, false);
-        case 9:
-          _context5.next = 11;
-          return (0, _property.soldProperty)(curProperty.data.address);
         case 11:
         case "end":
           return _context5.stop();
@@ -42415,16 +42694,9 @@ if (buyBiddingBtn) buyBiddingBtn.addEventListener('click', /*#__PURE__*/function
         case 4:
           curProperty = _context8.sent;
           console.log(curProperty);
-          // await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
           _context8.next = 8;
-          return (0, _web3ModalFactory.buyNft)(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
+          return (0, _web3ModalFactory.buyNft)(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, curProperty.data.address, curProperty.data.slug, curProperty.data._id);
         case 8:
-          _context8.next = 10;
-          return (0, _property.soldProperty)(curProperty.data.address);
-        case 10:
-          _context8.next = 12;
-          return (0, _updateSettings.removeBidding)(curProperty.data.address);
-        case 12:
         case "end":
           return _context8.stop();
       }
@@ -42447,16 +42719,9 @@ if (depositBiddingBtn) depositBiddingBtn.addEventListener('click', /*#__PURE__*/
         case 4:
           curProperty = _context9.sent;
           console.log(curProperty);
-          // await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
           _context9.next = 8;
-          return (0, _web3ModalFactory.depositPayment)(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice / 100 * 10);
+          return (0, _web3ModalFactory.depositPayment)(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice / 100 * 10, curProperty.data.address, curProperty.data.slug, curProperty.data._id);
         case 8:
-          _context9.next = 10;
-          return (0, _property.soldProperty)(curProperty.data.address);
-        case 10:
-          _context9.next = 12;
-          return (0, _updateSettings.removeBidding)(curProperty.data.address);
-        case 12:
         case "end":
           return _context9.stop();
       }
@@ -42556,26 +42821,31 @@ if (addToFavouriteBtn) addToFavouriteBtn.addEventListener('click', /*#__PURE__*/
     return _ref13.apply(this, arguments);
   };
 }());
-if (removeFromFavouriteBtn) removeFromFavouriteBtn.addEventListener('click', /*#__PURE__*/function () {
-  var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(e) {
-    var slug;
-    return _regeneratorRuntime().wrap(function _callee14$(_context14) {
-      while (1) switch (_context14.prev = _context14.next) {
-        case 0:
-          console.log("Removing property from favorite");
-          slug = removeFromFavouriteBtn.dataset.slug;
-          _context14.next = 4;
-          return (0, _updateSettings.removeFromFavourite)(slug);
-        case 4:
-        case "end":
-          return _context14.stop();
-      }
-    }, _callee14);
-  }));
-  return function (_x14) {
-    return _ref14.apply(this, arguments);
-  };
-}());
+if (removeFromFavouriteBtn) {
+  removeFromFavouriteBtn.forEach(function (btn) {
+    btn.addEventListener("click", /*#__PURE__*/function () {
+      var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(e) {
+        var slug;
+        return _regeneratorRuntime().wrap(function _callee14$(_context14) {
+          while (1) switch (_context14.prev = _context14.next) {
+            case 0:
+              console.log("Removing property from favorite");
+              e.preventDefault();
+              slug = btn.getAttribute("data-slug");
+              _context14.next = 5;
+              return (0, _updateSettings.removeFromFavourite)(slug);
+            case 5:
+            case "end":
+              return _context14.stop();
+          }
+        }, _callee14);
+      }));
+      return function (_x14) {
+        return _ref14.apply(this, arguments);
+      };
+    }());
+  });
+}
 if (testBtn) testBtn.addEventListener('click', /*#__PURE__*/function () {
   var _ref15 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee15(e) {
     return _regeneratorRuntime().wrap(function _callee15$(_context15) {
@@ -42780,7 +43050,7 @@ if (updatePropertyForm) updatePropertyForm.addEventListener('submit', /*#__PURE_
 if (updateRentalPropertyForm) {
   updateRentalPropertyForm.addEventListener('submit', /*#__PURE__*/function () {
     var _ref23 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee23(e) {
-      var address, city, listingNum, propertyStyle, garageType, garageSize, numBedroom, numBathroom, rent, securityDeposit, description, berRating, squareFeet, lotSize, ownerEmail, slug, rentalPropertyId;
+      var address, city, listingNum, propertyStyle, garageType, garageSize, numBedroom, numBathroom, rent, securityDeposit, description, berRating, squareFeet, lotSize, ownerEmail, tokenId, slug, rentalPropertyId;
       return _regeneratorRuntime().wrap(function _callee23$(_context23) {
         while (1) switch (_context23.prev = _context23.next) {
           case 0:
@@ -42800,13 +43070,14 @@ if (updateRentalPropertyForm) {
             berRating = document.getElementById('berRating').value;
             squareFeet = document.getElementById('squareFeet').value;
             lotSize = document.getElementById('lotSize').value;
-            ownerEmail = document.getElementById('ownerEmail').value; //const archive = document.getElementById('archive').checked;
+            ownerEmail = document.getElementById('ownerEmail').value;
+            tokenId = document.getElementById('tokenId').value;
             slug = document.getElementById('slug').value;
             rentalPropertyId = document.getElementById('rentalPropertyId').value;
             console.log(rentalPropertyId);
-            _context23.next = 22;
-            return (0, _rentalProperty.updateRentalProperty)(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId);
-          case 22:
+            _context23.next = 23;
+            return (0, _rentalProperty.updateRentalProperty)(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId, tokenId);
+          case 23:
           case "end":
             return _context23.stop();
         }
@@ -42817,50 +43088,51 @@ if (updateRentalPropertyForm) {
     };
   }());
 }
-if (btnProceedRental) btnProceedRental.addEventListener('click', /*#__PURE__*/function () {
-  var _ref24 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee24(e) {
-    var propertyId, curProperty;
-    return _regeneratorRuntime().wrap(function _callee24$(_context24) {
-      while (1) switch (_context24.prev = _context24.next) {
-        case 0:
-          propertyId = btn.getAttribute("data-propertyid");
-          _context24.next = 3;
-          return (0, _rentalProperty.getRentalProperty)(propertyId);
-        case 3:
-          curProperty = _context24.sent;
-          console.log(curProperty);
-          console.log(curProperty.data._id);
-          _context24.next = 8;
-          return (0, _rentalProperty.signRentalContract)(BigInt(curProperty.data.nftContract), curProperty.data.rent + curProperty.data.securityDeposit, propertyId);
-        case 8:
-        case "end":
-          return _context24.stop();
-      }
-    }, _callee24);
-  }));
-  return function (_x24) {
-    return _ref24.apply(this, arguments);
-  };
-}());
 if (btnProceedRental) {
   btnProceedRental.forEach(function (btn) {
     btn.addEventListener("click", /*#__PURE__*/function () {
-      var _ref25 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee25(e) {
+      var _ref24 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee24(e) {
         var propertyId, curProperty;
+        return _regeneratorRuntime().wrap(function _callee24$(_context24) {
+          while (1) switch (_context24.prev = _context24.next) {
+            case 0:
+              e.preventDefault();
+              propertyId = btn.getAttribute("data-propertyid");
+              _context24.next = 4;
+              return (0, _rentalProperty.getRentalProperty)(propertyId);
+            case 4:
+              curProperty = _context24.sent;
+              console.log(curProperty);
+              console.log(curProperty.data._id);
+              _context24.next = 9;
+              return (0, _rentalProperty.signRentalContract)(BigInt(curProperty.data.nftContract), curProperty.data.rent + curProperty.data.securityDeposit, propertyId);
+            case 9:
+            case "end":
+              return _context24.stop();
+          }
+        }, _callee24);
+      }));
+      return function (_x24) {
+        return _ref24.apply(this, arguments);
+      };
+    }());
+  });
+}
+if (btnPayRent) {
+  btnPayRent.forEach(function (btn) {
+    btn.addEventListener("click", /*#__PURE__*/function () {
+      var _ref25 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee25(e) {
+        var propertyId, rent, tokenId;
         return _regeneratorRuntime().wrap(function _callee25$(_context25) {
           while (1) switch (_context25.prev = _context25.next) {
             case 0:
               e.preventDefault();
               propertyId = btn.getAttribute("data-propertyid");
-              _context25.next = 4;
-              return (0, _rentalProperty.getRentalProperty)(propertyId);
-            case 4:
-              curProperty = _context25.sent;
-              console.log(curProperty);
-              console.log(curProperty.data._id);
-              _context25.next = 9;
-              return (0, _rentalProperty.signRentalContract)(BigInt(curProperty.data.nftContract), curProperty.data.rent + curProperty.data.securityDeposit, propertyId);
-            case 9:
+              rent = btn.getAttribute("data-rent");
+              tokenId = btn.getAttribute("data-tokenId");
+              _context25.next = 6;
+              return (0, _rentalProperty.payRent)(propertyId, rent, BigInt(tokenId));
+            case 6:
             case "end":
               return _context25.stop();
           }
@@ -42872,21 +43144,20 @@ if (btnProceedRental) {
     }());
   });
 }
-if (btnPayRent) {
-  btnPayRent.forEach(function (btn) {
+if (btnEndContract) {
+  btnEndContract.forEach(function (btn) {
     btn.addEventListener("click", /*#__PURE__*/function () {
       var _ref26 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee26(e) {
-        var propertyId, rent, tokenId;
+        var propertyId, tokenId;
         return _regeneratorRuntime().wrap(function _callee26$(_context26) {
           while (1) switch (_context26.prev = _context26.next) {
             case 0:
               e.preventDefault();
               propertyId = btn.getAttribute("data-propertyid");
-              rent = btn.getAttribute("data-rent");
               tokenId = btn.getAttribute("data-tokenId");
-              _context26.next = 6;
-              return (0, _rentalProperty.payRent)(propertyId, rent, BigInt(tokenId));
-            case 6:
+              _context26.next = 5;
+              return (0, _rentalProperty.endRentalContract)(propertyId, BigInt(tokenId));
+            case 5:
             case "end":
               return _context26.stop();
           }
@@ -42898,8 +43169,8 @@ if (btnPayRent) {
     }());
   });
 }
-if (btnEndContract) {
-  btnEndContract.forEach(function (btn) {
+if (btnRenewContract) {
+  btnRenewContract.forEach(function (btn) {
     btn.addEventListener("click", /*#__PURE__*/function () {
       var _ref27 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee27(e) {
         var propertyId, tokenId;
@@ -42910,7 +43181,7 @@ if (btnEndContract) {
               propertyId = btn.getAttribute("data-propertyid");
               tokenId = btn.getAttribute("data-tokenId");
               _context27.next = 5;
-              return (0, _rentalProperty.endRentalContract)(propertyId, BigInt(tokenId));
+              return (0, _rentalProperty.renewRentalContract)(propertyId, BigInt(tokenId));
             case 5:
             case "end":
               return _context27.stop();
@@ -42919,31 +43190,6 @@ if (btnEndContract) {
       }));
       return function (_x27) {
         return _ref27.apply(this, arguments);
-      };
-    }());
-  });
-}
-if (btnRenewContract) {
-  btnRenewContract.forEach(function (btn) {
-    btn.addEventListener("click", /*#__PURE__*/function () {
-      var _ref28 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee28(e) {
-        var propertyId, tokenId;
-        return _regeneratorRuntime().wrap(function _callee28$(_context28) {
-          while (1) switch (_context28.prev = _context28.next) {
-            case 0:
-              e.preventDefault();
-              propertyId = btn.getAttribute("data-propertyid");
-              tokenId = btn.getAttribute("data-tokenId");
-              _context28.next = 5;
-              return (0, _rentalProperty.renewRentalContract)(propertyId, BigInt(tokenId));
-            case 5:
-            case "end":
-              return _context28.stop();
-          }
-        }, _callee28);
-      }));
-      return function (_x28) {
-        return _ref28.apply(this, arguments);
       };
     }());
   });

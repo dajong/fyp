@@ -39,7 +39,7 @@ block content
     
           - const date = property.createdAt
           // +overviewBox('Date added', String(date), 'calendar')
-          +overviewBox('Price', `${property.price} ETH`, 'star')
+          +overviewBox('Price', `${property.biddingPrice} ETH`, 'star')
           +overviewBox('Property Style', `${property.propertyStyle}`, 'star')
           +overviewBox('Number of Bedrooms', `${property.numBedroom} bedrooms`, 'star')
           +overviewBox('Number of Bathrooms', `${property.numBathroom} bathrooms`, 'star')
@@ -91,7 +91,7 @@ block content
             
             if user
               if isFavorite === true
-                a.btn-small-red.span-all-rows#remove-from-favourite(data-slug=`${property.slug}`)
+                a.btn-small-red.span-all-rows.remove-from-favourite(data-slug=`${property.slug}`)
                   i.fas.fa-heart
                   | Remove from favorite
               else 

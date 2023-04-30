@@ -15,7 +15,7 @@ block content
           +navItem('/me', 'Settings', 'settings')
           +navItem('#', 'My bidding', 'star', true)
           +navItem('/getFavouriteProperties', 'Favourite Properties', 'heart')
-          +navItem('/myProperty', 'My property', 'home')
+          +navItem('/myProperty', 'Purchased property', 'home')
           +navItem('/rentalApplications', 'Rental Application', 'mail')
           +navItem('/myRentalProperty', 'Rented Properties', 'lock')
 
@@ -41,8 +41,9 @@ block content
                             td You won the bid!
                         
                         else if (property.currentHighestBidder === user.id)
-                            td Higest bidder
-
+                            td Highest bidder
+                        else if (property.propertySold === true)
+                            td The property is sold out
                         else 
                             td Not Highest Bidder
                         td
@@ -51,6 +52,6 @@ block content
                             td
                                 button.btn-xsmall.btn-red#remove-bidding-btn(value=`${property.address}`) Stop Watching
 
-                        if(property.currentHighestBidder === user.id && property.createdAt < Date.now())
+                        if(property.currentHighestBidder === user.id && property.biddingEndDate < Date.now())
                             td
                                 a.btn-xsmall.btn-xgreen#checkout-bidding-btn(href=`checkoutBidProperty/${property.slug}`) Checkout

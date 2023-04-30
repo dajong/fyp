@@ -98,10 +98,6 @@ const propertySchema = new mongoose.Schema(
       default: 1,
       min: [1, "Number of bathrooms must be above 1.0"]
     },
-    // price: {
-    //   type: Number,
-    //   required: [true, "Price is required!"]
-    // },
     description: {
       type: String,
       trim: true,

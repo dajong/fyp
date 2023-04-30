@@ -139,7 +139,7 @@ export const resetPassword = async (password, passwordConfirmation, resetToken) 
       window.setTimeout(() => {
         location.assign('/');
       }, 1500);
-      showAlert("Password has been reset!");
+      showAlert("success", "Password has been reset!");
     }
   } catch (err) {
     showAlert('error', err.response.data.message);

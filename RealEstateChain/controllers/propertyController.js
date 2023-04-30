@@ -36,50 +36,65 @@ exports.addContract = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.soldProperty = catchAsync(async (req, res, next) => {
-  // Fetch
-  const { address, slug } = req.body;
+const updateUsersAfterPropertySold = async (
+  propertyId,
+  userId,
+  slug,
+  address
+) => {
+  // Fetch the sold property
+  const soldProperty = await Property.findById(propertyId);
+  if (!soldProperty) {
+    throw new Error("No property found with that ID");
+  }
 
-  // Get users that either has them as favorite or bidding property
-  const usersToUpdate = await User.find({
-    $or: [{ favoriteProperties: slug }, { currentBiddingProperty: address }]
-  });
-
-  // Update each user by removing the sold property from the arrays
-  const updatedUsersPromises = usersToUpdate.map(async user => {
-    user.removeSoldProperty(address, slug);
-    await user.save({ validateBeforeSave: false });
-  });
-
-  // Wait for all users to be updated
-  await Promise.all(updatedUsersPromises);
-
-  // Update the buyer by adding the purchased property to the propertyPurchased array
-  await User.findByIdAndUpdate(
-    req.user.id,
+  // Remove the property from favoriteProperties and currentBiddingProperty arrays for all users
+  await User.updateMany(
+    {},
     {
-      $push: { propertyPurchased: address }
-    },
-    {
-      new: true,
-      runValidators: true
+      $pull: {
+        favoriteProperties: slug,
+        currentBiddingProperty: address
+      }
     }
   );
 
-  // Filter for updating property
-  const filter = { address: address };
+  // Add the property address to the propertyPurchased array of the user who purchased the property
+  await User.findByIdAndUpdate(
+    userId,
+    {
+      $push: {
+        propertyPurchased: soldProperty.address
+      }
+    },
+    { new: true }
+  );
+};
 
-  // field to update
-  const update = { propertySold: true };
+exports.soldProperty = catchAsync(async (req, res, next) => {
+  // Fetch
+  const { address, slug, propertyId } = req.body;
 
-  const property = await Property.findOneAndUpdate(filter, update, {
-    new: true
-  });
-  console.log(property);
+  const userId = req.user.id; // Assuming the user ID is available in req.user.id
+
+  // Mark the property as sold (update the propertySold field in the Property document)
+  const soldProperty = await Property.findByIdAndUpdate(
+    propertyId,
+    { propertySold: true },
+    { new: true }
+  );
+
+  if (!soldProperty) {
+    return next(new AppError("No property found with that ID", 404));
+  }
+
+  // Update users after the property is sold
+  await updateUsersAfterPropertySold(propertyId, userId, slug, address);
+
   res.status(200).json({
     status: "success",
     data: {
-      property
+      property: soldProperty
     }
   });
 });
@@ -139,19 +154,23 @@ exports.uploadImageCover = upload.single("imageCover");
 
 exports.resizeImageCover = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
-  req.file.imageCover = `${req.body.listingNum}.JPG`;
+
+  const imageName = `${req.body.listingNum}.JPG`;
   const dir = `public/img/properties/large/${req.body.listingNum}`;
 
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
+
+  const imagePath = `public/img/properties/large/${req.body.listingNum}/${imageName}`;
+
   await sharp(req.file.buffer)
     .resize(500, 500)
-    .toFormat("JPG")
+    .toFormat("jpeg")
     .jpeg({ quality: 90 })
-    .toFile(
-      `public/img/properties/large/${req.body.listingNum}/${req.file.imageCover}`
-    );
+    .toFile(imagePath);
+
+  req.body.imageCover = imageName;
 
   next();
 });
@@ -171,11 +190,11 @@ exports.createProperty = catchAsync(async (req, res, next) => {
     lotSize,
     numBedroom,
     numBathroom,
-    price,
+    imageCover,
     description,
     biddingPrice
   } = req.body;
-
+  console.log(imageCover);
   const newProperty = await Property.create({
     address: address,
     city: city,
@@ -188,9 +207,8 @@ exports.createProperty = catchAsync(async (req, res, next) => {
     lotSize: lotSize,
     numBedroom: numBedroom,
     numBathroom: numBathroom,
-    price: price,
     description: description,
-    imageCover: "test.JPG",
+    imageCover: imageCover,
     propertySold: false,
     propertyViews: 0,
     biddingPrice: biddingPrice

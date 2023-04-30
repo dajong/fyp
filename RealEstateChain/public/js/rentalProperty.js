@@ -6,6 +6,7 @@ import { showAlert } from './alerts';
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 import { RentalAddress, RentalAddressABI } from "../../context/constants";
+import { uploadToIPFS } from './ipfsUtils';
 
 const fetchContract = signerOrProvider =>
   new ethers.Contract(RentalAddress, RentalAddressABI, signerOrProvider);
@@ -35,42 +36,46 @@ export const getRentalProperty = async (propertyId) => {
 }
 };
 
-export const createRentalProperty = async (address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, rent, imageCover, description, securityDeposit) => {
-    try {
-      const res = await axios({
-        method: 'POST',
-        url: 'http://localhost:3000/api/v1/rentals/createRentalProperty',
-        data: {
-          address,
-          ownerEmail,
-          city,
-          listingNum,
-          propertyStyle,
-          garageType,
-          garageSize,
-          berRating,
-          squareFeet,
-          lotSize,
-          numBedroom,
-          numBathroom,
-          rent,
-          imageCover,
-          description,
-          securityDeposit
-        }
-      });
-  
-      if (res.data.status === 'success') {
-        showAlert('success', 'Rental Property created successfully!');
-        // window.setTimeout(() => {
-        //     location.assign('/');
-        //   }, 1500);
-      }
-    } catch (err) {
-      showAlert('error', err.response.data.message);
-      console.log(err);
+const createRentalProperty = async (address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit) => {
+  try {
+    const formData = new FormData();
+    formData.append('address', address);
+    formData.append('ownerEmail', ownerEmail);
+    formData.append('city', city);
+    formData.append('listingNum', listingNum);
+    formData.append('propertyStyle', propertyStyle);
+    formData.append('garageType', garageType);
+    formData.append('garageSize', garageSize);
+    formData.append('berRating', berRating);
+    formData.append('squareFeet', squareFeet);
+    formData.append('lotSize', lotSize);
+    formData.append('numBedroom', numBedroom);
+    formData.append('numBathroom', numBathroom);
+    formData.append('rent', rent);
+    formData.append('imageCover', imageCover);
+    formData.append('description', description);
+    formData.append('securityDeposit', securityDeposit);
+
+    const res = await axios({
+      method: 'POST',
+      url: 'http://localhost:3000/api/v1/rentals/createRentalProperty',
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'Rental Property created successfully!');
+      // window.setTimeout(() => {
+      //     location.assign('/');
+      //   }, 1500);
     }
-  };
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+    console.log(err);
+  }
+};
 
 export const applyRental = catchAsync(async (slug) => {
   try {
@@ -254,22 +259,22 @@ export const renewRentalContract = catchAsync(async (propertyId, tokenId) => {
 });
 
   // eslint-disable-next-line import/prefer-def\ault-export
-export const createRentalTokenNFT = catchAsync(async (rentPrice, propertyAddress, securityDeposit) => {
+export const createRentalTokenNFT = async (address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit) => {
     // using hardcoded value for now..
     const web3modal = new Web3Modal();
     const connection = await web3modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
-    const price = ethers.utils.parseUnits(rentPrice, "ether");
+    const price = ethers.utils.parseUnits(rent, "ether");
     const deposit = ethers.utils.parseUnits(securityDeposit, "ether");
     const contract = fetchContract(signer);
-    const url =
-      "https://gateway.pinata.cloud/ipfs/QmXA7GCd4pWNKXkQ5FGrMMnzMHsRAAzex2WXtWFVdu32ji";
+    const url = await uploadToIPFS(imageCover);
   
-    const transaction = await contract.addProperty(url, price, deposit, propertyAddress);
+    const transaction = await contract.addProperty(url, price, deposit, address);
     await transaction.wait();
-    await addContract(propertyAddress, transaction);
-  });
+    await createRentalProperty(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit);
+    await addContract(address);
+  };
 
   export const signRentalContract = async (tokenId, tokenPrice, propertyId) => {
     console.log("running rental contract");
@@ -284,6 +289,18 @@ export const createRentalTokenNFT = catchAsync(async (rentPrice, propertyAddress
      
     await transaction.wait();
     await rentProperty(propertyId);
+  };
+
+  export const updateRentalProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId, tokenId) => {
+    console.log("updating rental property");
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(RentalAddress, RentalAddressABI, signer);
+    const transaction = await contract.updateRentalProperty(tokenId, rent, securityDeposit);
+    await transaction.wait();
+    await updateRentalPropertyMongo(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId);
   };
 
 const addContract = catchAsync(async (propertyAddress, tx) =>{
@@ -306,9 +323,7 @@ const addContract = catchAsync(async (propertyAddress, tx) =>{
     }
 });
 
-
-
-export const updateRentalProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId) => {
+const updateRentalPropertyMongo = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId) => {
   try {
     const res = await axios({
       method: 'PATCH',

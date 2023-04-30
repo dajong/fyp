@@ -3,8 +3,8 @@ import '@babel/polyfill';
 import { login, logout } from './login';
 import { register, addNewAdmin } from './registration';
 import { updateSettings, forgetPassword, userPlaceBid, removeBidding, resetPassword, addToFavourite, removeFromFavourite } from './updateSettings';
-import { createRentalTokenNFT, createRentalProperty, applyRental, withdrawRental, approveRental, updateRentalProperty,getRentalProperty, signRentalContract, payRent, endRentalContract, renewRentalContract } from './rentalProperty';
-import { createProperty, getProperty, soldProperty, placeBid, updateProperty } from './property';
+import { createRentalTokenNFT, applyRental, withdrawRental, approveRental, updateRentalProperty,getRentalProperty, signRentalContract, payRent, endRentalContract, renewRentalContract } from './rentalProperty';
+import { getProperty, placeBid, updateProperty } from './property';
 import { createTokenNFT, buyNft, depositPayment, fetchMyNFTs } from './web3ModalFactory';
 import { sendQuery,replyQuery } from './query';
 // DOM ELEMENTS
@@ -17,7 +17,6 @@ const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const buyBiddingBtn = document.getElementById('buy-bid-property');
 const depositBiddingBtn = document.getElementById('deposit-bid-property');
-const buyBtn = document.getElementById('buy-property');
 const removeBiddingBtn = document.getElementById('remove-bidding-btn');
 const createPropertyForm = document.querySelector(".form--createProperty");
 const forgetPasswordForm = document.querySelector(".form--forgetPassword");
@@ -26,7 +25,7 @@ const contactAdminForm = document.querySelector(".form--contactAdmin");
 const replyQueryForm = document.querySelector(".form--replyQuery");
 const resetPasswordForm = document.querySelector(".form--resetPassword");
 const addToFavouriteBtn = document.getElementById("add-to-favourite");
-const removeFromFavouriteBtn = document.getElementById("remove-from-favourite");
+const removeFromFavouriteBtn = document.querySelectorAll(".remove-from-favourite");
 const testBtn = document.getElementById("btn--test");
 const propertyLink = document.getElementById("my-property-link");
 const createRentalPropertyForm = document.querySelector(".form--createRentalProperty");
@@ -76,7 +75,7 @@ if (loginForm)
   });
 
   if(createPropertyForm)
-    createPropertyForm.addEventListener('submit', e => {
+    createPropertyForm.addEventListener('submit', async e => {
     e.preventDefault();
     console.log("Creating property..")
 
@@ -88,7 +87,6 @@ if (loginForm)
     const garageSize = document.getElementById('garageSize').value;
     const numBedroom = document.getElementById('numBedroom').value;
     const numBathroom = document.getElementById('numBathroom').value;
-    // const price = document.getElementById('price').value;
     const imageCover = document.getElementById('imageCover').files[0];
     const biddingPrice = document.getElementById('biddingPrice').value;
     const description = document.getElementById('description').value;
@@ -96,10 +94,7 @@ if (loginForm)
     const squareFeet = document.getElementById('squareFeet').value;
     const lotSize = document.getElementById('lotSize').value;
 
-    console.log(imageCover);
-    createProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, price, imageCover, description, biddingPrice);
-    // createTokenNFT(price, address, biddingPrice);
-    createTokenNFT(address, biddingPrice);
+    await createTokenNFT(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, imageCover, description, biddingPrice);
 
     document.getElementById('address').value = "";
     document.getElementById('listingNum').value = "";
@@ -135,8 +130,7 @@ if (loginForm)
     const squareFeet = document.getElementById('squareFeet').value;
     const lotSize = document.getElementById('lotSize').value;
 
-    await createRentalProperty(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, rent, imageCover, description, securityDeposit);
-    await createRentalTokenNFT(rent, address, securityDeposit);
+    await createRentalTokenNFT(address, ownerEmail, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, imageCover, description, securityDeposit);
   });
 
 if (registrationForm)
@@ -191,17 +185,6 @@ if (userPasswordForm)
     document.getElementById('password-confirm').value = '';
   });
 
-  if(buyBtn)
-  buyBtn.addEventListener('click',async e => {
-    console.log("button_click")
-    e.target.textContent = 'Processing...';
-    const { propertyId } = e.target.dataset;
-    const curProperty = await getProperty(propertyId);
-    console.log(curProperty);
-    await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.price, false);
-    await soldProperty(curProperty.data.address);
-  });
-
   if(biddingForm)
     biddingForm.addEventListener('submit', async e => {
     e.preventDefault();
@@ -239,10 +222,7 @@ if (userPasswordForm)
     const { propertyId } = e.target.dataset;
     const curProperty = await getProperty(propertyId);
     console.log(curProperty);
-    // await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
-    await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
-    await soldProperty(curProperty.data.address);
-    await removeBidding(curProperty.data.address);
+    await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, curProperty.data.address, curProperty.data.slug, curProperty.data._id);
   });
 
   if(depositBiddingBtn)
@@ -251,10 +231,7 @@ if (userPasswordForm)
     const { propertyId } = e.target.dataset;
     const curProperty = await getProperty(propertyId);
     console.log(curProperty);
-    // await buyNft(BigInt(curProperty.data.nftContract), curProperty.data.biddingPrice, true);
-    await depositPayment(BigInt(curProperty.data.nftContract), (curProperty.data.biddingPrice / 100 * 10));
-    await soldProperty(curProperty.data.address);
-    await removeBidding(curProperty.data.address);
+    await depositPayment(BigInt(curProperty.data.nftContract), (curProperty.data.biddingPrice / 100 * 10), curProperty.data.address, curProperty.data.slug, curProperty.data._id);
   });
 
   if(contactAdminForm)
@@ -300,12 +277,16 @@ if(addToFavouriteBtn)
     await addToFavourite(slug);
   });
 
-  if(removeFromFavouriteBtn)
-  removeFromFavouriteBtn.addEventListener('click', async e => {
-    console.log("Removing property from favorite");
-    const slug = removeFromFavouriteBtn.dataset.slug;
-    await removeFromFavourite(slug);
-  });
+  if(removeFromFavouriteBtn){
+    removeFromFavouriteBtn.forEach((btn) => {
+      btn.addEventListener("click", async e => {
+        console.log("Removing property from favorite");
+        e.preventDefault();
+        const slug = btn.getAttribute("data-slug");
+        await removeFromFavourite(slug);
+      });
+    });
+  }
 
 if(testBtn)
   testBtn.addEventListener('click', async e => {
@@ -423,23 +404,13 @@ if (updateRentalPropertyForm) {
     const squareFeet = document.getElementById('squareFeet').value;
     const lotSize = document.getElementById('lotSize').value;
     const ownerEmail = document.getElementById('ownerEmail').value;
-    //const archive = document.getElementById('archive').checked;
+    const tokenId = document.getElementById('tokenId').value;
     const slug = document.getElementById('slug').value;
     const rentalPropertyId = document.getElementById('rentalPropertyId').value;
     console.log(rentalPropertyId)
-    await updateRentalProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId);
+    await updateRentalProperty(address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize, numBedroom, numBathroom, rent, securityDeposit, description, ownerEmail, slug, rentalPropertyId, tokenId);
   });
 }
-
-if(btnProceedRental)
-btnProceedRental.addEventListener('click',async e => {
-  const propertyId = btn.getAttribute("data-propertyid");
-  const curProperty = await getRentalProperty(propertyId);
-  console.log(curProperty);
-  console.log(curProperty.data._id);
-
-  await signRentalContract(BigInt(curProperty.data.nftContract), curProperty.data.rent + curProperty.data.securityDeposit, propertyId);
-});
 
 if(btnProceedRental){
   btnProceedRental.forEach((btn) => {

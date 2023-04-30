@@ -3,41 +3,6 @@ import axios from 'axios';
 import catchAsync from "../../utils/catchAsync";
 import { showAlert } from './alerts';
 
-export const createProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, imageCover, description, biddingPrice) => {
-    try {
-      const res = await axios({
-        method: 'POST',
-        url: 'http://localhost:3000/api/v1/properties',
-        data: {
-          address,
-          city,
-          listingNum,
-          propertyStyle,
-          garageType,
-          garageSize,
-          berRating,
-          squareFeet,
-          lotSize,
-          numBedroom,
-          numBathroom,
-          imageCover,
-          description,
-          biddingPrice
-        }
-      });
-  
-      if (res.data.status === 'success') {
-        showAlert('success', 'Property created successfully!');
-        // window.setTimeout(() => {
-        //   location.assign('/');
-        // }, 1500);
-      }
-    } catch (err) {
-      showAlert('error', err.response.data.message);
-      console.log(err);
-    }
-  };
-
   export const updateProperty = async (address, city, listingNum, propertyStyle, garageType, garageSize, berRating, squareFeet, lotSize,  numBedroom, numBathroom, description, biddingPrice, slug, propertyId) => {
     try {
       const res = await axios({
@@ -86,28 +51,6 @@ export const getProperty = async (propertyId) => {
   showAlert('error', err.response.data.message);
 }
 };
-
-export const soldProperty = catchAsync(async (propertyAddress, slug) =>{
-  try {
-    const res = await axios({
-      method: "POST",
-      url: "http://localhost:3000/api/v1/properties/soldProperty",
-      data: {
-        address: propertyAddress,
-        slug: slug
-      }
-    });
-
-    if (res.data.status === "success") {
-      showAlert("success", "Property Sold!");
-      window.setTimeout(() => {
-        location.assign('/');
-      }, 1500);
-    }
-  } catch (err) {
-    showAlert("error", err);
-  }
-});
 
 export const placeBid = catchAsync(async (propertyAddress, newBidPrice, curBidder) =>{
   try {

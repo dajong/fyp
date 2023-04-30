@@ -50,7 +50,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
       properties = await Property.find()
         .where("propertySold")
         .equals(false)
-        .where("price")
+        .where("biddingPrice")
         .gte(mMinprice)
         .lte(mMaxPrice)
         .sort({ propertyViews: -1 });
@@ -60,9 +60,10 @@ exports.getOverview = catchAsync(async (req, res, next) => {
         .equals(false)
         .where("city")
         .equals(city)
-        .where("price")
+        .where("biddingPrice")
         .gte(mMinprice)
-        .lte(mMaxPrice);
+        .lte(mMaxPrice)
+        .sort({ propertyViews: -1 });
     }
   } else if (rent === "true") {
     if (city === "") {
@@ -81,7 +82,8 @@ exports.getOverview = catchAsync(async (req, res, next) => {
         .equals(city)
         .where("rent")
         .gte(mMinprice)
-        .lte(mMaxPrice);
+        .lte(mMaxPrice)
+        .sort({ propertyViews: -1 });
     }
   }
   console.log(properties);
@@ -397,11 +399,22 @@ exports.getRentalApplication = catchAsync(async (req, res, next) => {
 
 exports.getFavouriteProperties = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
-  const properties = await Property.aggregate([
+  // Get favorite properties
+  const favoriteProperties = await Property.aggregate([
     {
       $match: { slug: { $in: user.favoriteProperties } }
     }
   ]);
+
+  // Get favorite rental properties
+  const favoriteRentalProperties = await RentalProperty.aggregate([
+    {
+      $match: { slug: { $in: user.favoriteProperties } }
+    }
+  ]);
+
+  // Merge favorite properties and rental properties
+  const properties = [...favoriteProperties, ...favoriteRentalProperties];
   res.status(200).render("favouriteProperties", {
     title: "Favourite Properties",
     properties

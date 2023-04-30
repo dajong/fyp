@@ -10,8 +10,8 @@ router
   .post(
     authController.protect,
     authController.restrictTo("admin"),
-    // propertyController.uploadImageCover,
-    // propertyController.resizeImageCover,
+    propertyController.uploadImageCover,
+    propertyController.resizeImageCover,
     propertyController.createProperty
   );
 

@@ -26,7 +26,6 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
       address payable owner;
       string propertyAddress;
       uint256 bidPrice;
-      // uint256 price;
       uint256 paidAmount;
       address payable currentBidder;
       bool sold;
@@ -67,16 +66,6 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
     }
 
     /* Mints a token and lists it in the marketplace */
-    // function createTokenNFT(string memory tokenURI, uint256 price, string memory propertyAddress, uint256 bidPrice) public payable returns (uint) {
-    //   _tokenIds.increment();
-    //   uint256 newTokenId = _tokenIds.current();
-
-    //   _mint(msg.sender, newTokenId);
-    //   _setTokenURI(newTokenId, tokenURI);
-    //   createMarketItem(newTokenId, price, propertyAddress, bidPrice);
-    //   return newTokenId;
-    // }
-
     function createTokenNFT(string memory tokenURI, string memory propertyAddress, uint256 bidPrice) public payable returns (uint) {
       _tokenIds.increment();
       uint256 newTokenId = _tokenIds.current();
@@ -89,7 +78,6 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
 
     function createMarketItem(
       uint256 tokenId,
-      // uint256 price,
       string memory propertyAddress,
       uint256 bidPrice
     ) private {
@@ -101,7 +89,6 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
         payable(address(this)),
         propertyAddress,
         bidPrice,
-        // price,
         0,
         payable(address(this)),
         false
@@ -114,28 +101,11 @@ contract NFTPropertyContractSystem is ERC721URIStorage {
         address(this),
         propertyAddress,
         bidPrice,
-        // price,
         0,
         payable(address(this)),
         false
       );
     }
-
-    /* Creates the sale of a marketplace item */
-    /* Transfers ownership of the item, as well as funds between parties */
-    // function createMarketSale(
-    //   uint256 tokenId
-    //   ) public payable {
-    //   uint price = idToMarketItem[tokenId].price;
-    //   require(msg.value == price, "Please pay the full amount in order to complete the transaction!");
-    //   idToMarketItem[tokenId].owner = payable(msg.sender);
-    //   idToMarketItem[tokenId].sold = true;
-    //   idToMarketItem[tokenId].seller = payable(address(0));
-    //   _itemsSold.increment();
-    //   _transfer(address(this), msg.sender, tokenId);
-
-    //   payable(owner).transfer(msg.value);
-    // }
 
     function buyBidProperty(
       uint256 tokenId

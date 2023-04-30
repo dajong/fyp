@@ -58,4 +58,8 @@ module.exports = class EmailWithContent {
   async sendOutbidNotification(subject) {
     await this.send("outbid", `Someone else bid on ${subject}!`);
   }
+
+  async sendRentalApprovedNotification() {
+    await this.send("rentalApproved", `Congratulations on your application!`);
+  }
 };

@@ -7,11 +7,11 @@ block content
       form(class="form--createRentalProperty")
         div.mb-3
           label.form__label(for='address') Address
-          input#address.form__input(type='text', value="13 Lisheen Homes Caherdavin", required)
+          input#address.form__input(type='text', required)
 
         div.mb-3
           label.form__label(for='ownerEmail') Owner Email
-          input#ownerEmail.form__input(type='text', value="danieljong5201@gmail.com", required)
+          input#ownerEmail.form__input(type='text', required)
 
         div.mb-3
           label.form__label(for='city') City
@@ -21,7 +21,7 @@ block content
 
         div.mb-3
           label.form__label(for='listingNum') Listing Number
-          input#listingNum.form__input(type='number', value="123456", required)
+          input#listingNum.form__input(type='number', required)
 
         div.mb-3e
           label.form__label(for='propertyStyle') Property Style
@@ -37,7 +37,7 @@ block content
 
         div.mb-3
           label.form__label(for='garageSize') Garage Size
-          input#garageSize.form__input(type='number', value="123", required)
+          input#garageSize.form__input(type='number', required)
 
         div.mb-3
           label.form__label(for='berRating') Ber Rating
@@ -47,31 +47,31 @@ block content
 
         div.mb-3
           label.form__label(for='squareFeet') Square Feet
-          input#squareFeet.form__input(type='number', value="1800", required)
+          input#squareFeet.form__input(type='number', required)
         
         div.mb-3
           label.form__label(for='lotSize') Lot Size
-          input#lotSize.form__input(type='text', value="60x180", required)
+          input#lotSize.form__input(type='text', required)
           
         div.mb-3
           label.form__label(for='numBedroom') Number of Bedrooms
-          input#numBedroom.form__input(type='number', value="5",required)
+          input#numBedroom.form__input(type='number',required)
 
         div.mb-3
           label.form__label(for='numBathroom') Number of Bathrooms
-          input#numBathroom.form__input(type='number', value="3", required)
+          input#numBathroom.form__input(type='number', required)
 
         div.mb-3
           label.form__label(for='rent') Rent Price
-          input#rent.form__input(type='number', value="0.5", required)
+          input#rent.form__input(type='number', step="0.01", min=0, required)
 
         div.mb-3
           label.form__label(for='securityDeposit') Deposit Price
-          input#securityDeposit.form__input(type='number', value="1", required)
+          input#securityDeposit.form__input(type='number', step="0.01", min=0,required)
 
         div.mb-3
           label.form__label(for='description') Description
-          textarea#description.form__input(rows="3", value="tset description", required)  test description
+          textarea#description.form__input(rows="3", required)  test description
 
         div.mb-3
           .form__group.form__photo-upload

@@ -6,8 +6,6 @@
   "scripts": {
     "test": "jest --testTimeout=10000",
     "start": "nodemon server.js",
-    "import-data": "node dev-data/json-data/import-dev-data.js --import",
-    "delete-data": "node dev-data/json-data/import-dev-data.js --delete",
     "start:prod": "NODE_ENV=production nodemon server.js",
     "debug": "ndb server.js",
     "watch:js": "parcel watch --no-hmr ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url /js",
@@ -43,6 +41,7 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.1.1",
     "nodemailer-sendgrid": "^1.0.3",
+    "nodemon": "^2.0.22",
     "pug": "^3.0.2",
     "save-dev": "^0.0.1-security",
     "sharp": "^0.31.3",

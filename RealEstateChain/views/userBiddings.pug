@@ -52,6 +52,6 @@ block content
                             td
                                 button.btn-xsmall.btn-red#remove-bidding-btn(value=`${property.address}`) Stop Watching
 
-                        if(property.currentHighestBidder === user.id && property.createdAt < Date.now())
+                        if(property.currentHighestBidder === user.id && property.biddingEndDate < Date.now())
                             td
                                 a.btn-xsmall.btn-xgreen#checkout-bidding-btn(href=`checkoutBidProperty/${property.slug}`) Checkout

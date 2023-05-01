@@ -134,8 +134,8 @@ const rentProperty = catchAsync(async (propertyId) => {
 
     if (res.data.status === 'success') {
       showAlert('success', 'Contract signed successfully');
-      window.setTimeout(() => {
-        location.assign('/myRentalProperties');
+      window.setTimeout(() => {s
+        location.assign('/myRentalProperty');
       }, 1500);
     }
   } catch (err) {
